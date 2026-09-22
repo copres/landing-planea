@@ -1,0 +1,45 @@
+{
+  "name": "astro-theme-stone",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "translate:blog": "node scripts/translate-blog-posts.js",
+    "translate:blog:apikey": "node scripts/translate-blog-posts-api-key.js",
+    "translate:blog:free": "node scripts/translate-blog-posts-free.js",
+    "translate:blog:groq": "node scripts/translate-blog-posts-groq.js"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@astrojs/mdx": "^4.3.0",
+    "@astrojs/node": "^9.4.0",
+    "@astrojs/sitemap": "^3.4.1",
+    "@astrojs/svelte": "^7.1.0",
+    "@astrojs/tailwind": "^6.0.2",
+    "@astrojs/vercel": "^8.2.5",
+    "@astropub/md": "^1.0.0",
+    "@fontsource/inter": "^5.2.6",
+    "@tailwindcss/typography": "^0.5.15",
+    "astro": "^5.10.1",
+    "astro-compress": "^2.3.8",
+    "marked": "^16.1.2",
+    "mermaid": "^11.4.0",
+    "svelte": "^5.34.8",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.9.3"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.15.0"
+  },
+  "devDependencies": {
+    "@google-cloud/translate": "^8.0.0",
+    "@types/marked": "^5.0.2",
+    "glob": "^11.0.0",
+    "groq-sdk": "^0.5.0"
+  }
+}

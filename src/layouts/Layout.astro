@@ -1,0 +1,87 @@
+---
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import { ViewTransitions } from 'astro:transitions';
+import Footer from '../components/layout/Footer.astro';
+import Header from '../components/layout/Header.astro';
+
+interface Props {
+  description: string;
+  title: string;
+  image?: string;
+}
+
+const { description, title, image = '/assets/logo.png' } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// Detectar locale desde la URL: /es/, /en/, /pt/, /fr/ o por defecto 'es'
+const pathSegments = Astro.url.pathname.split('/').filter(Boolean);
+const locale = pathSegments[0] && ['es', 'en', 'pt', 'fr'].includes(pathSegments[0]) 
+  ? pathSegments[0] 
+  : 'es';
+const htmlLang = locale;
+---
+
+<!DOCTYPE html>
+<html lang={htmlLang} class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+
+    <link rel="icon" href="/assets/favicon_m3.png" type="image/png">
+    <link rel="apple-touch-icon" href="/assets/favicon_m3.png">
+
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <ViewTransitions />
+    <script>
+      import '../stores/theme.js';
+    </script>
+
+    <!-- Metaetiquetas SEO -->
+    <meta name="description" content={description} />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="metroKUBIKO" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, Astro.site)} />
+
+    <script type="application/ld+json" set:html={
+      JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "metroKUBIKO",
+        "url": Astro.site,
+        "logo": new URL('/assets/logo.png', Astro.site),
+        "sameAs": [
+          "https://www.youtube.com/@metrokubiko5164"
+        ]
+      })
+    }/>
+
+  </head>
+  <body
+    class="bg-primary-50 text-primary-950 dark:bg-primary-950 dark:text-primary-200 antialiased transition"
+  >
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

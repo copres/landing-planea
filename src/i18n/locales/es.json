@@ -1,0 +1,733 @@
+{
+  "nav": {
+    "home": "Home",
+    "nosotros": "Nosotros",
+    "software": "Software",
+    "utilidades": "Utilidades",
+    "precios": "Precios",
+    "contacto": "Contacto",
+    "blog": "Blog",
+    "theme_toggle_light": "Modo claro",
+    "theme_toggle_dark": "Modo oscuro"
+  },
+  "common": {
+    "ingresa": "Ingresa",
+    "registrate": "Regístrate"
+  },
+  "pricingPage": {
+    "meta": {
+      "description": "Encuentra el plan de precios que mejor se adapte a tus necesidades. Los planes incluyen usuarios, proyectos, soporte y más"
+    }
+  },
+  "pricing": {
+    "title": "Precios",
+    "subtitle": "Impulsa tu empresa, elige el mejor plan.",
+    "toggle_label": "Cambiar entre plan mensual y anual",
+    "monthly": "Mensual",
+    "annual": "Anual",
+    "discount_annual_monthly_view": "30% de descuento por pago anual",
+    "discount_annual_view": "Incluye 30% de descuento.",
+    "buy_now": "Comprar Ahora",
+    "cost_control_title": "Control de Costos",
+    "integrations_title": "Integraciones",
+    "per_month": "/mes",
+    "per_year": "/año",
+    "plans": {
+      "emprendedor": {
+        "name": "Emprendedor",
+        "description": "Plan ideal para profesionales de consultoría como arquitectos e ingenieros civiles",
+        "features": {
+          "users": "3 Usuarios",
+          "projects": "20 Proyectos por año",
+          "apu_databases": "3 Bases de datos de APU",
+          "storage": "10 GB de almacenamiento",
+          "budget_scheduling": "Presupuesto y Programación de Obra (Gantt)",
+          "training": "4 Horas de capacitación"
+        }
+      },
+      "pymes": {
+        "name": "PyMes",
+        "description": "La solución completa para pequeñas y medianas empresas.",
+        "features": {
+          "users": "15 Usuarios",
+          "projects": "Proyectos Ilimitados",
+          "apu_databases": "10 Bases de datos de APU",
+          "storage": "100 GB de almacenamiento",
+          "budget_scheduling": "Presupuesto y Programación de Obra (Gantt)",
+          "labor_management": "Gestión de Mano de Obra",
+          "materials_management": "Gestión de compra y consumo de materiales (kardex e inventario)",
+          "project_management": "Gerencia y control de obra",
+          "training": "12 Horas de capacitación"
+        }
+      },
+      "corporativo": {
+        "name": "Corporativo",
+        "description": "Para grandes empresas con necesidades avanzadas de integración y soporte.",
+        "features": {
+          "users": "75 Usuarios",
+          "projects": "Proyectos Ilimitados",
+          "apu_databases": "30 Bases de datos de APU",
+          "storage": "1 TB de almacenamiento",
+          "budget_scheduling": "Presupuesto y Programación de Obra (Gantt)",
+          "labor_management": "Gestión de Mano de Obra",
+          "materials_management": "Gestión de compra y consumo de materiales (kardex e inventario)",
+          "project_management": "Gerencia y control de obra",
+          "integrations": "Incluye integraciones con otras plataformas (contable, crm, revit, etc.)",
+          "priority_support": "Soporte prioritario",
+          "training": "36 Horas de capacitación"
+        }
+      }
+    }
+  },
+  "footer": {
+    "description": "metroKUBIKO es el software para empresas constructoras más fácil de usar y 100% online. Potenciado con IA para crear presupuestos, gestionar obras y optimizar proyectos de construcción.",
+    "copyright": "© 2025 metroKUBIKO",
+    "links": {
+      "create_budgets": "Crear presupuestos de obra con IA de forma gratuita",
+      "apus": "APUs",
+      "unit_price_analysis": "Análisis de Precios Unitarios",
+      "construction_budgets": "Presupuestos de Obras",
+      "construction_scheduling": "Programación de obras",
+      "construction_platforms": "Plataformas de construcción",
+      "construction_software": "Software de construcción",
+      "software_for_contractor": "Software para constructora",
+      "software_colombia": "Software para constructoras en Colombia",
+      "software_contractors": "Software para contructoras",
+      "construction_control_software": "Software para control de obras de construcción"
+    }
+  },
+  "cta": {
+    "title": "¿Tienes alguna duda?",
+    "description": "Escríbenos, estaremos gustosos de atenderte y resolver cualquier inquietud",
+    "button": "Contáctanos",
+    "shared": {
+      "title": "¿Listo para digitalizar tu constructora?",
+      "description": "Únete a las empresas constructoras que ya gestionan sus proyectos con metroKUBIKO.",
+      "button": "Comienza ahora - Pruébalo gratis"
+    }
+  },
+  "utilities": {
+    "title": "Utilidades",
+    "description": "Nuestra comunidad comparte información que puede ser de utilidad para tus proyectos… descúbrela.",
+    "download_brochure": "Descarga Nuestro Brochure",
+    "meta": {
+      "title": "Utilidades · Metrokubiko",
+      "description": "Encuentra el plan de precios que mejor se adapte a tus necesidades. Los planes incluyen asientos, proyectos, soporte y más"
+    },
+    "sections": {
+      "apus": {
+        "name": "Bases de Datos de APUs: Análisis de Precios Unitarios",
+        "description": "Algunos de nuestros usuarios generosamente comparten sus bases de datos de APUs, que puedes llevar a tu cuenta para presupuestar con ellos.​<br>También tú podrás compartir bases de datos de los apus que uses en tu país, esto contribuye al fortalecimiento de la industria de la construcción y potencia la inteligencia colectiva de nuestra comunidad.​<br>Para buscar análisis de precios unitarios en forma de actividades haz click en el botón:",
+        "button": "Buscar Análisis de Precios Unitarios APUs"
+      },
+      "proyecto": {
+        "name": "Proyecto",
+        "description": "Algunos de nuestros usuarios, que son profesionales de la construcción, arquitectos e ingenieros, publican sus proyectos para beneficio de la comunidad de metroKUBIKO, esto puede ser de utilidad en caso de que vayas a construir un proyecto similar.​<br>La publicación de un proyecto incluye, el presupuesto de obra, sus actividades, sus análisis de precios unitarios y todos los insumos del proyecto, tales como materiales, equipos, mano de obra, transportes, etc.  Para llevar un proyecto publicado a tu cuenta haz click en botón:",
+        "button": "Proyectos Publicados"
+      },
+      "terceros": {
+        "name": "Bases de Datos de Terceros",
+        "description": "Algunos de nuestros usuarios publican generosamente sus bases de datos, de proveedores, contratistas y trabajadores de las ciudades de dónde elllos trabajan.​<br>Si necesitas nuevas contrataciones para tus proyectos, puedes consultar quien haya publicado sus bases de datos de terceros que puedes llevar a tu cuenta.",
+        "proveedores": "Proveedores por país",
+        "contratistas": "Contratistas por país",
+        "trabajadores": "Trabajadores por país"
+      }
+    }
+  },
+  "software": {
+    "title": "Software",
+    "description": "Descubre las funcionalidades de metroKUBIKO.",
+    "modules": {
+      "createAccount": {
+        "name": "Crea y Activa tu Cuenta",
+        "description": "Darte de alta en metroKUBIKO, es bastante sencillo, al registrarte en la plataforma, crearás una cuenta freemium que te permite crear dos proyectos con todas las funciones para que puedas familiarizarte con las herramientas e iniciar tu aprendizaje del control de costos.​<br>Luego podrás elegir el plan que mejor se adapte a tu necesidad.",
+        "items": [
+          "Manual de Registro",
+          "Manual de Ingreso",
+          "Editar perfil y cambiar contraseña"
+        ],
+        "callToAction": "Crear mi cuenta ahora"
+      },
+      "myAccount": {
+        "name": "Mi Cuenta",
+        "description": "Una vez te hayas registrado en la plataforma encontrarás una interfaz con tres enlaces, el primero de ellos es \"Mi Cuenta\", dónde puedes configurar tu metroKUBIKO",
+        "items": [
+          "Editar mi suscripción",
+          "Añadir mis Usuarios",
+          "Eventos registrados de usuarios",
+          "Roles y Permisos para usuarios",
+          "Mis Publicaciones",
+          "Mis Integraciones"
+        ]
+      },
+      "databases": {
+        "name": "Mis Bases de Datos",
+        "description": "Otro enlace importante en tu página de inicio de metroKUBIKO es el que conduce a las bases de datos. En estas bases puedes almacenar información que posteriormente requieres para elaborar tus presupuestos o ejecutar tu proyecto. metroKUBIKO te permite almacenar múltiples bases de datos, creadas por tí mismo, compartidas por otros usuarios o descargadas directamente desde nuestra página web www.metrokubiko.com",
+        "items": [
+          "Base de Análisis de Precios Unitarios",
+          "Base de Datos de Proveedores",
+          "Base de Datos de Contratistas"
+        ]
+      },
+      "projects": {
+        "name": "Mis Proyectos",
+        "description": "Esta es la sección más importante de metroKUBIKO, dónde puedes crear tus propios proyectos para presupuestar y controlar en la plataforma",
+        "items": [
+          "Crear proyecto sencillo",
+          "Crear proyecto por fases",
+          "Editar proyectos",
+          "Duplicar un proyecto",
+          "Compartir un proyecto",
+          "Desactivar y eliminar un proyecto"
+        ]
+      },
+      "budget": {
+        "name": "Presupuesto de Obra",
+        "description": "metroKUBIKO te ofrece varias alternativas para crear el presupuesto de tu proyecto de construcción, puedes realizarlo desde cero o con la ayuda de bases de datos de APUs (Análisis de Precios Unitarios) previamente definidos en tu base de datos y de forma colaborativa.",
+        "items": [
+          "Presupuesto desde cero",
+          "Presupuesto a partir de bases de datos",
+          "Presupuesto importado",
+          "Presupuesto por fases",
+          "Especificaciones de las actividades",
+          "Memoria de cantidades",
+          "Reportes",
+          "Crea un Presupuesto en solo dos pasos"
+        ]
+      },
+      "scheduling": {
+        "name": "Programación de Obra",
+        "description": "metroKUBIKO, te ofrece una potente herramienta para crear una programación de obra mediante un diagrama de gantt en línea y que permite el trabajo colaborativo de varios usuarios. Además puedes concatenar las actividades, de tal manera que definas una ruta crítica de tu proyecto. Una vez finalizada la concatenación de las actividades, puedes obtener automáticamente un flujo de fondos para saber cuantos recursos necesitas en cada periodo de tiempo.",
+        "items": [
+          "Diagrama de gantt",
+          "Flujo de fondos"
+        ]
+      },
+      "warehouse": {
+        "name": "Almacén",
+        "description": "Gestión de compra y consumo de materiales",
+        "items": [
+          "Crear y asignar una bodega al proyecto",
+          "Requisiciones",
+          "Órdenes de compra",
+          "Entradas de almacén",
+          "Salidas de almacén",
+          "Reintegros",
+          "Traslados",
+          "Almacén por fases",
+          "Reportes"
+        ]
+      },
+      "laborContracts": {
+        "name": "Contratos de Mano de Obra",
+        "description": "Con la herramienta contratos de metroKUBIKO puedes realizar el pago de tu mano de obra a destajo, o sea mediante cortes de obra o actas de avance.",
+        "items": [
+          "Creación de un contrato",
+          "Editar un contrato",
+          "Asignación de Actividades",
+          "Minuta de Contrato",
+          "Pago de Actas o Cortes de Obra"
+        ]
+      },
+      "payroll": {
+        "name": "Mano de Obra por Nómina o Administración",
+        "description": "La Nómina de metroKUBIKO te paga a tus trabajadores que has contratado por el método de administración o sea que se pagan por un periodo de tiempo de trabajo, por ejemplo mensual o quincenal. Al pagar la mano de obra por este método, muchas veces te impide saber cuanto es el costo de la mano de obra por cada actividad, sin embargo con la plataforma metroKUBIKO puedes saber en cada periodo de tiempo que pagas el costo exacto que ese costo afecta a cada una de las actividades del proyecto.",
+        "items": [
+          "Creación de un Frente de Obra",
+          "Creación de un Periodo de Nómina",
+          "Avance de Obra"
+        ]
+      },
+      "utilities": {
+        "name": "Utilidades",
+        "description": "Las utilidades de metroKUBIKO, te permite, por una parte llevar un libro de obra digital de tu proyecto, una bitácora, dónde tus usuarios y tus invitados pueden registrar los sucesos del día a día de tu obra. Y por otra parte Anexos, que te permite compartir, con tu equipo de trabajo, documentos, tales como planos, licencias de construcción, minutas de contratos, etc.",
+        "items": [
+          "Anexos",
+          "Bitácora"
+        ]
+      },
+      "management": {
+        "name": "Gerencia y Control",
+        "description": "Debido a que tus usuarios alimentan la información día a día, en un mismo proyecto y enfocada en cada una de las actividades, puedes obtener informes en tiempo real del avance de tu proyecto no solo en tiempo sino en costos de inversión. Puedes detectar a tiempo, actividades que te vayan a generar pérdidas de dinero o de tiempo y tomar oportunamente los correctivos. El control de costos es la mejor herramienta para la toma de decisiones.",
+        "items": [
+          "Control de Costos",
+          "Control de Tiempos",
+          "Control de Personal",
+          "Control de Equipos"
+        ]
+      },
+      "integrations": {
+        "name": "Integraciones",
+        "description": "Debido a que en metroKUBIKO somos expertos en el control de proyectos de construcción, no nos enfocamos en otras herramientas que tu empresa necesitas, sin embargo integramos las herramientas líderes en el mercado. Y nuestro equipo de desarrollo está siempre atento a crear integraciones puntuales con las herramientas de tu confianza.",
+        "items": [
+          "Integración con contabilidad - SIIGO",
+          "Integración con CRM - Briker",
+          "Integración con BiM - Revit"
+        ]
+      }
+    }
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "Por favor verifica la URL en la barra de direcciones e intenta de nuevo.",
+    "button": "Volver al inicio"
+  },
+  "home": {
+    "meta": {
+      "description": "metroKUBIKO, el software para empresas constructoras, más fácil de usar y 100% online. Potenciado con IA. Es una plataforma web, que permite a las empresas constructoras gestionar sus proyectos en la web. Enfocados principalmente en la facilidad de uso y la rapidez de implementación, el trabajo colaborativo y la rápida obtención de informes en tiempo real que optimicen la toma de decisiones de la gerencia de la empresa.",
+      "title": "metroKUBIKO · Software para empresas constructoras . fácil de usar . 100% online"
+    },
+    "hero": {
+      "title": "Gestión de Obras fácil, colaborativa y potenciada con IA... haz que suceda.",
+      "description": "metroKUBIKO, el software para empresas constructoras, más fácil de usar y 100% online. Potenciado con IA.",
+      "cta": "Es fácil, compruébalo ahora"
+    },
+    "services": {
+      "title": "Ventajas de la facilidad de uso",
+      "read_more": "Leer más",
+      "items": [
+        {
+          "name": "Capacitaciones sin costo: ventaja competitiva para constructoras",
+          "description": "Descubre cómo las capacitaciones gratuitas de metroKUBIKO potencian la adopción tecnológica y mejoran la productividad de tu equipo de construcción."
+        },
+        {
+          "name": "Rápida implementación",
+          "description": "En poco tiempo, tú y tu equipo podrán comenzar a gestionar digitalmente los proyectos de construcción en la web. Así contarás con reportes en tiempo real a un solo clic, para mejorar tu toma de decisiones."
+        },
+        {
+          "name": "Mejor apropiación",
+          "description": "Gracias a la facilidad de uso de la plataforma, tu equipo se adapta rápidamente al entorno digital y asume sus tareas con mayor confianza. Esto mejora la apropiación de sus responsabilidades, reduce errores y fortalece el trabajo colaborativo."
+        }
+      ]
+    },
+    "about": {
+      "title": "Nuestro Propósito",
+      "paragraph1": "En metroKUBIKO creemos que cada proyecto de construcción merece ser ejecutado con excelencia. Nuestro propósito superior es <strong>empoderar a las empresas constructoras</strong> para que mantengan un control total sobre sus proyectos y logren sus objetivos de gestión de manera eficiente.",
+      "paragraph2": "Sabemos que la construcción es un sector complejo donde cada detalle cuenta. Por eso desarrollamos herramientas que simplifican la gestión, optimizan los procesos y proporcionan la información necesaria para tomar decisiones acertadas en tiempo real.",
+      "paragraph3": "<strong>Tu éxito es nuestro éxito.</strong> Trabajamos día a día para que puedas enfocarte en lo que realmente importa: construir proyectos excepcionales que transformen comunidades.",
+      "button": "Conoce más sobre nosotros"
+    },
+    "callToAction": {
+      "title": "¿Listo para transformar el control de tus proyectos?",
+      "description": "Únete a cientos de empresas constructoras que ya optimizan sus proyectos con metroKUBIKO. Comienza hoy mismo con nuestro modo freemium.",
+      "button": "Comienza ahora - Regístrate - Pruébalo sin costo por 3 meses",
+      "subtext": "Sin compromisos • Sin tarjeta de crédito • Acceso inmediato"
+    },
+    "video": {
+      "title": "metroKUBIKO - Software para empresas constructoras"
+    },
+    "gestionObra": {
+      "title": "Hazlo fácil",
+      "subtitle": "Gestiona tu obra con trabajo en equipo y simultáneo, obtén reportes en tiempo real y automatiza procesos.",
+      "imageAlt": "Ingeniera civil profesional",
+      "features": {
+        "presupuesto": {
+          "name": "Presupuesto de Obra",
+          "description": "En <strong>metroKUBIKO</strong> puedes crear presupuestos de obra de manera rápida, precisa y colaborativa. La plataforma te ofrece tres formas flexibles para hacerlo:<br><br><strong>1. Desde cero:</strong> Construye tu presupuesto paso a paso creando capítulos, subcapítulos, actividades, ítems básicos, insumos y análisis de precios unitarios directamente en la hoja del proyecto.<br><br><strong>2. Importando desde Excel:</strong> Si ya tienes tu presupuesto en hojas de cálculo, puedes importarlo fácilmente, incluyendo insumos y análisis de precios unitarios. Solo tienes que pedir ayuda a Laura, nuestra asistente virtual, y ella te guiará paso a paso.<br><br><strong>3. Usando la base de datos de <strong>metroKUBIKO</strong>:</strong> Accede a una biblioteca de análisis de precios unitarios que puedes arrastrar directamente al presupuesto de tu proyecto y personalizar según tus necesidades.<br><br>Además, <strong>puedes cotizar los precios de los insumos en línea</strong>. Con un solo clic, <strong>metroKUBIKO</strong> utiliza inteligencia artificial para buscar proveedores cercanos a la ubicación de tu obra, mostrándote automáticamente precios actualizados y enlaces de compra. Olvídate de hacer tres cotizaciones por producto: la plataforma te entregará hasta 10 cotizaciones reales en segundos.<br><br>Con el acompañamiento de Laura, nuestro asistente virtual, podrás agilizar, automatizar y optimizar la elaboración del presupuesto de tus proyectos de construcción."
+        },
+        "programacion": {
+          "name": "Programación de Obra",
+          "description": "La plataforma <strong>metroKUBIKO</strong> pone a tu disposición una potente herramienta de programación de obra basada en un diagrama de Gantt completamente en línea. Esta funcionalidad te permite visualizar el listado de actividades del proyecto, cada una con su fecha de inicio y fin, generando automáticamente las barras de duración en el calendario. La duración puede calcularse de forma automática a partir del rendimiento de los análisis de precios unitarios asociados a cada actividad.<br><br>Además, puedes establecer relaciones de dependencia entre las actividades, como inicio-fin, fin-inicio, inicio-inicio, entre otras, lo que te permite construir de forma dinámica la ruta crítica del proyecto.<br><br>A partir del diagrama de Gantt, la plataforma también genera automáticamente un flujo de fondos o flujo de caja, en el cual podrás visualizar tanto los costos asociados a cada actividad en un período determinado, como el listado de insumos requeridos, lo que te facilitará la planificación anticipada de tus compras.<br><br>Como en todas las herramientas de <strong>metroKUBIKO</strong>, varios colaboradores pueden trabajar simultáneamente en la programación de obra, lo que agiliza los procesos y mejora significativamente la eficiencia del equipo de trabajo."
+        },
+        "inventarios": {
+          "name": "Gestión de Inventarios",
+          "description": "Con <strong>metroKUBIKO</strong> puedes controlar de forma integral los inventarios de insumos de obra, así como toda la gestión de compras y consumos de materiales en tus proyectos. La plataforma te ofrece herramientas para cada etapa del proceso: desde la solicitud de insumos hasta el registro de su consumo en obra. Además, contarás con reportes en tiempo real —como Stock y Kardex— para todos los proyectos en los que estés trabajando, y alertas automáticas cuando se excedan las cantidades presupuestadas o se soliciten insumos adicionales.<br><br><strong>Herramientas del módulo de Almacén</strong><br><br><strong>REQUISICIONES</strong><br>Los ingenieros residentes pueden registrar fácilmente las solicitudes de materiales necesarios para un periodo específico (por ejemplo, la siguiente semana). Estas requisiciones son procesadas por el área de compras, que genera automáticamente las órdenes de compra correspondientes para los proveedores.<br><br><strong>ÓRDENES DE COMPRA</strong><br>Permite al área de compras gestionar los pedidos de insumos a proveedores. Estas órdenes pueden crearse manualmente o a partir de las requisiciones. Cada orden generada activa alertas sobre la recepción de los materiales, ayudando a prevenir retrasos en obra.<br><br><strong>ENTRADAS DE ALMACÉN</strong><br>Los almacenistas pueden registrar digitalmente la llegada de insumos a la obra, de manera automática a partir de las órdenes de compra. Esta herramienta simplifica el proceso, evita reprocesos y no requiere conocimientos avanzados de software, ya que la plataforma es intuitiva. El registro incrementa el stock del proyecto.<br><br><strong>SALIDAS DE ALMACÉN</strong><br>Permite controlar el consumo de materiales asignándolos a las actividades específicas donde serán utilizados. El almacenista, en conjunto con el ingeniero residente, registra las salidas para contratistas o trabajadores, descargando automáticamente los insumos del inventario y sumando su costo a la actividad correspondiente.<br><br><strong>DEVOLUCIONES</strong><br>Facilita el retorno de materiales defectuosos o no utilizados a los proveedores. Este proceso se asocia a la factura de compra y descarga los insumos del inventario sin generar costos adicionales para el proyecto.<br><br><strong>REINTEGROS</strong><br>Permite reingresar al almacén los materiales no consumidos por contratistas o trabajadores. Estos reintegros se asocian a la Salida de Almacén original y reducen el costo de la actividad de destino.<br><br><strong>TRASLADOS</strong><br>Con esta herramienta puedes transferir materiales entre bodegas o entre diferentes proyectos. El sistema realiza automáticamente la salida en el proyecto de origen y genera la entrada en el proyecto de destino, manteniendo actualizado el inventario de ambas ubicaciones.<br><br>Gracias a estas herramientas, podrás mantener todos los procesos documentados y bajo control, mientras accedes a reportes en tiempo real sobre inventarios, consumos por contratista, compras por proveedor, uso de materiales por actividad, entre muchos otros indicadores clave para tomar mejores decisiones en tus proyectos."
+        },
+        "contratos": {
+          "name": "Contratos de Mano de Obra por Destajo",
+          "description": "La plataforma <strong>metroKUBIKO</strong> cuenta con una herramienta especializada para gestionar contratos de mano de obra bajo la modalidad de destajo, ideal para hacer seguimiento al avance de ejecución de cada actividad del proyecto.<br><br>Cada contrato se asigna a un trabajador específico e incluye el listado detallado de las actividades que deberá ejecutar, junto con sus cantidades y precios. Además, puedes configurar fácilmente parámetros como retenciones, costos indirectos, impuestos y otros valores relevantes.<br><br>Al estar directamente vinculados al presupuesto del proyecto, los contratos no permiten que los ingenieros encargados excedan los valores definidos en los análisis de precios unitarios (APUs). En caso de requerir un sobrecosto, este deberá ser previamente autorizado por un usuario con rol superior. Esto garantiza un control riguroso del presupuesto desde la etapa de contratación.<br><br><strong>Cortes de Obra</strong><br>La herramienta permite a los residentes de obra generar cortes de forma ágil y sencilla, obteniendo automáticamente todos los cálculos de acumulados, retenciones, amortizaciones de anticipos y más, sin errores ni reprocesos.<br><br><strong>Minuta de Contrato</strong><br>También incluye un editor de minutas de contrato, donde puedes guardar tus plantillas predeterminadas y utilizarlas fácilmente al elaborar las minutas de cada contratista.<br><br>Con <strong>metroKUBIKO</strong>, llevas el control financiero y contractual de la mano de obra en tu proyecto, de forma estructurada, segura y eficiente."
+        },
+        "nomina": {
+          "name": "Gestión de Nómina",
+          "description": "Cuando gestionas el pago de tu personal de obra bajo el método de administración directa —es decir, mediante una nómina formal que incluye días laborados, retenciones de ley, bonificaciones, y aportes al sistema de salud y pensiones—, es fundamental contar con una herramienta que simplifique esta tarea sin perder detalle.<br><br>Con ese propósito, <strong>metroKUBIKO</strong> te ofrece un módulo especializado para la creación de planillas de nómina, en el que puedes registrar a todos los trabajadores asignados a un frente específico de obra. Cada trabajador tiene su salario pactado, descuentos legales, bonificaciones y demás conceptos, todo en un entorno claro y estructurado.<br><br>Sin embargo, uno de los grandes retos de este método de pago es asociar los costos reales de mano de obra a cada actividad del proyecto. Tradicionalmente, esta tarea se resuelve con hojas de cálculo, porcentajes estimados y cálculos manuales, lo cual consume tiempo valioso y abre margen a errores.<br><br>Aquí es donde <strong>metroKUBIKO</strong> marca la diferencia.<br><br>Gracias a su herramienta \"Avance de Nómina\", puedes prorratear automáticamente el costo total de la nómina a cada una de las actividades ejecutadas. Basta con registrar el avance de obra en un periodo (por ejemplo, una quincena), o sea, ingresar el metrado o avance físico de cada ítem. El sistema calculará, con base en la incidencia de cada actividad, el costo de mano de obra correspondiente.<br><br>Este enfoque no solo ahorra tiempo al personal técnico en obra, sino que también te permite conocer en tiempo real cuánto cuesta ejecutar cada actividad, con datos precisos y trazables. Así puedes tomar mejores decisiones, optimizar recursos y gestionar con visión más amplia del proyecto."
+        },
+        "costos": {
+          "name": "Gerencia y Control de Costos",
+          "description": "Toma el control total de los costos de tu proyecto, en tiempo real, con <strong>metroKUBIKO</strong><br><br>Cuando estás al frente de la gerencia de un proyecto, las decisiones deben ser rápidas, pero muchas veces te enfrentas a la frustración de no tener información oportuna. Preguntas como:<br><br>¿Cuál es el avance real de una actividad?<br><br>¿Estoy dentro del presupuesto o ya tengo desviaciones?<br><br>¿Por qué se generó un sobrecosto?<br><br>¿Se asignaron insumos erróneos a una actividad?<br><br>¿Cuánto dinero me falta para terminar el proyecto?<br><br>¿Qué insumos o recursos están generando mayores costos?<br><br>¿Cómo se compara el precio unitario presupuestado frente al ejecutado?<br><br>¿Cuál es el valor actual de mi inventario?<br><br>¿Cuánto debo cobrar por anticipos?<br><br>Estas dudas no deberían tardar días o semanas en resolverse por depender de informes extensos o mal consolidados.<br><br>Con <strong>metroKUBIKO</strong> y su herramienta de Control de Costos, obtienes respuestas inmediatas, claras y confiables, sin depender de terceros, sin esperas y muchas veces con solo un clic.<br><br>Esto no solo mejora la toma de decisiones, sino que te da una visión completa del estado financiero de tu obra, permitiéndote anticipar desviaciones, ajustar el rumbo y optimizar los recursos del proyecto.<br><br>La herramienta te presenta cinco escenarios clave para tener el control absoluto del proyecto:<br><br>🔹 1. Presupuesto Inicial<br>Es la línea base con la que arrancas tu obra: capítulos, subcapítulos, actividades, insumos, análisis de precios unitarios y costos indirectos. Todo lo que has proyectado, organizado y cargado desde la planificación inicial.<br><br>🔹 2. Presupuesto Modificado<br>Durante la ejecución, las condiciones cambian. Con este escenario puedes actualizar cantidades y costos sin perder de vista tu presupuesto original. Ideal para nuevas actividades no previstas o ajustes de alcance.<br><br>🔹 3. Presupuesto Ejecutado<br>Es el reflejo real de lo que ha pasado en obra: materiales consumidos, mano de obra pagada, equipos alquilados y todo lo registrado por tu equipo. La plataforma consolida automáticamente esta información para darte una visión fiel de los costos reales.<br><br>🔹 4. Presupuesto por Ejecutar<br>Calculado automáticamente como la diferencia entre el presupuesto modificado y el ejecutado. Así sabes, en todo momento, cuánto dinero te falta invertir para finalizar el proyecto.<br><br>🔹 5. Presupuesto Proyectado<br>Es la combinación del presupuesto ejecutado más lo que falta por ejecutar. Este escenario te anticipa el costo total al que terminará la obra, permitiéndote actuar a tiempo, corregir desvíos y optimizar resultados antes de que sea demasiado tarde.<br><br>Con <strong>metroKUBIKO</strong>, puedes identificar desde los grandes gastos —como la instalación de un ascensor— hasta errores mínimos, como un clavo mal imputado en una actividad. Nada pasa desapercibido.<br><br>La información está ahí. Lo importante es tenerla a tiempo para tomar decisiones. Y eso es exactamente lo que te ofrece <strong>metroKUBIKO</strong>."
+        },
+        "ventas": {
+          "name": "Presupuesto de Ventas - para contratistas y constructores",
+          "description": "Si construyes para terceros —ya sea para el Estado, una empresa o un cliente privado— <strong>metroKUBIKO</strong> pone en tus manos una herramienta especializada para gestionar contratos bajo el método de destajo que llamamos PRESUPUESTO DE VENTAS.<br><br>Esta herramienta parte del presupuesto inicial de costos de tu proyecto, con sus respectivos análisis de precios unitarios (APUs), y te permite añadir una rentabilidad específica a cada actividad, ya sea en valor monetario o como un porcentaje sobre su costo. Esta utilidad se calcula antes de aplicar los costos indirectos generales del proyecto.<br><br>El presupuesto de contratación incluye únicamente las actividades que decidas incorporar en el contrato, dejando fuera aquellas que, aunque deban ejecutarse, no generan cobro directo. Cada actividad se define con su unidad de medida y cantidad de obra, lo que hace que elaborar un acta de cobro sea rápido y sencillo: solo creas la nueva acta, ingresas la cantidad ejecutada y la plataforma calcula automáticamente la rentabilidad, el avance, los acumulados y demás indicadores clave.<br><br>Además, Presupuesto de Ventas te ofrece reportes de rentabilidad detallados para cada actividad, comparando lo contratado con la ejecución real. Así puedes conocer la rentabilidad efectiva, los costos por insumos, contratos y nóminas, así como el total invertido hasta la fecha, incluyendo material en stock y anticipos pendientes por cobrar.<br><br>Con Presupuesto de Ventas, tu contrato estará siempre bajo control: tendrás visibilidad total, tomarás decisiones con información precisa y evitarás pérdidas por falta de gestión."
+        },
+        "ia": {
+          "name": "Automatizaciones con IA",
+          "description": "La plataforma <strong>metroKUBIKO</strong> incorpora automatizaciones impulsadas por inteligencia artificial que pueden reducir los tiempos de tus procesos hasta en 60 días, especialmente en tareas como la cotización de materiales o la generación automática de presupuestos. Esto permite que tu empresa logre una mayor eficiencia y productividad en cada proyecto.<br><br><strong>Principales automatizaciones con IA:</strong><br><br><strong>1. Cotización de materiales de construcción</strong><br>Una vez terminado el presupuesto de tu proyecto, con el análisis de precios unitarios y el listado completo de materiales, comienza el proceso de cotización. Tradicionalmente, esto puede implicar llamadas telefónicas, solicitudes de listas de precios o búsquedas en la web, y tardar hasta 60 días. Con <strong>metroKUBIKO</strong>, este proceso se reduce a menos de 20 minutos: cotiza automáticamente todos los materiales de tu proyecto en tiempo real y recibe de manera inmediata los enlaces de compra de cada insumo, agilizando la gestión y la toma de decisiones.<br><br><strong>2. Presupuestos automáticos con IA</strong><br>Con nuestro agente de Inteligencia Artificial, puedes generar un presupuesto preliminar de tu proyecto en minutos. Solo ingresa los datos básicos de tu obra —como área, número de pisos, tipo de cimentación, sistema constructivo— y, si deseas mayor precisión, adjunta planos en PDF. La plataforma te entregará un presupuesto completo, con listado de actividades, análisis de precios unitarios y materiales necesarios, listo para editar y ajustar directamente según tus necesidades.<br><br><div class=\"mt-4 mb-4 text-center\"><a href=\"/#presupuesto-automatico-ia-section\" class=\"inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5\">🤖 Crear presupuesto automático con IA</a></div><br><br><strong>3. Asistente virtual Laura</strong><br>Si cuentas con archivos en Excel o PDF, como presupuestos de obra, facturas de compra u otros documentos, Laura los importa directamente a tu proyecto. Además, puedes solicitarle informes automatizados sobre presupuestos, ejecución, desviaciones o proyecciones. Con esta información en tiempo real, tomarás decisiones más acertadas y estratégicas. Laura también gestiona notificaciones programadas, manteniéndote siempre al día con tu proyecto.<br><br>En resumen, <strong>metroKUBIKO</strong>, potenciado con IA, seguirá creciendo en funciones y automatizaciones, haciendo que la gestión de tus proyectos sea más fácil, eficiente y segura, permitiéndote controlar cada detalle y minimizar los riesgos de incumplir presupuesto o cronograma."
+        },
+        "integraciones": {
+          "name": "Integraciones",
+          "description": "Integraciones inteligentes que llevan tu automatización al siguiente nivel<br><br>Para llevar la automatización de tus procesos al máximo, <strong>metroKUBIKO</strong> incorpora integraciones estratégicas con diversas plataformas, logrando que tus herramientas favoritas trabajen de forma conectada y coordinada. Este diálogo digital continuo permite que la información fluya automáticamente entre sistemas, eliminando tareas duplicadas y minimizando errores humanos.<br><br>El resultado es una experiencia colaborativa y sin fricciones, donde todo tu equipo accede a datos actualizados en tiempo real, coordina actividades y toma decisiones precisas y oportunas. Gracias a estas integraciones, la gestión de tus proyectos se vuelve más inteligente, eficiente y fluida, impulsando la productividad de tu empresa desde el primer día.<br><br><strong>1. API REST: el núcleo de la conectividad en metroKUBIKO</strong><br><br>Nuestra API REST es una herramienta potente y flexible, diseñada para facilitar la integración entre <strong>metroKUBIKO</strong> y otras plataformas tecnológicas. Basada en los verbos estándar de una CRUD (Create, Read, Update, Delete), permite a los desarrolladores interactuar con la plataforma de manera sencilla, segura y eficiente.<br><br>Con esta API, los programadores pueden escribir y consultar datos en tiempo real dentro de <strong>metroKUBIKO</strong>: crear proyectos, registrar avances, cargar presupuestos o acceder a información clave como estados de obra, costos, recursos o cronogramas.<br><br>Esta capacidad bidireccional convierte a <strong>metroKUBIKO</strong> en un ecosistema abierto y colaborativo, capaz de integrarse con ERPs, sistemas de control de costos u otras soluciones de gestión, potenciando la automatización de procesos y eliminando tareas repetitivas o manuales.<br><br><div class=\"mt-4 mb-4 text-center\"><a href=\"https://github.com/copres/metrokubiko-api-documentation\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5\">🚀 Conocer API REST</a></div><br><br><strong>2. Integración con el software contable Siigo</strong><br><br>Siigo es una plataforma contable y administrativa en la nube, orientada a pymes y profesionales contables, que permite gestionar contabilidad, facturación electrónica, nómina, inventarios y operaciones comerciales desde cualquier dispositivo conectado a internet. Con más de un millón de usuarios en Latinoamérica, ofrece funcionalidades como POS, reportes automatizados, cumplimiento normativo y formación continua.<br><br>Si tu empresa utiliza Siigo como software contable, <strong>metroKUBIKO</strong> se conecta directamente mediante la API REST de Siigo, permitiendo consultar y registrar información contable en tiempo real —por ejemplo, compras de materiales o actas de corte de mano de obra—. Así, garantizas una gestión sincronizada, fluida y libre de reprocesos entre tus sistemas administrativos y de obra.<br><br><strong>3. Integraciones personalizadas: nos adaptamos a tu ecosistema digital</strong><br><br>En <strong>metroKUBIKO</strong> sabemos que cada empresa tiene un entorno digital único. Por eso, si tu organización utiliza otras plataformas —como CRMs de ventas, software de administración de propiedad horizontal o sistemas contables distintos a Siigo—, nuestro equipo técnico puede desarrollar integraciones a la medida de tus necesidades.<br><br>Conectamos <strong>metroKUBIKO</strong> con las herramientas que ya usas, asegurando un flujo de información automatizado y seguro entre sistemas. De esta forma, eliminas reprocesos, optimizas tiempos y mantienes todos tus datos —desde ventas y contabilidad hasta la gestión de obra— sincronizados y actualizados en tiempo real."
+        }
+      }
+    },
+    "blog": {
+      "title": "Últimos artículos del blog",
+      "description": "Descubre las últimas tendencias en construcción, consejos para optimizar tus proyectos y cómo aprovechar al máximo <strong>metroKUBIKO</strong>.",
+      "button": "Ver todos los artículos"
+    },
+    "cta": {
+      "quote": "La Construcción es la industria que mueve la economía del mundo y gestionando adecuadamente es posible reducir los costos de imprevistos de los proyectos hasta en un 95%",
+      "button": "Contactar"
+    },
+    "testimonials": {
+      "items": [
+        {
+          "role": "Directora de Obras",
+          "message": "\"metroKUBIKO ha transformado completamente la forma en que gestionamos nuestros proyectos de construcción. Los presupuestos son más precisos y el control de obras es excepcional.\""
+        },
+        {
+          "role": "Ingeniero Civil",
+          "message": "\"La facilidad para crear análisis de precios unitarios y programar obras en metroKUBIKO nos ha permitido optimizar nuestros recursos y entregar proyectos a tiempo.\""
+        },
+        {
+          "role": "Gerente de Construcción",
+          "message": "\"El software de construcción más completo que hemos usado. La integración con IA para presupuestos ha sido un cambio revolucionario para nuestra empresa.\""
+        }
+      ]
+    },
+    "presupuestoIA": {
+      "title": "Presupuestos de construcción automáticos con IA",
+      "subtitle": "Genera presupuestos profesionales y detallados para tus proyectos de construcción con inteligencia artificial en minutos",
+      "powered_by": "Powered by AI",
+      "automatic_budgets": "Presupuestos Automáticos",
+      "form": {
+        "title": "Crear Presupuesto Automático",
+        "project_type": "Tipo de Proyecto",
+        "project_types": {
+          "single_family": "Vivienda Unifamiliar",
+          "residential_building": "Edificio Residencial",
+          "commercial": "Obra Comercial",
+          "infrastructure": "Infraestructura"
+        },
+        "built_area": "Área Construida (m²)",
+        "built_area_placeholder": "Ej: 120",
+        "location": "Ubicación",
+        "location_placeholder": "Ciudad, Departamento",
+        "detail_level": "Nivel de Detalle",
+        "detail_levels": {
+          "basic": "Básico",
+          "intermediate": "Intermedio",
+          "detailed": "Detallado"
+        },
+        "button": "Generar Presupuesto con IA"
+      },
+      "how_it_works": {
+        "title": "¿Cómo funciona?",
+        "step1": "Completa los datos básicos de tu proyecto de construcción",
+        "step2": "Nuestra IA analiza y genera un presupuesto detallado",
+        "step3": "Descarga, imprime o ajusta según tus necesidades"
+      },
+      "placeholder": {
+        "title": "Tu presupuesto aparecerá aquí",
+        "description": "Completa el formulario y genera un presupuesto profesional con inteligencia artificial"
+      }
+    },
+    "ai_budget": {
+      "section": {
+        "title": "Presupuestos de Obra Gratuitos con IA",
+        "description": "Crea presupuestos de obra precisos y detallados utilizando nuestra tecnología de inteligencia artificial. Genera análisis de precios unitarios, calcula materiales y mano de obra, y obtén estimaciones confiables para tus proyectos de construcción. Todo esto de forma completamente gratuita y en pocos minutos.",
+        "primary_cta": "Crear Presupuesto Gratis",
+        "secondary_cta": "Saber más",
+        "image_alt": "Presupuestos de Obra Gratuitos con IA"
+      },
+      "hero": {
+        "title": "Presupuestos de construcción automáticos con Laura",
+        "description": "Genera presupuestos profesionales y detallados para tus proyectos de construcción con Laura, el agente de IA para la construcción en minutos",
+        "powered_by": "Powered by AI",
+        "automatic_budgets": "Presupuestos Automáticos",
+        "background_alt": "Escena de sitio de construcción con equipos"
+      },
+      "steps": {
+        "title": "¿Cómo funciona el presupuesto automático?",
+        "items": [
+          {
+            "icon": "form",
+            "title": "Rellenar el formulario",
+            "description": "Completa los datos de tu proyecto de construcción."
+          },
+          {
+            "icon": "sparkles",
+            "title": "Laura piensa",
+            "description": "Laura, el agente de IA para la construcción, analiza la solicitud."
+          },
+          {
+            "icon": "document",
+            "title": "Se genera el presupuesto",
+            "description": "Se genera un presupuesto detallado, con análisis de precios unitarios."
+          }
+        ],
+        "note": "Es necesario estar registrado para poder editar o generar reportes de presupuestos."
+      },
+      "form": {
+        "title": "Completa el formulario y genera un presupuesto con IA.",
+        "project_type_label": "Tipo de Proyecto",
+        "project_type_options": {
+          "empty": "Proyecto personalizado",
+          "house": "Casa",
+          "building": "Edificio",
+          "buildingComplex": "Conjunto",
+          "bridge": "Puente"
+        },
+        "custom_project": {
+          "specifications_label": "Especificaciones del proyecto",
+          "specifications_placeholder": "Ingresa las especificaciones detalladas de tu proyecto..."
+        },
+        "house": {
+          "title": "Detalles de la casa",
+          "style_label": "Estilo arquitectónico",
+          "floors_label": "Pisos",
+          "bedrooms_label": "Habitaciones",
+          "bathrooms_label": "Baños",
+          "parking_label": "Parqueaderos",
+          "square_meters_label": "Metros cuadrados",
+          "garden_label": "Jardín",
+          "pool_label": "Piscina",
+          "finishing_quality_label": "Nivel de acabados (Calidad)",
+          "construction_style_label": "Estilo constructivo",
+          "construction_style_placeholder": "Ej: estructura de concreto y bloque",
+          "scope_label": "Alcance"
+        },
+        "building": {
+          "title": "Detalles del edificio",
+          "type_title": "Tipo de edificio",
+          "volumetry_title": "Volumetría y Terreno",
+          "land_area_label": "Superficie del Terreno (m²)",
+          "total_construction_area_label": "Superficie Total de Construcción (m²)",
+          "floors_label": "Niveles (Altura)",
+          "basements_label": "Sótanos (Niveles subterráneos)",
+          "density_title": "Densidad y Unidades",
+          "total_apartments_label": "Número total de departamentos",
+          "apartments_per_floor_label": "Apartamentos por piso",
+          "structure_facade_title": "Tipo de Estructura y Fachada",
+          "structure_type_label": "Estructura",
+          "facade_type_label": "Fachada"
+        },
+        "buildingComplex": {
+          "title": "Detalles del conjunto de edificios",
+          "masterplan_title": "1. Master Plan (Terreno y Urbanización)",
+          "total_land_area_label": "Superficie total del predio (m²)",
+          "infrastructure_status_label": "Estado de la infraestructura",
+          "topography_label": "Topografía general",
+          "vertical_scope_title": "2. Alcance Vertical (Los Edificios)",
+          "building_count_label": "Cantidad de Torres/Edificios",
+          "floors_per_building_label": "Niveles por Torre",
+          "building_footprint_label": "Huella de cada edificio (m²)",
+          "total_units_label": "Total de Unidades de Vivienda",
+          "same_design_label": "¿Edificios idénticos (tipo espejo)?",
+          "amenities_title": "3. Amenidades \"Club\" (Equipamiento General)",
+          "has_pool_label": "Piscina",
+          "pool_type_label": "Tipo de piscina",
+          "has_sports_courts_label": "Canchas deportivas",
+          "has_parks_label": "Parques",
+          "has_artificial_lakes_label": "Lagos artificiales",
+          "has_jogging_track_label": "Pistas de jogging",
+          "has_security_booth_label": "Casetas de vigilancia",
+          "has_perimeter_walls_label": "Muros perimetrales"
+        },
+        "bridge": {
+          "title": "Detalles del puente",
+          "usage_title": "1. Uso y Tráfico",
+          "bridge_type_label": "Tipo de puente",
+          "traffic_intensity_label": "Intensidad de tráfico",
+          "lanes_label": "Número de carriles",
+          "has_sidewalk_label": "Incluye banqueta peatonal",
+          "geometry_title": "2. Geometría y \"Luz\"",
+          "total_length_label": "Longitud Total (metros)",
+          "span_length_label": "Luz - distancia entre apoyos (metros)",
+          "span_length_help": "Mientras más grande sea la distancia sin columnas, exponencialmente más caro es el puente.",
+          "clear_height_label": "Altura libre - Gálibo (metros)",
+          "width_label": "Ancho total (metros)",
+          "obstacle_title": "3. El Obstáculo (Lo que se cruza)",
+          "crossing_type_label": "Tipo de obstáculo",
+          "structure_title": "4. Tipo de Estructura (Materialidad)",
+          "structure_type_label": "Tipo de estructura"
+        },
+        "submit": "Generar Presupuesto con IA"
+      },
+      "preview": {
+        "title": "Tu presupuesto aparecerá aquí",
+        "description": "Completa el formulario y genera un presupuesto profesional con inteligencia artificial",
+        "fullscreen_title": "Pantalla completa",
+        "fullscreen_aria": "Abrir presupuesto en pantalla completa",
+        "close_fullscreen_aria": "Cerrar pantalla completa"
+      }
+    },
+    "lauraSection": {
+      "badge": "Agente de IA",
+      "title": "Laura, tu Agente de IA para la Construcción",
+      "description": "Laura es un agente inteligente integrado en metroKUBIKO. Crea presupuestos de obra, cotiza precios de materiales, te ayuda a importar datos a la plataforma y responde tus preguntas.",
+      "capabilities": {
+        "budgets": "Presupuestos de obra",
+        "materials": "Cotizar materiales",
+        "import": "Importar datos",
+        "questions": "Responder preguntas"
+      },
+      "primary_cta": "Habla con Laura",
+      "secondary_cta": "Saber más",
+      "avatar_alt": "Laura, agente de IA para la construcción",
+      "section_aria_label": "Presentación de Laura, agente de IA para la construcción"
+    }
+  },
+  "contact": {
+    "title": "Contacta a metroKUBIKO",
+    "description": "El software para constructoras más fácil de usar y completamente online.",
+    "form": {
+      "full_name": "Nombre Completo",
+      "email": "Email",
+      "message": "Mensaje",
+      "send": "Enviar",
+      "sending": "Enviando...",
+      "success": "Correo enviado exitosamente!",
+      "error": "Error al enviar el correo. Por favor intente nuevamente.",
+      "validation": "Por favor complete todos los campos requeridos."
+    },
+    "address": "Calle 104 A # 21 - 57, en Bogotá, D.C., Colombia",
+    "address_label": "Dirección postal",
+    "phone": "+57 (316) 3719421",
+    "phone_label": "Número de teléfono",
+    "email": "soporte@metrokubiko.com",
+    "email_label": "Correo electrónico",
+    "connect": "Conectar"
+  },
+  "laura": {
+    "title": "Habla con Laura",
+    "description": "Laura te ayuda a crear presupuestos de obra gratuitos y responde tus preguntas sobre metroKUBIKO.",
+    "create_budget": "Crear presupuesto de obra gratis",
+    "ask_question": "Pregunta algo interesante",
+    "chat": {
+      "title": "Laura",
+      "subtitle": "Asistente de Construcción",
+      "greeting": "¡Hola! Soy Laura, tu asistente de construcción. ¿En qué puedo ayudarte hoy?",
+      "placeholder": "Escribe tu mensaje aquí...",
+      "send": "Enviar",
+      "error": "Uups, no puedo responder ahora mismo. Inténtalo más tarde.",
+      "budget_opened": "Se abrió una pestaña nueva para que puedas realizar el presupuesto con Laura, tienes que tener iniciada la sesión en metroKUBIKO para poder realizar el presupuesto. Ve a la pestaña para revisar.",
+      "error_generic": "Lo siento, algo salió mal."
+    }
+  },
+  "aboutPage": {
+    "meta": {
+      "title": "Sobre nosotros · Metrokubiko",
+      "description": "Encuentra más información sobre nuestra historia, valores, misión y más. Somos un grupo de personas que comparten los mismos valores."
+    }
+  },
+  "about": {
+    "heading": {
+      "title": "Nosotros"
+    },
+    "mission": {
+      "paragraph1": "<strong style=\"color: #024057\">metroKUBIKO</strong>, es una plataforma web, creada desde Colombia para la transformación digital de la industria de la construcción de todo el contienente latinoamericano. Ha sido desarrollada, desde el año 2013 por un equipo multidisciplinario de profesionales, entre arquitectos, ingenieros civiles, ingenieros informáticos, docentes, constructores, entre otros, algunos con más de 30 años de experiencia en construcción.​",
+      "paragraph2": "Hemos visto que la construcción, en nuestros países, es un sector bastante tradicional respecto al uso de tecnologías de la información, sin embargo, luego del confinamiento, se hizo evidente que las empresas necesitaran que sus directivos trabajasen desde casa o desde cualquier otro lugar diferente a la obra y además que todos alimentaran la información en un mismo proyecto.",
+      "paragraph3": "Esto evitaría reprocesos, retrasos en la información y permitiría el control del proyecto en todo momento y desde cualquier dispositivo conectado a internet.  Así los gerentes de las empresas y los tomadores de decisiones obtendrían reportes en tiempo real de su proyecto, no solo en general sino en cada una de sus actividades particulares.​",
+      "paragraph4": "<strong style=\"color: #024057\">metroKUBIKO</strong>, es la respuesta a esa necesidad…",
+      "imageAlt": "Oficina moderna de metroKUBIKO",
+      "stats": {
+        "clients": "Clientes",
+        "projects": "Proyectos",
+        "countries": "Países",
+        "active_users": "Usuarios Activos"
+      }
+    },
+    "values": {
+      "title": "En constante innovación",
+      "year": "Año",
+      "read_more": "Ver más",
+      "read_less": "Ver menos",
+      "items": {
+        "potencia": {
+          "name": "PotencIA",
+          "year": "2024",
+          "description": "Proyecto Colombia PotencIA Digital, impulsado por el Ministerio de Tecnologías de la Información y las Comunicaciones (MinTIC), es una estrategia integral con una inversión de $2 billones (2023–2026) diseñada para consolidar y acelerar los ecosistemas de innovación y la transformación digital en todas las regiones del país. Mediante la articulación de Gobierno, empresas, emprendedores, inversionistas, academia y comunidades, PotencIA Digital promueve la conectividad permanente, el desarrollo de capacidades técnicas, la creación de índices de transformación digital y la adopción de inteligencia artificial como motor de crecimiento.<br><br>Además, implementa centros digitales 24/7, rutas de formación para un millón de personas en habilidades TIC y modelos de gobernanza dinámica para generar soluciones de alto impacto regional y global.<br><br><strong style=\"color: #024057\">metroKUBIKO</strong> fue seleccionado para obtener recursos no reembolsables para la implementación de IA y Business Intelligence, fortaleciendo así su capacidad de innovación tecnológica en la industria de la construcción."
+        },
+        "nexo": {
+          "name": "Nexo Digital - ConexsurTic",
+          "year": "2024",
+          "description": "Proyecto de sofisticación de productos y servicios liderado por el cluster tecnológico ConexSurTIC (Pasto, Nariño), diseñado para impulsar la competitividad de empresas TIC mediante estrategias innovadoras que permitan la identificación de nuevas oportunidades de negocio, acceso a nuevos mercados y la ejecución de misiones comerciales. Este proyecto buscó fortalecer capacidades comerciales, inteligencia de negocios, acceso a financiamiento, internacionalización, atracción de talento y generación de conocimiento sobre la economía digital (conexsurtic.com)."
+        },
+        "appsco": {
+          "name": "Apps.co",
+          "year": "2023",
+          "description": "El Premio Emprendimiento Femenino APPS.CO 2023 reconoció la trayectoria y la visión de <strong style=\"color: #024057\">LEIDY ERASO TORRES</strong>, fundadora de <strong style=\"color: #024057\">metroKUBIKO</strong>, una empresa pionera en el desarrollo de soluciones de software en la nube. Durante el evento Colombia 4.0, APPS.CO destacó su capacidad innovadora y su liderazgo en la categoría de Emprendimiento Femenino, subrayando el impacto positivo de su proyecto en la transformación digital regional. Este galardón refuerza el compromiso de APPS.CO con el impulso de mujeres emprendedoras que generan valor y crecimiento sostenible en el ecosistema TIC colombiano."
+        },
+        "sena2020": {
+          "name": "SENA INNOVA",
+          "year": "2020",
+          "description": "<strong style=\"color: #024057\">metroKUBIKO</strong> fue nuevamente reconocido en la convocatoria SENA INNOVA 2020, obteniendo recursos no reembolsables para la implementación de integraciones avanzadas y el mejoramiento integral de la experiencia de usuario. Este proyecto permitió desarrollar nuevas funcionalidades de conectividad con sistemas externos, optimizar la interfaz de usuario y crear herramientas más intuitivas para los profesionales de la construcción. La implementación de estas mejoras fortaleció significativamente la plataforma, ofreciendo una experiencia más fluida y eficiente que facilita la gestión de proyectos de construcción en toda Latinoamérica."
+        },
+        "sena2018": {
+          "name": "SENA INNOVA",
+          "year": "2018",
+          "description": "<strong style=\"color: #024057\">metroKUBIKO</strong> fue reconocido en la convocatoria SENA INNOVA 2018, obteniendo recursos no reembolsables como premio de innovación para el proyecto \"Mejoramiento de capacidad de servidores de <strong style=\"color: #024057\">metroKUBIKO</strong> para escalar a miles de usuarios\". Este reconocimiento permitió fortalecer la infraestructura tecnológica de la plataforma, optimizando su rendimiento y capacidad para atender la creciente demanda de usuarios en la industria de la construcción. El proyecto se enfocó en mejorar la escalabilidad del sistema, garantizando una experiencia fluida y eficiente para miles de profesionales que confían en <strong style=\"color: #024057\">metroKUBIKO</strong> para gestionar sus proyectos de construcción."
+        }
+      }
+    },
+    "team": {
+      "title": "Nuestro equipo",
+      "description": "Conoce a los profesionales que hacen posible la innovación en construcción",
+      "connect": "Conectar",
+      "roles": {
+        "ceo": "Director Ejecutivo",
+        "coo": "Directora de Operaciones",
+        "cto": "Director de Tecnología",
+        "projectManager": "Gerente de Proyectos",
+        "communityManager": "Gerente de Comunidad",
+        "ciao": "Director de IA"
+      }
+    },
+    "video": {
+      "title": "Conoce nuestra historia",
+      "subtitle": "Descubre cómo metroKUBIKO está transformando la industria de la construcción",
+      "subscribe": "Suscríbete a nuestro canal"
+    }
+  },
+  "blog": {
+    "title": "Blog de metroKUBIKO",
+    "search_placeholder": "Buscar artículos por título, categoría o palabras clave...",
+    "read_more": "Leer más",
+    "no_posts": "Pronto publicaremos nuestros primeros artículos. ¡Mantente atento!",
+    "no_results": "No se encontraron artículos que coincidan con tu búsqueda.",
+    "no_results_hint": "Intenta con otras palabras clave o revisa la ortografía.",
+    "results_count": "Se encontraron {count} artículo{plural}",
+    "tags": "Etiquetas"
+  },
+  "gestionObra": {
+    "features": {
+      "presupuesto": {
+        "name": "Presupuesto de Obra",
+        "description": "En <strong>metroKUBIKO</strong> puedes crear presupuestos de obra de manera rápida, precisa y colaborativa. La plataforma te ofrece tres formas flexibles para hacerlo:<br><br><strong>1. Desde cero:</strong> Construye tu presupuesto paso a paso creando capítulos, subcapítulos, actividades, ítems básicos, insumos y análisis de precios unitarios directamente en la hoja del proyecto.<br><br><strong>2. Importando desde Excel:</strong> Si ya tienes tu presupuesto en hojas de cálculo, puedes importarlo fácilmente, incluyendo insumos y análisis de precios unitarios. Solo tienes que pedir ayuda a Laura, nuestra asistente virtual, y ella te guiará paso a paso.<br><br><strong>3. Usando la base de datos de <strong>metroKUBIKO</strong>:</strong> Accede a una biblioteca de análisis de precios unitarios que puedes arrastrar directamente al presupuesto de tu proyecto y personalizar según tus necesidades.<br><br>Además, <strong>puedes cotizar los precios de los insumos en línea</strong>. Con un solo clic, <strong>metroKUBIKO</strong> utiliza inteligencia artificial para buscar proveedores cercanos a la ubicación de tu obra, mostrándote automáticamente precios actualizados y enlaces de compra. Olvídate de hacer tres cotizaciones por producto: la plataforma te entregará hasta 10 cotizaciones reales en segundos.<br><br>Con el acompañamiento de Laura, nuestro asistente virtual, podrás agilizar, automatizar y optimizar la elaboración del presupuesto de tus proyectos de construcción."
+      },
+      "programacion": {
+        "name": "Programación de Obra",
+        "description": "La plataforma <strong>metroKUBIKO</strong> pone a tu disposición una potente herramienta de programación de obra basada en un diagrama de Gantt completamente en línea. Esta funcionalidad te permite visualizar el listado de actividades del proyecto, cada una con su fecha de inicio y fin, generando automáticamente las barras de duración en el calendario. La duración puede calcularse de forma automática a partir del rendimiento de los análisis de precios unitarios asociados a cada actividad.<br><br>Además, puedes establecer relaciones de dependencia entre las actividades, como inicio-fin, fin-inicio, inicio-inicio, entre otras, lo que te permite construir de forma dinámica la ruta crítica del proyecto.<br><br>A partir del diagrama de Gantt, la plataforma también genera automáticamente un flujo de fondos o flujo de caja, en el cual podrás visualizar tanto los costos asociados a cada actividad en un período determinado, como el listado de insumos requeridos, lo que te facilitará la planificación anticipada de tus compras.<br><br>Como en todas las herramientas de <strong>metroKUBIKO</strong>, varios colaboradores pueden trabajar simultáneamente en la programación de obra, lo que agiliza los procesos y mejora significativamente la eficiencia del equipo de trabajo."
+      },
+      "inventarios": {
+        "name": "Gestión de Inventarios",
+        "description": "Con <strong>metroKUBIKO</strong> puedes controlar de forma integral los inventarios de insumos de obra, así como toda la gestión de compras y consumos de materiales en tus proyectos. La plataforma te ofrece herramientas para cada etapa del proceso: desde la solicitud de insumos hasta el registro de su consumo en obra. Además, contarás con reportes en tiempo real —como Stock y Kardex— para todos los proyectos en los que estés trabajando, y alertas automáticas cuando se excedan las cantidades presupuestadas o se soliciten insumos adicionales.<br><br><strong>Herramientas del módulo de Almacén</strong><br><br><strong>REQUISICIONES</strong><br>Los ingenieros residentes pueden registrar fácilmente las solicitudes de materiales necesarios para un periodo específico (por ejemplo, la siguiente semana). Estas requisiciones son procesadas por el área de compras, que genera automáticamente las órdenes de compra correspondientes para los proveedores.<br><br><strong>ÓRDENES DE COMPRA</strong><br>Permite al área de compras gestionar los pedidos de insumos a proveedores. Estas órdenes pueden crearse manualmente o a partir de las requisiciones. Cada orden generada activa alertas sobre la recepción de los materiales, ayudando a prevenir retrasos en obra.<br><br><strong>ENTRADAS DE ALMACÉN</strong><br>Los almacenistas pueden registrar digitalmente la llegada de insumos a la obra, de manera automática a partir de las órdenes de compra. Esta herramienta simplifica el proceso, evita reprocesos y no requiere conocimientos avanzados de software, ya que la plataforma es intuitiva. El registro incrementa el stock del proyecto.<br><br><strong>SALIDAS DE ALMACÉN</strong><br>Permite controlar el consumo de materiales asignándolos a las actividades específicas donde serán utilizados. El almacenista, en conjunto con el ingeniero residente, registra las salidas para contratistas o trabajadores, descargando automáticamente los insumos del inventario y sumando su costo a la actividad correspondiente.<br><br><strong>DEVOLUCIONES</strong><br>Facilita el retorno de materiales defectuosos o no utilizados a los proveedores. Este proceso se asocia a la factura de compra y descarga los insumos del inventario sin generar costos adicionales para el proyecto.<br><br><strong>REINTEGROS</strong><br>Permite reingresar al almacén los materiales no consumidos por contratistas o trabajadores. Estos reintegros se asocian a la Salida de Almacén original y reducen el costo de la actividad de destino.<br><br><strong>TRASLADOS</strong><br>Con esta herramienta puedes transferir materiales entre bodegas o entre diferentes proyectos. El sistema realiza automáticamente la salida en el proyecto de origen y genera la entrada en el proyecto de destino, manteniendo actualizado el inventario de ambas ubicaciones.<br><br>Gracias a estas herramientas, podrás mantener todos los procesos documentados y bajo control, mientras accedes a reportes en tiempo real sobre inventarios, consumos por contratista, compras por proveedor, uso de materiales por actividad, entre muchos otros indicadores clave para tomar mejores decisiones en tus proyectos."
+      },
+      "contratos": {
+        "name": "Contratos de Mano de Obra por Destajo",
+        "description": "La plataforma <strong>metroKUBIKO</strong> cuenta con una herramienta especializada para gestionar contratos de mano de obra bajo la modalidad de destajo, ideal para hacer seguimiento al avance de ejecución de cada actividad del proyecto.<br><br>Cada contrato se asigna a un trabajador específico e incluye el listado detallado de las actividades que deberá ejecutar, junto con sus cantidades y precios. Además, puedes configurar fácilmente parámetros como retenciones, costos indirectos, impuestos y otros valores relevantes.<br><br>Al estar directamente vinculados al presupuesto del proyecto, los contratos no permiten que los ingenieros encargados excedan los valores definidos en los análisis de precios unitarios (APUs). En caso de requerir un sobrecosto, este deberá ser previamente autorizado por un usuario con rol superior. Esto garantiza un control riguroso del presupuesto desde la etapa de contratación.<br><br><strong>Cortes de Obra</strong><br>La herramienta permite a los residentes de obra generar cortes de forma ágil y sencilla, obteniendo automáticamente todos los cálculos de acumulados, retenciones, amortizaciones de anticipos y más, sin errores ni reprocesos.<br><br><strong>Minuta de Contrato</strong><br>También incluye un editor de minutas de contrato, donde puedes guardar tus plantillas predeterminadas y utilizarlas fácilmente al elaborar las minutas de cada contratista.<br><br>Con <strong>metroKUBIKO</strong>, llevas el control financiero y contractual de la mano de obra en tu proyecto, de forma estructurada, segura y eficiente."
+      },
+      "nomina": {
+        "name": "Gestión de Nómina",
+        "description": "Cuando gestionas el pago de tu personal de obra bajo el método de administración directa —es decir, mediante una nómina formal que incluye días laborados, retenciones de ley, bonificaciones, y aportes al sistema de salud y pensiones—, es fundamental contar con una herramienta que simplifique esta tarea sin perder detalle.<br><br>Con ese propósito, <strong>metroKUBIKO</strong> te ofrece un módulo especializado para la creación de planillas de nómina, en el que puedes registrar a todos los trabajadores asignados a un frente específico de obra. Cada trabajador tiene su salario pactado, descuentos legales, bonificaciones y demás conceptos, todo en un entorno claro y estructurado.<br><br>Sin embargo, uno de los grandes retos de este método de pago es asociar los costos reales de mano de obra a cada actividad del proyecto. Tradicionalmente, esta tarea se resuelve con hojas de cálculo, porcentajes estimados y cálculos manuales, lo cual consume tiempo valioso y abre margen a errores.<br><br>Aquí es donde <strong>metroKUBIKO</strong> marca la diferencia.<br><br>Gracias a su herramienta \"Avance de Nómina\", puedes prorratear automáticamente el costo total de la nómina a cada una de las actividades ejecutadas. Basta con registrar el avance de obra en un periodo (por ejemplo, una quincena), o sea, ingresar el metrado o avance físico de cada ítem. El sistema calculará, con base en la incidencia de cada actividad, el costo de mano de obra correspondiente.<br><br>Este enfoque no solo ahorra tiempo al personal técnico en obra, sino que también te permite conocer en tiempo real cuánto cuesta ejecutar cada actividad, con datos precisos y trazables. Así puedes tomar mejores decisiones, optimizar recursos y gestionar con visión más amplia del proyecto."
+      },
+      "costos": {
+        "name": "Gerencia y Control de Costos",
+        "description": "Toma el control total de los costos de tu proyecto, en tiempo real, con <strong>metroKUBIKO</strong><br><br>Cuando estás al frente de la gerencia de un proyecto, las decisiones deben ser rápidas, pero muchas veces te enfrentas a la frustración de no tener información oportuna. Preguntas como:<br><br>¿Cuál es el avance real de una actividad?<br><br>¿Estoy dentro del presupuesto o ya tengo desviaciones?<br><br>¿Por qué se generó un sobrecosto?<br><br>¿Se asignaron insumos erróneos a una actividad?<br><br>¿Cuánto dinero me falta para terminar el proyecto?<br><br>¿Qué insumos o recursos están generando mayores costos?<br><br>¿Cómo se compara el precio unitario presupuestado frente al ejecutado?<br><br>¿Cuál es el valor actual de mi inventario?<br><br>¿Cuánto debo cobrar por anticipos?<br><br>Estas dudas no deberían tardar días o semanas en resolverse por depender de informes extensos o mal consolidados.<br><br>Con <strong>metroKUBIKO</strong> y su herramienta de Control de Costos, obtienes respuestas inmediatas, claras y confiables, sin depender de terceros, sin esperas y muchas veces con solo un clic.<br><br>Esto no solo mejora la toma de decisiones, sino que te da una visión completa del estado financiero de tu obra, permitiéndote anticipar desviaciones, ajustar el rumbo y optimizar los recursos del proyecto.<br><br>La herramienta te presenta cinco escenarios clave para tener el control absoluto del proyecto:<br><br>🔹 1. Presupuesto Inicial<br>Es la línea base con la que arrancas tu obra: capítulos, subcapítulos, actividades, insumos, análisis de precios unitarios y costos indirectos. Todo lo que has proyectado, organizado y cargado desde la planificación inicial.<br><br>🔹 2. Presupuesto Modificado<br>Durante la ejecución, las condiciones cambian. Con este escenario puedes actualizar cantidades y costos sin perder de vista tu presupuesto original. Ideal para nuevas actividades no previstas o ajustes de alcance.<br><br>🔹 3. Presupuesto Ejecutado<br>Es el reflejo real de lo que ha pasado en obra: materiales consumidos, mano de obra pagada, equipos alquilados y todo lo registrado por tu equipo. La plataforma consolida automáticamente esta información para darte una visión fiel de los costos reales.<br><br>🔹 4. Presupuesto por Ejecutar<br>Calculado automáticamente como la diferencia entre el presupuesto modificado y el ejecutado. Así sabes, en todo momento, cuánto dinero te falta invertir para finalizar el proyecto.<br><br>🔹 5. Presupuesto Proyectado<br>Es la combinación del presupuesto ejecutado más lo que falta por ejecutar. Este escenario te anticipa el costo total al que terminará la obra, permitiéndote actuar a tiempo, corregir desvíos y optimizar resultados antes de que sea demasiado tarde.<br><br>Con <strong>metroKUBIKO</strong>, puedes identificar desde los grandes gastos —como la instalación de un ascensor— hasta errores mínimos, como un clavo mal imputado en una actividad. Nada pasa desapercibido.<br><br>La información está ahí. Lo importante es tenerla a tiempo para tomar decisiones. Y eso es exactamente lo que te ofrece <strong>metroKUBIKO</strong>."
+      },
+      "ventas": {
+        "name": "Presupuesto de Ventas - para contratistas y constructores",
+        "description": "Si construyes para terceros —ya sea para el Estado, una empresa o un cliente privado— <strong>metroKUBIKO</strong> pone en tus manos una herramienta especializada para gestionar contratos bajo el método de destajo que llamamos PRESUPUESTO DE VENTAS.<br><br>Esta herramienta parte del presupuesto inicial de costos de tu proyecto, con sus respectivos análisis de precios unitarios (APUs), y te permite añadir una rentabilidad específica a cada actividad, ya sea en valor monetario o como un porcentaje sobre su costo. Esta utilidad se calcula antes de aplicar los costos indirectos generales del proyecto.<br><br>El presupuesto de contratación incluye únicamente las actividades que decidas incorporar en el contrato, dejando fuera aquellas que, aunque deban ejecutarse, no generan cobro directo. Cada actividad se define con su unidad de medida y cantidad de obra, lo que hace que elaborar un acta de cobro sea rápido y sencillo: solo creas la nueva acta, ingresas la cantidad ejecutada y la plataforma calcula automáticamente la rentabilidad, el avance, los acumulados y demás indicadores clave.<br><br>Además, Presupuesto de Ventas te ofrece reportes de rentabilidad detallados para cada actividad, comparando lo contratado con la ejecución real. Así puedes conocer la rentabilidad efectiva, los costos por insumos, contratos y nóminas, así como el total invertido hasta la fecha, incluyendo material en stock y anticipos pendientes por cobrar.<br><br>Con Presupuesto de Ventas, tu contrato estará siempre bajo control: tendrás visibilidad total, tomarás decisiones con información precisa y evitarás pérdidas por falta de gestión."
+      },
+      "ia": {
+        "name": "Automatizaciones con IA",
+        "description": "La plataforma <strong>metroKUBIKO</strong> incorpora automatizaciones impulsadas por inteligencia artificial que pueden reducir los tiempos de tus procesos hasta en 60 días, especialmente en tareas como la cotización de materiales o la generación automática de presupuestos. Esto permite que tu empresa logre una mayor eficiencia y productividad en cada proyecto.<br><br><strong>Principales automatizaciones con IA:</strong><br><br><strong>1. Cotización de materiales de construcción</strong><br>Una vez terminado el presupuesto de tu proyecto, con el análisis de precios unitarios y el listado completo de materiales, comienza el proceso de cotización. Tradicionalmente, esto puede implicar llamadas telefónicas, solicitudes de listas de precios o búsquedas en la web, y tardar hasta 60 días. Con <strong>metroKUBIKO</strong>, este proceso se reduce a menos de 20 minutos: cotiza automáticamente todos los materiales de tu proyecto en tiempo real y recibe de manera inmediata los enlaces de compra de cada insumo, agilizando la gestión y la toma de decisiones.<br><br><strong>2. Presupuestos automáticos con IA</strong><br>Con nuestro agente de Inteligencia Artificial, puedes generar un presupuesto preliminar de tu proyecto en minutos. Solo ingresa los datos básicos de tu obra —como área, número de pisos, tipo de cimentación, sistema constructivo— y, si deseas mayor precisión, adjunta planos en PDF. La plataforma te entregará un presupuesto completo, con listado de actividades, análisis de precios unitarios y materiales necesarios, listo para editar y ajustar directamente según tus necesidades.<br><br><div class=\"mt-4 mb-4 text-center\"><a href=\"/#presupuesto-automatico-ia-section\" class=\"inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5\">🤖 Crear presupuesto automático con IA</a></div><br><br><strong>3. Asistente virtual Laura</strong><br>Si cuentas con archivos en Excel o PDF, como presupuestos de obra, facturas de compra u otros documentos, Laura los importa directamente a tu proyecto. Además, puedes solicitarle informes automatizados sobre presupuestos, ejecución, desviaciones o proyecciones. Con esta información en tiempo real, tomarás decisiones más acertadas y estratégicas. Laura también gestiona notificaciones programadas, manteniéndote siempre al día con tu proyecto.<br><br>En resumen, <strong>metroKUBIKO</strong>, potenciado con IA, seguirá creciendo en funciones y automatizaciones, haciendo que la gestión de tus proyectos sea más fácil, eficiente y segura, permitiéndote controlar cada detalle y minimizar los riesgos de incumplir presupuesto o cronograma."
+      },
+      "integraciones": {
+        "name": "Integraciones",
+        "description": "Integraciones inteligentes que llevan tu automatización al siguiente nivel<br><br>Para llevar la automatización de tus procesos al máximo, <strong>metroKUBIKO</strong> incorpora integraciones estratégicas con diversas plataformas, logrando que tus herramientas favoritas trabajen de forma conectada y coordinada. Este diálogo digital continuo permite que la información fluya automáticamente entre sistemas, eliminando tareas duplicadas y minimizando errores humanos.<br><br>El resultado es una experiencia colaborativa y sin fricciones, donde todo tu equipo accede a datos actualizados en tiempo real, coordina actividades y toma decisiones precisas y oportunas. Gracias a estas integraciones, la gestión de tus proyectos se vuelve más inteligente, eficiente y fluida, impulsando la productividad de tu empresa desde el primer día.<br><br><strong>1. API REST: el núcleo de la conectividad en metroKUBIKO</strong><br><br>Nuestra API REST es una herramienta potente y flexible, diseñada para facilitar la integración entre <strong>metroKUBIKO</strong> y otras plataformas tecnológicas. Basada en los verbos estándar de una CRUD (Create, Read, Update, Delete), permite a los desarrolladores interactuar con la plataforma de manera sencilla, segura y eficiente.<br><br>Con esta API, los programadores pueden escribir y consultar datos en tiempo real dentro de <strong>metroKUBIKO</strong>: crear proyectos, registrar avances, cargar presupuestos o acceder a información clave como estados de obra, costos, recursos o cronogramas.<br><br>Esta capacidad bidireccional convierte a <strong>metroKUBIKO</strong> en un ecosistema abierto y colaborativo, capaz de integrarse con ERPs, sistemas de control de costos u otras soluciones de gestión, potenciando la automatización de procesos y eliminando tareas repetitivas o manuales.<br><br><div class=\"mt-4 mb-4 text-center\"><a href=\"https://github.com/copres/metrokubiko-api-documentation\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5\">🚀 Conocer API REST</a></div><br><br><strong>2. Integración con el software contable Siigo</strong><br><br>Siigo es una plataforma contable y administrativa en la nube, orientada a pymes y profesionales contables, que permite gestionar contabilidad, facturación electrónica, nómina, inventarios y operaciones comerciales desde cualquier dispositivo conectado a internet. Con más de un millón de usuarios en Latinoamérica, ofrece funcionalidades como POS, reportes automatizados, cumplimiento normativo y formación continua.<br><br>Si tu empresa utiliza Siigo como software contable, <strong>metroKUBIKO</strong> se conecta directamente mediante la API REST de Siigo, permitiendo consultar y registrar información contable en tiempo real —por ejemplo, compras de materiales o actas de corte de mano de obra—. Así, garantizas una gestión sincronizada, fluida y libre de reprocesos entre tus sistemas administrativos y de obra.<br><br><strong>3. Integraciones personalizadas: nos adaptamos a tu ecosistema digital</strong><br><br>En <strong>metroKUBIKO</strong> sabemos que cada empresa tiene un entorno digital único. Por eso, si tu organización utiliza otras plataformas —como CRMs de ventas, software de administración de propiedad horizontal o sistemas contables distintos a Siigo—, nuestro equipo técnico puede desarrollar integraciones a la medida de tus necesidades.<br><br>Conectamos <strong>metroKUBIKO</strong> con las herramientas que ya usas, asegurando un flujo de información automatizado y seguro entre sistemas. De esta forma, eliminas reprocesos, optimizas tiempos y mantienes todos tus datos —desde ventas y contabilidad hasta la gestión de obra— sincronizados y actualizados en tiempo real."
+      }
+    }
+  }
+}
+

@@ -1,0 +1,1879 @@
+---
+// metroKUBIKO Planea — Landing Page
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>metroKUBIKO Planea — Presupuesto y cronograma de obra con IA</title>
+  <meta name="description" content="Planea genera el presupuesto y el cronograma de tu obra a partir de un modelo BIM, una descripción en lenguaje natural o de forma manual con precios de internet por IA y conexión a obra con metroKUBIKO.">
+  <link rel="icon" href="/assets/favicon_m3.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/favicon_m3.png">
+
+  <!-- Open Graph / SEO -->
+  <meta property="og:site_name" content="metroKUBIKO Planea" />
+  <meta property="og:title" content="metroKUBIKO Planea — Presupuesto y cronograma de obra con IA" />
+  <meta property="og:description" content="Genera presupuesto y cronograma con IA, buscador web de precios en tiempo real, tus propias bases y conexión a control de obra en metroKUBIKO." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="metroKUBIKO Planea — Presupuesto y cronograma de obra con IA" />
+  <meta name="twitter:description" content="Genera presupuesto y cronograma con IA, buscador web de precios en tiempo real, tus propias bases y conexión a control de obra en metroKUBIKO." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style is:inline>
+    :root{
+      --stone-950:#0c0a09;
+      --stone-925:#141210;
+      --stone-900:#1c1917;
+      --stone-850:#232019;
+      --stone-800:#2b2723;
+      --stone-700:#453f38;
+      --stone-500:#7c756b;
+      --stone-400:#a39a8d;
+      --stone-200:#e6e1d8;
+      --stone-50:#faf8f4;
+      --accent:#ff6a1a;
+      --accent-dim:#ff6a1a26;
+      --accent-ink:#2a1206;
+      --ok:#7cb88f;
+      --line:#332e28;
+      --radius:14px;
+      --maxw:1180px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:var(--stone-950);
+      color:var(--stone-200);
+      font-family:'Inter',sans-serif;
+      font-size:16px;
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+    }
+    h1,h2,h3{
+      font-family:'Space Grotesk',sans-serif;
+      color:var(--stone-50);
+      margin:0;
+      letter-spacing:-0.01em;
+    }
+    .mono{font-family:'IBM Plex Mono',monospace}
+    a{color:inherit}
+    img{max-width:100%;display:block}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+    section{padding:96px 0}
+    @media (max-width:760px){ section{padding:64px 0} }
+
+    /* ---------- Nav ---------- */
+    header.nav{
+      position:sticky;top:0;z-index:50;
+      background:rgba(12,10,9,0.85);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav-inner{
+      max-width:var(--maxw);margin:0 auto;padding:16px 24px;
+      display:flex;align-items:center;justify-content:space-between;gap:24px;
+      position:relative;
+    }
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .brand img{height:28px;width:auto}
+    .brand-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;color:var(--stone-50)}
+    .brand-name span{color:var(--accent)}
+    nav.links{display:flex;gap:28px;font-size:14.5px;color:var(--stone-400)}
+    nav.links a{text-decoration:none;transition:color .15s ease}
+    nav.links a:hover{color:var(--stone-50)}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:11px 22px;border-radius:999px;font-weight:600;font-size:14.5px;
+      text-decoration:none;border:1px solid transparent;cursor:pointer;
+      transition:transform .15s ease, background .15s ease, border-color .15s ease;
+      font-family:'Inter',sans-serif;
+    }
+    .btn-primary{background:var(--accent);color:#1a0c02}
+    .btn-primary:hover{transform:translateY(-1px);background:#ff7a30}
+    .btn-ghost{background:transparent;color:var(--stone-50);border-color:var(--stone-700)}
+    .btn-ghost:hover{border-color:var(--stone-400)}
+    .menu-toggle{display:none;background:none;border:none;color:var(--stone-50);font-size:22px;cursor:pointer}
+    @media (max-width:860px){
+      nav.links{ display:none; }
+      nav.links.open{
+        display:flex;
+        flex-direction:column;
+        position:absolute;
+        top:100%;
+        left:0;
+        right:0;
+        background:var(--stone-925);
+        border-bottom:1px solid var(--line);
+        padding:20px 24px;
+        gap:18px;
+      }
+      .menu-toggle{display:block}
+    }
+
+    /* ---------- Hero ---------- */
+    .hero{padding:76px 0 40px;position:relative;overflow:hidden}
+    .hero::before{
+      content:"";position:absolute;inset:-20% -10% auto -10%;height:520px;
+      background:radial-gradient(60% 60% at 50% 0%, var(--accent-dim), transparent 70%);
+      pointer-events:none;
+    }
+    .eyebrow-row{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+    .dot-live{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px rgba(124,184,143,0.18)}
+    .eyebrow{font-size:13.5px;color:var(--stone-400)}
+    .hero h1{
+      font-size:clamp(34px,5vw,58px);
+      font-weight:600;
+      line-height:1.08;
+      max-width:16ch;
+    }
+    .hero .sub{
+      margin-top:22px;max-width:58ch;color:var(--stone-400);font-size:18px;
+    }
+    .hero-ctas{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+    .hero-note{margin-top:16px;color:var(--stone-500);font-size:13.5px}
+
+    /* ---------- Flow Selector & Interactive Demo ---------- */
+    .flow{
+      margin-top:64px;border:1px solid var(--line);border-radius:20px;
+      background:linear-gradient(180deg, var(--stone-925), var(--stone-950));
+      overflow:hidden;
+      box-shadow:0 24px 48px -12px rgba(0,0,0,0.55);
+    }
+    .flow-tabs{
+      display:flex;border-bottom:1px solid var(--line);
+      overflow-x:auto;
+      scrollbar-width:none;
+    }
+    .flow-tabs::-webkit-scrollbar{display:none}
+    .flow-tab{
+      flex:1;min-width:210px;text-align:left;background:none;border:none;cursor:pointer;
+      padding:20px 22px;color:var(--stone-400);
+      border-right:1px solid var(--line);
+      font-family:'Inter',sans-serif;
+      position:relative;
+      transition:background .2s ease, color .2s ease;
+    }
+    .flow-tab:last-child{border-right:none}
+    .flow-tab .k{
+      font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--stone-500);
+      display:block;margin-bottom:6px;transition:color .2s ease;
+    }
+    .flow-tab .t{color:var(--stone-50);font-weight:600;font-size:15.5px;display:block}
+    .flow-tab.active{color:var(--stone-50);background:var(--stone-900)}
+    .flow-tab.active::after{
+      content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent);
+    }
+    .flow-tab.active .k{color:var(--accent)}
+
+    .flow-body{padding:32px 28px 36px}
+    .flow-desc{color:var(--stone-400);max-width:68ch;margin:0 0 24px;font-size:15px;line-height:1.6}
+
+    /* DEMO BOARD */
+    .demo-board{
+      background:var(--stone-950);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:20px;
+      position:relative;
+    }
+    .demo-header-bar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding-bottom:16px;
+      border-bottom:1px solid #28241f;
+      margin-bottom:20px;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .demo-bar-left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .demo-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:5px 12px;
+      background:var(--stone-900);
+      border:1px solid var(--line);
+      border-radius:999px;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:12px;
+      color:var(--stone-200);
+    }
+    .demo-dot{
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 0 3px var(--accent-dim);
+      transition:background .25s ease, box-shadow .25s ease;
+    }
+    .demo-dot.done{
+      background:var(--ok);
+      box-shadow:0 0 0 3px rgba(124,184,143,0.25);
+    }
+    .demo-dot.paused{
+      background:var(--stone-500);
+      box-shadow:0 0 0 3px rgba(124,117,107,0.2);
+    }
+    .demo-bar-right{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .demo-timer{
+      font-family:'IBM Plex Mono',monospace;
+      font-size:12px;
+      color:var(--stone-500);
+    }
+    .btn-playback{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:5px 12px;
+      background:var(--stone-900);
+      border:1px solid var(--stone-700);
+      border-radius:999px;
+      color:var(--stone-200);
+      font-family:'IBM Plex Mono',monospace;
+      font-size:11.5px;
+      cursor:pointer;
+      transition:all .15s ease;
+    }
+    .btn-playback:hover{
+      background:var(--stone-850);
+      border-color:var(--stone-400);
+      color:var(--stone-50);
+    }
+    .btn-playback.highlight{
+      border-color:var(--accent);
+      color:var(--accent);
+      background:#241206;
+    }
+
+    /* Grid of 4 Cards */
+    .demo-grid{
+      display:grid;
+      grid-template-columns:1.15fr 0.95fr 1.05fr 1.05fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    @media (max-width:1040px){
+      .demo-grid{ grid-template-columns:1fr 1fr; gap:16px; }
+    }
+    @media (max-width:640px){
+      .demo-grid{ grid-template-columns:1fr; gap:16px; }
+    }
+
+    /* Card Panels */
+    .d-card{
+      background:var(--stone-925);
+      border:1px solid var(--line);
+      border-radius:12px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      transition:border-color .2s ease, transform .2s ease;
+    }
+    .d-card:hover{
+      border-color:var(--stone-700);
+    }
+    .d-card.core-card{
+      background:linear-gradient(180deg, #22130a, #141210);
+      border-color:#542f1a;
+    }
+    .d-card-head{
+      background:var(--stone-900);
+      border-bottom:1px solid var(--line);
+      padding:10px 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .core-card .d-card-head{
+      background:#2b160c;
+      border-bottom-color:#542f1a;
+    }
+    .d-card-title{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:0.04em;
+      text-transform:uppercase;
+      color:var(--stone-50);
+    }
+    .d-card-tag{
+      font-family:'IBM Plex Mono',monospace;
+      font-size:10.5px;
+      color:var(--stone-500);
+    }
+    .d-card-body{
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      flex:1;
+      gap:12px;
+    }
+
+    /* Elements inside cards */
+    .file-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:5px 9px;
+      background:var(--stone-850);
+      border:1px solid var(--line);
+      border-radius:6px;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:11.5px;
+      color:var(--stone-50);
+    }
+    .tag-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:6px;
+      margin-top:auto;
+    }
+    .tag-chip{
+      background:var(--stone-900);
+      border:1px solid var(--line);
+      border-radius:5px;
+      padding:4px 8px;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:10.5px;
+      color:var(--stone-400);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .tag-chip.accent{
+      background:var(--accent-dim);
+      border-color:rgba(255,106,26,0.35);
+      color:var(--accent);
+    }
+
+    /* Isometric BIM graphic */
+    .bim-graphic-wrap{
+      height:120px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#0e0c0a;
+      border:1px solid #26221d;
+      border-radius:8px;
+      padding:4px;
+    }
+    .bim-graphic-wrap svg{
+      max-height:100%;
+      width:auto;
+    }
+
+    /* Prompt text mockup */
+    .prompt-box{
+      background:var(--stone-950);
+      border:1px solid var(--line);
+      border-radius:8px;
+      padding:10px 12px;
+      font-size:11.5px;
+      line-height:1.45;
+      color:var(--stone-200);
+      position:relative;
+    }
+    .prompt-cursor{
+      display:inline-block;
+      width:6px;
+      height:13px;
+      background:var(--accent);
+      vertical-align:middle;
+      margin-left:2px;
+      animation:blink 1s steps(2,start) infinite;
+    }
+    @keyframes blink{ to{ visibility:hidden; } }
+
+    /* Manual item rows */
+    .manual-list{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .manual-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:var(--stone-950);
+      border:1px solid #28241f;
+      padding:6px 10px;
+      border-radius:6px;
+      font-size:11.5px;
+    }
+    .ai-suggest-row{
+      background:#1d130c;
+      border:1px dashed #663214;
+      padding:7px 10px;
+      border-radius:6px;
+      font-size:11px;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    /* Laura AI Core Visual */
+    .laura-core{
+      background:linear-gradient(180deg, #180e07, #0e0a07);
+      border:1px solid #452412;
+      border-radius:10px;
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      position:relative;
+      gap:8px;
+    }
+    .laura-avatar-wrap{
+      position:relative;
+      width:64px;
+      height:64px;
+      border-radius:50%;
+      padding:3px;
+      background:radial-gradient(circle, var(--accent) 0%, #3a1a08 70%);
+      box-shadow:0 0 16px -2px rgba(255,106,26,0.35);
+    }
+    .laura-avatar{
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      object-fit:cover;
+      display:block;
+      background:#141210;
+    }
+    .laura-pulse-dot{
+      position:absolute;
+      bottom:2px;
+      right:2px;
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      background:var(--ok);
+      border:2px solid #141210;
+      box-shadow:0 0 0 2px rgba(124,184,143,0.3);
+    }
+    .laura-role{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:12.5px;
+      font-weight:600;
+      color:var(--stone-50);
+      line-height:1.2;
+    }
+    .laura-sub{
+      font-family:'IBM Plex Mono',monospace;
+      font-size:10.5px;
+      color:var(--accent);
+    }
+    .custom-rules-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:3px 8px;
+      background:#26150b;
+      border:1px solid #663214;
+      border-radius:4px;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:10px;
+      color:var(--stone-300);
+      margin-top:2px;
+    }
+
+    .metric-list{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top:auto;
+    }
+    .metric-item{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:11.5px;
+      font-family:'Inter',sans-serif;
+      color:var(--stone-200);
+    }
+    .metric-item .chk{
+      color:var(--ok);
+      font-family:'IBM Plex Mono',monospace;
+      font-weight:600;
+    }
+
+    /* Budget Table */
+    .budget-table{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+    .b-header{
+      display:flex;
+      justify-content:space-between;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:10px;
+      color:var(--stone-500);
+      padding-bottom:3px;
+      border-bottom:1px solid #28241f;
+    }
+    .b-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:12px;
+      padding:4px 0;
+    }
+    .b-row span:last-child{
+      font-family:'IBM Plex Mono',monospace;
+      color:var(--stone-200);
+      font-size:11.5px;
+    }
+    .b-total{
+      margin-top:auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:#21140b;
+      border:1px solid #663214;
+      border-radius:6px;
+      padding:8px 10px;
+    }
+    .b-total .lbl{
+      font-family:'IBM Plex Mono',monospace;
+      font-size:11px;
+      font-weight:600;
+      color:var(--accent);
+    }
+    .b-total .val{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:15px;
+      font-weight:700;
+      color:var(--stone-50);
+    }
+
+    /* Gantt Schedule */
+    .gantt-wrap{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .gantt-header{
+      display:grid;
+      grid-template-columns:repeat(5, 1fr);
+      font-family:'IBM Plex Mono',monospace;
+      font-size:9.5px;
+      color:var(--stone-500);
+      text-align:center;
+      padding-bottom:4px;
+      border-bottom:1px solid #28241f;
+    }
+    .gantt-grid{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      padding:4px 0;
+    }
+    .gantt-track{
+      height:16px;
+      background:rgba(255,255,255,0.02);
+      border-radius:4px;
+      position:relative;
+    }
+    .g-bar{
+      position:absolute;
+      top:1px;
+      bottom:1px;
+      border-radius:3px;
+      background:var(--accent);
+      opacity:0.9;
+      transform-origin:left center;
+      transform:scaleX(0);
+      transition:transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    }
+    .g-bar.active{
+      transform:scaleX(1);
+    }
+    .gantt-footer{
+      margin-top:auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:var(--stone-900);
+      border:1px solid var(--line);
+      border-radius:6px;
+      padding:7px 10px;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:11px;
+    }
+
+    /* FINAL READY BANNER */
+    .demo-ready-banner{
+      margin-top:16px;
+      padding:12px 18px;
+      background:linear-gradient(90deg, #1f120a, #141210);
+      border:1px solid #663214;
+      border-radius:10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      opacity:0;
+      transform:translateY(6px);
+      transition:opacity .35s ease, transform .35s ease;
+    }
+    .demo-ready-banner.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+    .ready-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:13px;
+      color:var(--stone-50);
+      font-weight:600;
+    }
+    .ready-check{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:var(--ok);
+      color:#0c0a09;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:11px;
+      font-weight:700;
+    }
+    .ready-stats{
+      display:flex;
+      gap:16px;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:12px;
+    }
+    .ready-stats .p{color:var(--accent);font-weight:600}
+    .ready-stats .c{color:var(--ok);font-weight:600}
+
+    /* Reusable fade transition */
+    .anim-fade{
+      opacity:0;
+      transform:translateY(5px);
+      transition:opacity .3s ease, transform .3s ease;
+    }
+    .anim-fade.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .anim-fade{opacity:1 !important; transform:none !important; transition:none !important;}
+      .g-bar{transform:scaleX(1) !important; transition:none !important;}
+      .demo-ready-banner{opacity:1 !important; transform:none !important;}
+    }
+
+    /* ---------- Features ---------- */
+    .section-head{max-width:62ch;margin-bottom:52px}
+    .section-head h2{font-size:clamp(26px,3.4vw,36px);font-weight:600}
+    .section-head p{color:var(--stone-400);margin-top:14px;font-size:16.5px}
+    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+    @media (max-width:900px){.feat-grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:600px){.feat-grid{grid-template-columns:1fr}}
+    .feat{background:var(--stone-950);padding:30px 26px}
+    .feat h3{font-size:17px;margin-bottom:10px}
+    .feat p{color:var(--stone-400);font-size:14.5px;margin:0}
+    .feat .idx{font-family:'IBM Plex Mono',monospace;color:var(--accent);font-size:12px;margin-bottom:14px;display:block}
+
+    /* ---------- BIM split ---------- */
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+    @media (max-width:860px){.split{grid-template-columns:1fr;gap:40px}}
+    .bim-diagram{
+      border:1px solid var(--line);border-radius:16px;background:var(--stone-925);padding:28px;
+    }
+    .bim-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+    .bim-row:last-child{border-bottom:none}
+    .bim-file{
+      font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--stone-50);
+      background:var(--stone-850);border:1px solid var(--line);padding:6px 10px;border-radius:8px;white-space:nowrap;
+    }
+    .bim-arrow{color:var(--stone-500)}
+    .bim-out{color:var(--stone-400);font-size:13.5px}
+    .split h2{font-size:clamp(24px,3vw,32px);font-weight:600;max-width:14ch}
+    .split p.lead{color:var(--stone-400);margin-top:16px;font-size:16.5px;max-width:48ch}
+    .checklist{margin-top:24px;display:flex;flex-direction:column;gap:12px;padding:0}
+    .checklist li{list-style:none;display:flex;gap:10px;color:var(--stone-200);font-size:15px}
+    .checklist li::before{content:"→";color:var(--accent);font-family:'IBM Plex Mono',monospace}
+
+    /* ---------- METROKUBIKO PLATFORM INTEGRATION SECTION (POST-BIM) ---------- */
+    .integration-box{
+      background:linear-gradient(180deg, #191410, #100e0c);
+      border:1px solid #4a2f1c;
+      border-radius:24px;
+      padding:48px 40px;
+      position:relative;
+      overflow:hidden;
+      box-shadow:0 30px 60px -15px rgba(0,0,0,0.6);
+    }
+    .integration-box::after{
+      content:"";position:absolute;top:-40%;right:-10%;width:420px;height:420px;
+      background:radial-gradient(circle, rgba(255,106,26,0.14), transparent 70%);
+      pointer-events:none;
+    }
+    .int-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:24px;
+      flex-wrap:wrap;
+      margin-bottom:36px;
+    }
+    .int-title-area{max-width:640px}
+    .int-badge{
+      display:inline-flex;align-items:center;gap:8px;
+      font-family:'IBM Plex Mono',monospace;font-size:12px;
+      background:var(--accent-dim);color:var(--accent);border:1px solid rgba(255,106,26,0.35);
+      padding:4px 12px;border-radius:999px;margin-bottom:14px;
+    }
+    .int-title-area h2{font-size:clamp(24px,3.2vw,34px);font-weight:600;line-height:1.2}
+    .int-title-area p{color:var(--stone-400);font-size:16px;margin-top:12px}
+    
+    .int-modules-grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:16px;
+      margin-top:28px;
+    }
+    @media (max-width:960px){.int-modules-grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:540px){.int-modules-grid{grid-template-columns:1fr}}
+
+    .int-card{
+      background:var(--stone-925);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      transition:transform .2s ease, border-color .2s ease;
+    }
+    .int-card:hover{
+      transform:translateY(-2px);
+      border-color:var(--stone-700);
+    }
+    .int-card .i-icon{
+      width:40px;
+      height:40px;
+      border-radius:9px;
+      background:#26150b;
+      border:1px solid #5a2e16;
+      color:var(--accent);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+    .int-card .i-icon svg{
+      width:18px;
+      height:18px;
+      fill:currentColor;
+      display:block;
+    }
+    .int-card h4{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:15px;
+      color:var(--stone-50);
+      margin:0;
+    }
+    .int-card p{
+      color:var(--stone-400);
+      font-size:13px;
+      margin:0;
+      line-height:1.5;
+    }
+
+    .int-bottom-bar{
+      margin-top:32px;
+      padding-top:24px;
+      border-top:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:16px;
+    }
+    .int-points{
+      display:flex;gap:24px;flex-wrap:wrap;
+    }
+    .int-point{
+      display:flex;align-items:center;gap:8px;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:12.5px;
+      color:var(--stone-300);
+    }
+    .int-point span{color:var(--ok)}
+
+    /* ---------- Pricing Plans ---------- */
+    .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    @media (max-width:900px){.plans{grid-template-columns:1fr;max-width:420px;margin:0 auto}}
+    .plan{
+      border:1px solid var(--line);border-radius:16px;padding:30px 26px;background:var(--stone-925);
+      display:flex;flex-direction:column;
+    }
+    .plan.featured{
+      border-color:var(--accent);background:linear-gradient(180deg, #1f1108, var(--stone-925));
+      position:relative;
+    }
+    .plan-badge{
+      position:absolute;top:-13px;left:26px;background:var(--accent);color:#1a0c02;
+      font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;font-family:'IBM Plex Mono',monospace;
+    }
+    .plan h3{font-size:19px}
+    .plan .price{margin-top:14px;display:flex;align-items:baseline;gap:6px}
+    .plan .price .num{font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:600;color:var(--stone-50)}
+    .plan .price .per{color:var(--stone-500);font-size:14px}
+    .plan .desc{color:var(--stone-400);font-size:14px;margin-top:10px;min-height:42px}
+    .plan .includes{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--stone-500);margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+    .plan ul{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:11px;flex:1}
+    .plan li{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--stone-200)}
+    .plan li .v{color:var(--stone-400);font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-align:right}
+    .plan .btn{margin-top:24px;width:100%}
+
+    /* ---------- CTA / waitlist ---------- */
+    .cta-section{
+      border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+      background:radial-gradient(70% 100% at 50% 0%, #241206, var(--stone-950));
+    }
+    .cta-inner{text-align:center;max-width:640px;margin:0 auto}
+    .cta-inner h2{font-size:clamp(26px,4vw,38px)}
+    .cta-inner p{color:var(--stone-400);margin-top:14px;font-size:16.5px}
+    .waitlist-form{
+      margin-top:32px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+    }
+    .waitlist-form input[type=email]{
+      background:var(--stone-900);border:1px solid var(--stone-700);color:var(--stone-50);
+      padding:13px 16px;border-radius:999px;font-size:14.5px;min-width:280px;font-family:'Inter',sans-serif;
+    }
+    .waitlist-form input[type=email]:focus{outline:2px solid var(--accent);outline-offset:2px}
+    .waitlist-note{margin-top:14px;color:var(--stone-500);font-size:13px}
+    .waitlist-success{display:none;margin-top:28px;color:var(--ok);font-family:'IBM Plex Mono',monospace;font-size:14px}
+
+    /* ---------- Footer ---------- */
+    footer{padding:56px 0 40px}
+    .foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap}
+    .foot-brand{max-width:360px}
+    .foot-brand img{height:24px;margin-bottom:16px}
+    .foot-brand p{color:var(--stone-500);font-size:14px}
+    .foot-cols{display:flex;gap:56px;flex-wrap:wrap}
+    .foot-col h4{font-family:'Space Grotesk',sans-serif;color:var(--stone-50);font-size:13.5px;font-weight:600;margin-bottom:14px}
+    .foot-col a{display:block;color:var(--stone-500);font-size:13.5px;text-decoration:none;margin-bottom:10px}
+    .foot-col a:hover{color:var(--stone-200)}
+    .foot-bottom{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--stone-500);font-size:13px;flex-wrap:wrap;gap:10px}
+  </style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <img src="https://firebasestorage.googleapis.com/v0/b/copres-firebase.appspot.com/o/CoPres%2Flogo-planea%20-%20invertido.png?alt=media&token=1284529d-0d43-44c9-b851-c7aa91fccdfd" alt="metroKUBIKO Planea">
+    </a>
+    <nav class="links">
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#precios-ia">Precios con IA</a>
+      <a href="#bim">Integración BIM</a>
+      <a href="#control-obra">Control con metroKUBIKO</a>
+      <a href="#planes">Planes</a>
+    </nav>
+    <a class="btn btn-primary" href="#lista-espera">Unirme a la lista de espera</a>
+    <button class="menu-toggle" aria-label="Abrir menú">☰</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow-row">
+        <span class="dot-live"></span>
+        <span class="eyebrow mono">metroKUBIKO Planea · en preparación</span>
+      </div>
+      <h1>El presupuesto y el cronograma de tu obra, listos en minutos</h1>
+      <p class="sub">Sube tu modelo BIM, descríbelo en lenguaje natural o calcúlalo a mano. Planea busca precios en tiempo real con IA, permite cargar tus propias bases y se integra directamente con la plataforma principal metroKUBIKO para controlar la ejecución en terreno.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#lista-espera">Unirme a la lista de espera</a>
+        <a class="btn btn-ghost" href="#como-funciona">Ver cómo funciona</a>
+      </div>
+      <p class="hero-note">Sin tarjeta de crédito · Plan gratuito disponible al lanzamiento</p>
+
+      <!-- Flow selector & Interactive Visual Demonstration -->
+      <div class="flow" id="como-funciona">
+        <div class="flow-tabs" role="tablist">
+          <button class="flow-tab active" data-flow="bim" role="tab" type="button">
+            <span class="k">01</span>
+            <span class="t">Desde un modelo BIM</span>
+          </button>
+          <button class="flow-tab" data-flow="prompt" role="tab" type="button">
+            <span class="k">02</span>
+            <span class="t">Desde lenguaje natural</span>
+          </button>
+          <button class="flow-tab" data-flow="manual" role="tab" type="button">
+            <span class="k">03</span>
+            <span class="t">Manual, con ayuda de IA</span>
+          </button>
+        </div>
+        <div class="flow-body">
+          <p class="flow-desc" id="flow-desc">Sube tu archivo IFC y Planea extrae cantidades de obra automáticamente a partir del modelo. Laura IA busca los precios en la web o utiliza tus bases importadas para armar el presupuesto.</p>
+          
+          <!-- INTERACTIVE TECHNICAL DEMO -->
+          <div class="demo-board" id="flow-pipeline">
+            
+            <div class="demo-header-bar">
+              <div class="demo-bar-left">
+                <div class="demo-badge">
+                  <span class="demo-dot" id="demo-dot"></span>
+                  <span id="demo-phase-name">Iniciando análisis...</span>
+                </div>
+              </div>
+
+              <div class="demo-bar-right">
+                <div class="demo-timer" id="demo-timer-num">0.0s / 7.2s</div>
+                <button type="button" class="btn-playback" id="demo-playback-btn" aria-label="Controlar animación">
+                  <span id="playback-icon">❚❚</span>
+                  <span id="playback-text">Pausar</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- The 4 Connected Cards -->
+            <div class="demo-grid">
+              
+              <!-- CARD 1: ENTRADA -->
+              <div class="d-card" id="card-input">
+                <div class="d-card-head">
+                  <span class="d-card-title">01 Entrada</span>
+                  <span class="d-card-tag" id="input-type-badge">IFC BIM</span>
+                </div>
+                <div class="d-card-body">
+                  
+                  <!-- TAB 1: BIM -->
+                  <div id="view-bim" class="anim-fade show" style="display:flex;flex-direction:column;height:100%;gap:10px">
+                    <div class="file-pill">
+                      <span>📁</span>
+                      <span>edificio_apts.ifc</span>
+                      <span style="color:var(--stone-500);margin-left:auto">18.4 MB</span>
+                    </div>
+
+                    <!-- 3D Isometric Technical Apartment Building SVG -->
+                    <div class="bim-graphic-wrap">
+                      <svg viewBox="0 0 160 125" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="80,50 146,84 80,118 14,84" fill="#181512" stroke="#3d3730" stroke-width="1.2" />
+                        <polygon points="14,84 80,118 80,124 14,90" fill="#120f0e" stroke="#2e2924" stroke-width="1" />
+                        <polygon points="80,118 146,84 146,90 80,124" fill="#1b1715" stroke="#2e2924" stroke-width="1" />
+                        <polygon points="40,24 80,44 80,102 40,82" fill="#201c18" stroke="#524a42" stroke-width="1.2" />
+                        <polygon points="80,44 120,24 120,82 80,102" fill="#2c2722" stroke="#524a42" stroke-width="1.2" />
+                        <polygon points="80,14 120,-6 80,-26 40,-6" fill="#171412" stroke="#7c756b" stroke-width="1.2" transform="translate(0,30)" />
+
+                        <!-- Windows Grid -->
+                        <polygon points="48,34 56,38 56,47 48,43" fill="#ff6a1a18" stroke="#ff6a1a" stroke-width="0.9" />
+                        <polygon points="64,42 72,46 72,55 64,51" fill="#ff6a1a18" stroke="#ff6a1a" stroke-width="0.9" />
+                        <polygon points="88,46 96,42 96,51 88,55" fill="#ff6a1a25" stroke="#ff6a1a" stroke-width="0.9" />
+                        <polygon points="104,38 112,34 112,43 104,47" fill="#ff6a1a25" stroke="#ff6a1a" stroke-width="0.9" />
+
+                        <polygon points="48,51 56,55 56,64 48,60" fill="#ff6a1a18" stroke="#ff6a1a" stroke-width="0.9" />
+                        <polygon points="64,59 72,63 72,72 64,68" fill="#ff6a1a18" stroke="#ff6a1a" stroke-width="0.9" />
+                        <polygon points="88,63 96,59 96,68 88,72" fill="#ff6a1a25" stroke="#ff6a1a" stroke-width="0.9" />
+                        <polygon points="104,55 112,51 112,60 104,64" fill="#ff6a1a25" stroke="#ff6a1a" stroke-width="0.9" />
+
+                        <polygon points="74,84 80,87 80,102 74,99" fill="#ff6a1a35" stroke="#ff6a1a" stroke-width="1.1" />
+                        <polygon points="80,87 86,84 86,99 80,102" fill="#ff6a1a45" stroke="#ff6a1a" stroke-width="1.1" />
+                        <polygon points="48,68 56,72 56,81 48,77" fill="#181412" stroke="#524a42" stroke-width="0.8" />
+                        <polygon points="104,72 112,68 112,77 104,81" fill="#181412" stroke="#524a42" stroke-width="0.8" />
+
+                        <line x1="40" y1="48" x2="80" y2="68" stroke="#3a342c" stroke-width="0.9" />
+                        <line x1="80" y1="68" x2="120" y2="48" stroke="#453e35" stroke-width="0.9" />
+                        <line x1="40" y1="65" x2="80" y2="85" stroke="#3a342c" stroke-width="0.9" />
+                        <line x1="80" y1="85" x2="120" y2="65" stroke="#453e35" stroke-width="0.9" />
+                      </svg>
+                    </div>
+
+                    <div class="tag-grid">
+                      <div class="tag-chip">12 aptos · 4 pisos</div>
+                      <div class="tag-chip">muros 640 m²</div>
+                      <div class="tag-chip">losas 480 m²</div>
+                      <div class="tag-chip">Geometría IFC</div>
+                    </div>
+                  </div>
+
+                  <!-- TAB 2: PROMPT -->
+                  <div id="view-prompt" class="anim-fade" style="display:none;flex-direction:column;height:100%;gap:10px">
+                    <div class="file-pill">
+                      <span>✎</span>
+                      <span>prompt.txt</span>
+                      <span style="color:var(--accent);margin-left:auto">IA</span>
+                    </div>
+
+                    <div class="prompt-box">
+                      "Edificio de 4 pisos, 12 apartamentos, estructura en concreto, mampostería y acabados comerciales."<span class="prompt-cursor"></span>
+                    </div>
+
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--stone-500);margin-top:auto">PARSING SEMÁNTICO:</div>
+                    <div class="tag-grid">
+                      <div class="tag-chip accent">4 pisos · 12 apts</div>
+                      <div class="tag-chip">480 m² placas</div>
+                      <div class="tag-chip">concreto f'c 21MPa</div>
+                      <div class="tag-chip">acabados med.</div>
+                    </div>
+                  </div>
+
+                  <!-- TAB 3: MANUAL -->
+                  <div id="view-manual" class="anim-fade" style="display:none;flex-direction:column;height:100%;gap:10px">
+                    <div class="file-pill">
+                      <span>⊞</span>
+                      <span>manual + bases propias</span>
+                    </div>
+
+                    <div class="manual-list">
+                      <div class="manual-row">
+                        <span>Excavación y zapatas</span>
+                        <span class="mono" style="color:var(--stone-400)">68.0 m³</span>
+                      </div>
+                      <div class="manual-row">
+                        <span>Columnas y pantallas</span>
+                        <span class="mono" style="color:var(--stone-400)">42.5 m³</span>
+                      </div>
+                      <div class="manual-row">
+                        <span>Acero corrugado</span>
+                        <span class="mono" style="color:var(--stone-400)">4.8 ton</span>
+                      </div>
+                    </div>
+
+                    <div class="ai-suggest-row anim-fade" id="manual-ai-chip">
+                      <span class="mono" style="color:var(--accent)">✦ Sugerencia IA complementaria:</span>
+                      <div style="display:flex;justify-content:space-between">
+                        <span>Mampostería divisoria aptos</span>
+                        <span class="mono" style="color:var(--ok)">240 m²</span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- CARD 2: LAURA IA + BUSCADOR WEB -->
+              <div class="d-card core-card" id="card-engine">
+                <div class="d-card-head">
+                  <span class="d-card-title" style="color:var(--accent)">02 Laura IA</span>
+                  <span class="d-card-tag" style="color:var(--accent)">Buscador Web</span>
+                </div>
+                <div class="d-card-body">
+                  <!-- Laura Agent Profile & Custom Rules Visual -->
+                  <div class="laura-core">
+                    <div class="laura-avatar-wrap">
+                      <img 
+                        src="https://firebasestorage.googleapis.com/v0/b/copres-firebase.appspot.com/o/CoPres%2Flaura%2Fprofile-2.png?alt=media&token=af875745-5d70-4d56-9c78-cddd27880410" 
+                        alt="Laura - Agente IA de metroKUBIKO" 
+                        class="laura-avatar"
+                        loading="lazy"
+                      />
+                      <span class="laura-pulse-dot" title="Laura activa"></span>
+                    </div>
+                    <div>
+                      <div class="laura-role">Laura</div>
+                      <div class="laura-sub">Agente de IA</div>
+                    </div>
+                    <div class="custom-rules-chip">
+                      <span>🌐</span>
+                      <span>Web Search + Bases propias</span>
+                    </div>
+                  </div>
+
+                  <div class="metric-list">
+                    <div class="metric-item anim-fade" id="m-1">
+                      <span class="chk">✓</span>
+                      <span>Búsqueda IA de insumos en internet</span>
+                    </div>
+                    <div class="metric-item anim-fade" id="m-2">
+                      <span class="chk">✓</span>
+                      <span>248 elementos clasificados</span>
+                    </div>
+                    <div class="metric-item anim-fade" id="m-3">
+                      <span class="chk">✓</span>
+                      <span>42 actividades APU costeadas</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 3: PRESUPUESTO -->
+              <div class="d-card" id="card-budget">
+                <div class="d-card-head">
+                  <span class="d-card-title">03 Presupuesto</span>
+                  <span class="d-card-tag">En tu moneda</span>
+                </div>
+                <div class="d-card-body">
+                  <div class="budget-table">
+                    <div class="b-header">
+                      <span>CAPÍTULO</span>
+                      <span>SUBTOTAL</span>
+                    </div>
+                    <div class="b-row anim-fade" id="b-1">
+                      <span>01 Preliminares</span>
+                      <span>$ 6,800</span>
+                    </div>
+                    <div class="b-row anim-fade" id="b-2">
+                      <span>02 Cimentación</span>
+                      <span>$ 38,200</span>
+                    </div>
+                    <div class="b-row anim-fade" id="b-3">
+                      <span>03 Estructura</span>
+                      <span>$ 84,500</span>
+                    </div>
+                    <div class="b-row anim-fade" id="b-4">
+                      <span>04 Mampostería</span>
+                      <span>$ 32,100</span>
+                    </div>
+                    <div class="b-row anim-fade" id="b-5">
+                      <span>05 Acabados</span>
+                      <span>$ 58,400</span>
+                    </div>
+                  </div>
+
+                  <div class="b-total anim-fade" id="b-tot">
+                    <span class="lbl">TOTAL EDIFICIO</span>
+                    <span class="val">$ 220,000</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD 4: CRONOGRAMA -->
+              <div class="d-card" id="card-schedule">
+                <div class="d-card-head">
+                  <span class="d-card-title">04 Cronograma</span>
+                  <span class="d-card-tag" style="color:var(--ok)">CPM</span>
+                </div>
+                <div class="d-card-body">
+                  <div class="gantt-wrap">
+                    <div class="gantt-header">
+                      <span>S1</span><span>S2</span><span>S3</span><span>S4</span><span>S5</span>
+                    </div>
+                    <div class="gantt-grid">
+                      <!-- 01 Preliminares -->
+                      <div class="gantt-track">
+                        <div class="g-bar" id="gb-1" style="left:0%;width:24%"></div>
+                      </div>
+                      <!-- 02 Cimentación -->
+                      <div class="gantt-track">
+                        <div class="g-bar" id="gb-2" style="left:20%;width:30%"></div>
+                      </div>
+                      <!-- 03 Estructura -->
+                      <div class="gantt-track">
+                        <div class="g-bar" id="gb-3" style="left:44%;width:34%"></div>
+                      </div>
+                      <!-- 04 Muros -->
+                      <div class="gantt-track">
+                        <div class="g-bar" id="gb-4" style="left:65%;width:22%"></div>
+                      </div>
+                      <!-- 05 Acabados -->
+                      <div class="gantt-track">
+                        <div class="g-bar" id="gb-5" style="left:76%;width:24%"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="gantt-footer anim-fade" id="g-foot">
+                    <span style="color:var(--ok);font-weight:600">✓ 36 DÍAS</span>
+                    <span style="color:var(--stone-400)">42 actividades</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- RESULT BANNER -->
+            <div class="demo-ready-banner" id="ready-banner">
+              <div class="ready-left">
+                <span class="ready-check">✓</span>
+                <span>PROYECTO LISTO: PRESUPUESTO, PRECIOS WEB Y CRONOGRAMA CPM GENERADOS</span>
+              </div>
+              <div class="ready-stats">
+                <span>PRESUPUESTO: <span class="p">$220,000</span></span>
+                <span>PLAZO: <span class="c">36 DÍAS</span></span>
+                <span style="color:var(--stone-400)">Listo para exportar a metroKUBIKO</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES (PRECIOS CON IA & WEBSERVICE) -->
+  <section id="precios-ia">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Precios actualizados con IA, tus propias bases y la web</h2>
+        <p>No te limites a bases de datos obsoletas o a un solo país. Planea conecta modelos de IA con rastreo en vivo de internet y tus datos empresariales.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat">
+          <span class="idx mono">WEB SEARCH IA</span>
+          <h3>Búsqueda de precios en la web</h3>
+          <p>Un buscador impulsado por IA rastrea precios reales de materiales, maquinaria y mano de obra en internet según tu ubicación y moneda.</p>
+        </div>
+        <div class="feat">
+          <span class="idx mono">BASES PROPIAS</span>
+          <h3>Importa tus bases de datos</h3>
+          <p>Sube tus propios archivos de precios históricos, convenios o APUs internos para que la IA priorice tus costos de referencia.</p>
+        </div>
+        <div class="feat">
+          <span class="idx mono">ROADMAP</span>
+          <h3>Proveedores locales en vivo</h3>
+          <p>Próximamente: cotiza directamente con ferreterías y distribuidores locales de tu zona desde el mismo presupuesto.</p>
+        </div>
+        <div class="feat">
+          <span class="idx mono">BIM / IFC</span>
+          <h3>Cómputos métricos automáticos</h3>
+          <p>Sube un archivo IFC y Planea calcula cantidades de obra directamente desde el modelo 3D, sin digitar planos a mano.</p>
+        </div>
+        <div class="feat">
+          <span class="idx mono">CPM</span>
+          <h3>Cronograma de obra automático</h3>
+          <p>A partir del desglose de actividades y rendimientos, Planea construye el cronograma CPM con ruta crítica y precedencias.</p>
+        </div>
+        <div class="feat">
+          <span class="idx mono">EDITOR TOTAL</span>
+          <h3>Control manual flexible</h3>
+          <p>La IA propone y formula, pero tú tienes la última palabra: edita insumos, rendimientos y cantidades con un solo clic.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIM SPLIT -->
+  <section id="bim">
+    <div class="wrap">
+      <div class="split">
+        <div>
+          <span class="eyebrow mono">Integración BIM</span>
+          <h2>Tu modelo IFC, convertido en presupuesto</h2>
+          <p class="lead">Planea lee la geometría y la información de tu modelo BIM y extrae las cantidades de obra necesarias para costear el proyecto — muros, losas, acabados, aceros y más — ahorrándote días de cómputo manual.</p>
+          <ul class="checklist">
+            <li>Sube el archivo IFC exportado desde Revit, Archicad u otro software BIM</li>
+            <li>Agrega un prompt opcional para dar especificaciones de calidad o alcance</li>
+            <li>Planea busca precios web o lee tus bases para generar los APUs exactos</li>
+            <li>El cronograma CPM se genera automáticamente y queda listo para ejecutar en obra</li>
+          </ul>
+        </div>
+        <div class="bim-diagram">
+          <div class="bim-row">
+            <span class="bim-file mono">modelo.ifc</span>
+            <span class="bim-arrow mono">→</span>
+            <span class="bim-out">extracción métrica y elementos 3D</span>
+          </div>
+          <div class="bim-row">
+            <span class="bim-file mono">web + bases</span>
+            <span class="bim-arrow mono">→</span>
+            <span class="bim-out">precios de insumos en tiempo real</span>
+          </div>
+          <div class="bim-row">
+            <span class="bim-file mono">presupuesto</span>
+            <span class="bim-arrow mono">→</span>
+            <span class="bim-out">cómputos, APUs estructurados y valor total</span>
+          </div>
+          <div class="bim-row">
+            <span class="bim-file mono">metroKUBIKO</span>
+            <span class="bim-arrow mono">→</span>
+            <span class="bim-out">control de obra, almacén y mano de obra</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTEGRATION CON METROKUBIKO PLATAFORMA PRINCIPAL (UBICADA DESPUÉS DE BIM) -->
+  <section id="control-obra">
+    <div class="wrap">
+      <div class="integration-box">
+        
+        <div class="int-header">
+          <div class="int-title-area">
+            <span class="int-badge">Conexión directa con metroKUBIKO</span>
+            <h2>Del presupuesto al control total de tu obra en terreno</h2>
+            <p>Planea no termina en el papel. Exporta tu presupuesto y cronograma con un clic a <strong>metroKUBIKO</strong>, nuestra plataforma principal de gestión en campo donde ejecutas y controlas cada centavo y cada día de tu proyecto.</p>
+          </div>
+          <a class="btn btn-primary" href="https://www.metrokubiko.com/" target="_blank" rel="noopener noreferrer">
+            Conocer metroKUBIKO ↗
+          </a>
+        </div>
+
+        <div class="int-modules-grid">
+          
+          <!-- Módulo 1: Mano de obra (Casco de construcción) -->
+          <div class="int-card">
+            <div class="i-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                <path d="M352 264l0-200c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32l0 200c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-185.9C90 109.8 32 191.8 32 288l0 64 512 0 0-64c-1-95.2-58.4-177.7-144-209.8L400 264c0 13.3-10.7 24-24 24s-24-10.7-24-24zM40 400c-22.1 0-40 17.9-40 40s17.9 40 40 40l496 0c22.1 0 40-17.9 40-40s-17.9-40-40-40L40 400z"/>
+              </svg>
+            </div>
+            <h4>Mano de Obra</h4>
+            <p>Control de cuadrillas, destajos, asistencia y nómina vinculada a las actividades aprobadas en el presupuesto.</p>
+          </div>
+
+          <!-- Módulo 2: Almacén (Cat flatbed) -->
+          <div class="int-card">
+            <div class="i-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                <path d="M32 0C14.3 0 0 14.3 0 32S14.3 64 32 64l16 0c8.8 0 16 7.2 16 16l0 288c0 39.8 29.1 72.8 67.1 79-2 5.3-3.1 11-3.1 17 0 26.5 21.5 48 48 48s48-21.5 48-48c0-5.6-1-11-2.7-16l197.5 0c-1.8 5-2.7 10.4-2.7 16 0 26.5 21.5 48 48 48s48-21.5 48-48c0-5.6-1-11-2.7-16l34.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-400 0c-8.8 0-16-7.2-16-16l0-288C128 35.8 92.2 0 48 0L32 0zM224 64c-26.5 0-48 21.5-48 48l0 176c0 26.5 21.5 48 48 48l240 0c26.5 0 48-21.5 48-48l0-176c0-26.5-21.5-48-48-48L224 64z"/>
+              </svg>
+            </div>
+            <h4>Almacén e Inventarios</h4>
+            <p>Entradas, salidas, pedidos a proveedores y control de consumos de insumos contra las cantidades previstas en Planea.</p>
+          </div>
+
+          <!-- Módulo 3: Bitácora (Clipboard list) -->
+          <div class="int-card">
+            <div class="i-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                <path d="M311.4 32l8.6 0c35.3 0 64 28.7 64 64l0 352c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 96C0 60.7 28.7 32 64 32l8.6 0C83.6 12.9 104.3 0 128 0L256 0c23.7 0 44.4 12.9 55.4 32zM248 112c13.3 0 24-10.7 24-24s-10.7-24-24-24L136 64c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0zM128 256a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm32 0c0 13.3 10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0c-13.3 0-24 10.7-24 24zm0 128c0 13.3 10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0c-13.3 0-24 10.7-24 24zM96 416a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+              </svg>
+            </div>
+            <h4>Bitácora de Obra</h4>
+            <p>Registro diario digital de actividades, clima, contingencias fotográficas y trazabilidad jurídica de obra.</p>
+          </div>
+
+          <!-- Módulo 4: Costos y tiempos (File invoice dollar) -->
+          <div class="int-card">
+            <div class="i-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                <path d="M0 64C0 28.7 28.7 0 64 0L213.5 0c17 0 33.3 6.7 45.3 18.7L365.3 125.3c12 12 18.7 28.3 18.7 45.3L384 448c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 64zm208-5.5l0 93.5c0 13.3 10.7 24 24 24L325.5 176 208 58.5zM64 88c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24s-10.7-24-24-24L88 64C74.7 64 64 74.7 64 88zm0 96c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zm112 76l0 4c-28.8 .3-52 23.7-52 52.5 0 25.7 18.5 47.6 43.9 51.8l41.7 7c6 1 10.4 6.2 10.4 12.3 0 6.9-5.6 12.5-12.5 12.5L152 400c-11 0-20 9-20 20s9 20 20 20l24 0 0 4c0 11 9 20 20 20s20-9 20-20l0-4.7c25-4.1 44-25.7 44-51.8 0-25.7-18.5-47.6-43.9-51.8l-41.7-7c-6-1-10.4-6.2-10.4-12.3 0-6.9 5.6-12.5 12.5-12.5l47.5 0c11 0 20-9 20-20s-9-20-20-20l-8 0 0-4c0-11-9-20-20-20s-20 9-20 20z"/>
+              </svg>
+            </div>
+            <h4>Costos, Tiempos y Tableros</h4>
+            <p>Dashboards de control en tiempo real: comparativos de valor ganado, desvíos presupuestales y rendimientos por insumo y actividad.</p>
+          </div>
+
+        </div>
+
+        <div class="int-bottom-bar">
+          <div class="int-points">
+            <div class="int-point"><span>✓</span> Sincronización instantánea de APUs y CPM</div>
+            <div class="int-point"><span>✓</span> Alertas de sobrecostos e inventario crítico</div>
+            <div class="int-point"><span>✓</span> Reportes para gerencia y clientes</div>
+          </div>
+          <span class="mono" style="font-size:12px;color:var(--stone-500)">Ecosistema metroKUBIKO Suite</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="planes">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Planes para cada tamaño de equipo</h2>
+        <p>Empieza gratis y escala a medida que requieras más proyectos, cargas de archivos IFC y créditos de búsqueda IA.</p>
+      </div>
+      <div class="plans">
+
+        <div class="plan">
+          <h3>Freemium</h3>
+          <div class="price"><span class="num">$0</span><span class="per">/mes</span></div>
+          <p class="desc">Para probar Planea y presupuestar proyectos iniciales.</p>
+          <ul>
+            <li>Presupuestos con IA <span class="v">incluido</span></li>
+            <li>Proyectos <span class="v">2</span></li>
+            <li>Cargas de IFC <span class="v">3 · una sola vez</span></li>
+            <li>Créditos IA / Búsqueda <span class="v">200 · una sola vez</span></li>
+            <li>Tipos de reportes <span class="v">20</span></li>
+          </ul>
+          <a class="btn btn-ghost" href="#lista-espera">Unirme a la lista de espera</a>
+        </div>
+
+        <div class="plan">
+          <h3>Profesional</h3>
+          <div class="price"><span class="num">$10</span><span class="per">/mes</span></div>
+          <p class="desc">Para consultores y contratistas que cotizan obra continuamente.</p>
+          <ul>
+            <li>Presupuestos con IA <span class="v">incluido</span></li>
+            <li>Búsqueda Web de precios <span class="v">activa</span></li>
+            <li>Carga de bases propias <span class="v">ilimitada</span></li>
+            <li>Proyectos activos <span class="v">5</span></li>
+            <li>Cargas de IFC <span class="v">4 / día</span></li>
+            <li>Créditos IA <span class="v">350 / mes</span></li>
+            <li>Tableros BI <span class="v">incluidos</span></li>
+          </ul>
+          <div class="includes">Incluye todo lo de Freemium</div>
+          <a class="btn btn-ghost" href="#lista-espera">Unirme a la lista de espera</a>
+        </div>
+
+        <div class="plan featured">
+          <span class="plan-badge">Más popular</span>
+          <h3>Empresarial</h3>
+          <div class="price"><span class="num">$15</span><span class="per">/mes</span></div>
+          <p class="desc">Para constructoras con trabajo colaborativo y conexión a control de obra.</p>
+          <ul>
+            <li>Presupuestos con IA <span class="v">incluido</span></li>
+            <li>Integración metroKUBIKO <span class="v">completa</span></li>
+            <li>Proyectos activos <span class="v">20</span></li>
+            <li>Cargas de IFC <span class="v">20 / día</span></li>
+            <li>Créditos IA <span class="v">500 / mes</span></li>
+            <li>Usuario adicional <span class="v">+200 créditos</span></li>
+          </ul>
+          <div class="includes">Incluye todo lo de Profesional</div>
+          <a class="btn btn-primary" href="#lista-espera">Unirme a la lista de espera</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / WAITLIST -->
+  <section class="cta-section" id="lista-espera">
+    <div class="wrap cta-inner">
+      <h2>Sé de los primeros en usar Planea</h2>
+      <p>Estamos completando las pruebas de conexión BIM y el buscador web de proveedores. Déjanos tu correo para darte acceso prioritario.</p>
+      <form class="waitlist-form" id="waitlist-form">
+        <input type="email" id="waitlist-email" placeholder="tu@empresa.com" required aria-label="Correo electrónico">
+        <button type="submit" class="btn btn-primary">Unirme a la lista de espera</button>
+      </form>
+      <p class="waitlist-success" id="waitlist-success">Listo — quedaste en la lista. Te avisaremos con una invitación directa a la plataforma.</p>
+      <p class="waitlist-note">Un solo correo de bienvenida. Cero spam.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <img src="https://firebasestorage.googleapis.com/v0/b/copres-firebase.appspot.com/o/CoPres%2Flogo-planea%20-%20invertido.png?alt=media&token=1284529d-0d43-44c9-b851-c7aa91fccdfd" alt="metroKUBIKO Planea">
+        <p>Planea es el motor de presupuesto y programación de obra con IA de metroKUBIKO, diseñado para arquitectos, ingenieros y constructoras.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h4>Producto</h4>
+          <a href="#como-funciona">Cómo funciona</a>
+          <a href="#precios-ia">Precios con IA</a>
+          <a href="#bim">Integración BIM</a>
+          <a href="#control-obra">Control de obra</a>
+          <a href="#planes">Planes</a>
+        </div>
+        <div class="foot-col">
+          <h4>metroKUBIKO</h4>
+          <a href="https://www.metrokubiko.com/" target="_blank" rel="noopener noreferrer">Plataforma de obra</a>
+          <a href="https://www.metrokubiko.com/es/nosotros" target="_blank" rel="noopener noreferrer">Nosotros</a>
+          <a href="https://www.metrokubiko.com/es/contacto" target="_blank" rel="noopener noreferrer">Contactar</a>
+        </div>
+        <div class="foot-col">
+          <h4>Contacto</h4>
+          <a href="https://wa.me/573163719421?text=Hola,%20quiero%20más%20información%20sobre%20Planea" target="_blank" rel="noopener noreferrer">WhatsApp de soporte</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 metroKUBIKO</span>
+      <span class="mono">Planea — Presupuesto, cronograma y control de obra con IA</span>
+    </div>
+  </div>
+</footer>
+
+<script is:inline>
+  // ================================================================
+  // PLANEA TIMELINE ENGINE (LAURA IA + BÚSQUEDA WEB DE PRECIOS)
+  // ================================================================
+  const flowsData = {
+    bim: {
+      desc: "Sube tu archivo IFC y Planea extrae cantidades de obra automáticamente a partir del modelo. Laura IA busca los precios en la web o utiliza tus bases importadas para armar el presupuesto.",
+      badge: "IFC BIM",
+      label: "Extrayendo geometría IFC..."
+    },
+    prompt: {
+      desc: "Describe el proyecto en tus palabras — tipo de obra, área, acabados, alcance — y Planea rastrea en internet insumos acordes para estructurar el presupuesto y cronograma.",
+      badge: "LENGUAJE NATURAL",
+      label: "Interpretando prompt..."
+    },
+    manual: {
+      desc: "Arma actividades, cantidades y precios tú mismo, sube tus bases propias o deja que la IA busque precios y complementos en la web.",
+      badge: "MANUAL + IA",
+      label: "Cargando actividades y bases..."
+    }
+  };
+
+  const PlaneaDemo = {
+    flow: "bim",
+    state: "idle",
+    timerId: null,
+    stepTimeouts: [],
+    startTime: 0,
+    cycleDuration: 7200,
+    isInView: false,
+    isReducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+
+    init() {
+      this.cacheDOM();
+      this.bindEvents();
+      this.setupObserver();
+      this.setFlow("bim", false);
+    },
+
+    cacheDOM() {
+      this.dot = document.getElementById("demo-dot");
+      this.phaseText = document.getElementById("demo-phase-name");
+      this.timerText = document.getElementById("demo-timer-num");
+      this.inputBadge = document.getElementById("input-type-badge");
+      this.playbackBtn = document.getElementById("demo-playback-btn");
+      this.playbackIcon = document.getElementById("playback-icon");
+      this.playbackText = document.getElementById("playback-text");
+
+      // Views
+      this.viewBim = document.getElementById("view-bim");
+      this.viewPrompt = document.getElementById("view-prompt");
+      this.viewManual = document.getElementById("view-manual");
+      this.manualAiChip = document.getElementById("manual-ai-chip");
+
+      // Laura metrics
+      this.metrics = [
+        document.getElementById("m-1"),
+        document.getElementById("m-2"),
+        document.getElementById("m-3")
+      ];
+
+      // Budget
+      this.bRows = [
+        document.getElementById("b-1"),
+        document.getElementById("b-2"),
+        document.getElementById("b-3"),
+        document.getElementById("b-4"),
+        document.getElementById("b-5")
+      ];
+      this.bTotal = document.getElementById("b-tot");
+
+      // Gantt
+      this.gBars = [
+        document.getElementById("gb-1"),
+        document.getElementById("gb-2"),
+        document.getElementById("gb-3"),
+        document.getElementById("gb-4"),
+        document.getElementById("gb-5")
+      ];
+      this.gFoot = document.getElementById("g-foot");
+      this.readyBanner = document.getElementById("ready-banner");
+    },
+
+    bindEvents() {
+      const tabs = document.querySelectorAll(".flow-tab");
+      const descEl = document.getElementById("flow-desc");
+
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          tabs.forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          const flowKey = tab.dataset.flow;
+          if (descEl && flowsData[flowKey]) {
+            descEl.textContent = flowsData[flowKey].desc;
+          }
+          this.setFlow(flowKey, true);
+        });
+      });
+
+      if (this.playbackBtn) {
+        this.playbackBtn.addEventListener("click", () => {
+          if (this.state === "running") {
+            this.pause();
+          } else if (this.state === "paused") {
+            this.resume();
+          } else {
+            this.play();
+          }
+        });
+      }
+    },
+
+    setupObserver() {
+      const target = document.getElementById("como-funciona");
+      if (!target || !("IntersectionObserver" in window)) {
+        this.play();
+        return;
+      }
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            this.isInView = true;
+            if (this.state === "idle") {
+              this.play();
+            }
+          } else {
+            this.isInView = false;
+            if (this.state === "running") {
+              this.pause();
+            }
+          }
+        });
+      }, { threshold: 0.25 });
+      obs.observe(target);
+    },
+
+    setFlow(flowKey, restart = true) {
+      this.flow = flowKey;
+      this.clearTimeouts();
+
+      if (this.inputBadge) {
+        this.inputBadge.textContent = flowsData[flowKey].badge;
+      }
+
+      if (this.viewBim) this.viewBim.style.display = (flowKey === "bim") ? "flex" : "none";
+      if (this.viewPrompt) this.viewPrompt.style.display = (flowKey === "prompt") ? "flex" : "none";
+      if (this.viewManual) this.viewManual.style.display = (flowKey === "manual") ? "flex" : "none";
+
+      if (this.isReducedMotion) {
+        this.showInstantState();
+        return;
+      }
+
+      this.resetStates();
+      if (restart && this.isInView) {
+        this.play();
+      }
+    },
+
+    resetStates() {
+      [this.viewBim, this.viewPrompt, this.viewManual].forEach(el => el && el.classList.remove("show"));
+      if (this.manualAiChip) this.manualAiChip.classList.remove("show");
+
+      this.metrics.forEach(m => m && m.classList.remove("show"));
+      this.bRows.forEach(r => r && r.classList.remove("show"));
+      if (this.bTotal) this.bTotal.classList.remove("show");
+      this.gBars.forEach(b => b && b.classList.remove("active"));
+      if (this.gFoot) this.gFoot.classList.remove("show");
+      if (this.readyBanner) this.readyBanner.classList.remove("visible");
+      if (this.dot) {
+        this.dot.classList.remove("done");
+        this.dot.classList.remove("paused");
+      }
+    },
+
+    showInstantState() {
+      this.state = "finished";
+      const activeView = (this.flow === "bim") ? this.viewBim : (this.flow === "prompt" ? this.viewPrompt : this.viewManual);
+      if (activeView) activeView.classList.add("show");
+      if (this.manualAiChip) this.manualAiChip.classList.add("show");
+      this.metrics.forEach(m => m && m.classList.add("show"));
+      this.bRows.forEach(r => r && r.classList.add("show"));
+      if (this.bTotal) this.bTotal.classList.add("show");
+      this.gBars.forEach(b => b && b.classList.add("active"));
+      if (this.gFoot) this.gFoot.classList.add("show");
+      if (this.readyBanner) this.readyBanner.classList.add("visible");
+      if (this.dot) {
+        this.dot.classList.remove("paused");
+        this.dot.classList.add("done");
+      }
+      if (this.phaseText) this.phaseText.textContent = "Presupuesto y cronograma listos";
+      if (this.timerText) this.timerText.textContent = "7.2s / 7.2s · Finalizado";
+      this.updatePlaybackButton("finished");
+    },
+
+    clearTimeouts() {
+      this.stepTimeouts.forEach(t => clearTimeout(t));
+      this.stepTimeouts = [];
+      if (this.timerId) {
+        clearInterval(this.timerId);
+        this.timerId = null;
+      }
+    },
+
+    schedule(fn, delay) {
+      const id = setTimeout(fn, delay);
+      this.stepTimeouts.push(id);
+    },
+
+    play() {
+      this.clearTimeouts();
+      this.resetStates();
+      this.state = "running";
+      this.updatePlaybackButton("running");
+
+      if (this.isReducedMotion) {
+        this.showInstantState();
+        return;
+      }
+
+      this.startTime = Date.now();
+      this.runTimer();
+
+      // T: 0.1s -> Input
+      this.schedule(() => {
+        const v = (this.flow === "bim") ? this.viewBim : (this.flow === "prompt" ? this.viewPrompt : this.viewManual);
+        if (v) v.classList.add("show");
+        if (this.phaseText) this.phaseText.textContent = flowsData[this.flow].label;
+      }, 100);
+
+      // T: 0.7s -> Manual AI Chip
+      if (this.flow === "manual") {
+        this.schedule(() => {
+          if (this.manualAiChip) this.manualAiChip.classList.add("show");
+        }, 700);
+      }
+
+      // T: 1.2s -> Laura IA + Buscador Web
+      this.schedule(() => {
+        if (this.phaseText) this.phaseText.textContent = "Laura: rastreando precios web y aplicando bases...";
+      }, 1200);
+
+      // T: 1.6s - 2.3s -> Core metrics
+      this.schedule(() => { if (this.metrics[0]) this.metrics[0].classList.add("show"); }, 1600);
+      this.schedule(() => { if (this.metrics[1]) this.metrics[1].classList.add("show"); }, 1950);
+      this.schedule(() => { if (this.metrics[2]) this.metrics[2].classList.add("show"); }, 2300);
+
+      // T: 2.7s - 3.7s -> Budget rows
+      this.schedule(() => {
+        if (this.phaseText) this.phaseText.textContent = "Generando presupuesto detallado...";
+        if (this.bRows[0]) this.bRows[0].classList.add("show");
+      }, 2700);
+      this.schedule(() => { if (this.bRows[1]) this.bRows[1].classList.add("show"); }, 2950);
+      this.schedule(() => { if (this.bRows[2]) this.bRows[2].classList.add("show"); }, 3200);
+      this.schedule(() => { if (this.bRows[3]) this.bRows[3].classList.add("show"); }, 3450);
+      this.schedule(() => { if (this.bRows[4]) this.bRows[4].classList.add("show"); }, 3700);
+
+      // T: 4.1s -> Budget Total
+      this.schedule(() => {
+        if (this.bTotal) this.bTotal.classList.add("show");
+      }, 4100);
+
+      // T: 4.6s - 5.8s -> Gantt CPM Bars
+      this.schedule(() => {
+        if (this.phaseText) this.phaseText.textContent = "Armando cronograma de obra CPM...";
+        if (this.gBars[0]) this.gBars[0].classList.add("active");
+      }, 4600);
+      this.schedule(() => { if (this.gBars[1]) this.gBars[1].classList.add("active"); }, 4900);
+      this.schedule(() => { if (this.gBars[2]) this.gBars[2].classList.add("active"); }, 5200);
+      this.schedule(() => { if (this.gBars[3]) this.gBars[3].classList.add("active"); }, 5500);
+      this.schedule(() => { if (this.gBars[4]) this.gBars[4].classList.add("active"); }, 5800);
+
+      // T: 6.1s -> Schedule footer & Banner
+      this.schedule(() => {
+        if (this.gFoot) this.gFoot.classList.add("show");
+        if (this.readyBanner) this.readyBanner.classList.add("visible");
+        if (this.dot) {
+          this.dot.classList.remove("paused");
+          this.dot.classList.add("done");
+        }
+        if (this.phaseText) this.phaseText.textContent = "✓ Presupuesto y cronograma listos";
+      }, 6100);
+
+      // T: 7.2s -> Finish cycle
+      this.schedule(() => {
+        this.finishCycle();
+      }, this.cycleDuration);
+    },
+
+    finishCycle() {
+      this.state = "finished";
+      if (this.timerId) clearInterval(this.timerId);
+      if (this.timerText) this.timerText.textContent = "7.2s / 7.2s · Finalizado";
+      this.updatePlaybackButton("finished");
+    },
+
+    pause() {
+      if (this.state !== "running") return;
+      this.state = "paused";
+      this.clearTimeouts();
+      if (this.dot) this.dot.classList.add("paused");
+      if (this.phaseText) this.phaseText.textContent = "Animación pausada";
+      this.updatePlaybackButton("paused");
+    },
+
+    resume() {
+      this.play();
+    },
+
+    updatePlaybackButton(state) {
+      if (!this.playbackBtn || !this.playbackIcon || !this.playbackText) return;
+      this.playbackBtn.classList.remove("highlight");
+
+      if (state === "running") {
+        this.playbackIcon.textContent = "❚❚";
+        this.playbackText.textContent = "Pausar";
+      } else if (state === "paused") {
+        this.playbackIcon.textContent = "▶";
+        this.playbackText.textContent = "Reanudar";
+        this.playbackBtn.classList.add("highlight");
+      } else if (state === "finished") {
+        this.playbackIcon.textContent = "↺";
+        this.playbackText.textContent = "Reiniciar demo";
+        this.playbackBtn.classList.add("highlight");
+      }
+    },
+
+    runTimer() {
+      if (this.timerId) clearInterval(this.timerId);
+      this.timerId = setInterval(() => {
+        const elapsed = (Date.now() - this.startTime) / 1000;
+        if (elapsed <= 7.2 && this.timerText && this.state === "running") {
+          this.timerText.textContent = elapsed.toFixed(1) + "s / 7.2s";
+        }
+      }, 100);
+    }
+  };
+
+  // ---- Page Init ----
+  function initPage() {
+    PlaneaDemo.init();
+
+    // Mobile menu toggle
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector("nav.links");
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("open");
+      });
+      navLinks.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+          navLinks.classList.remove("open");
+        });
+      });
+    }
+
+    // Waitlist form
+    const form = document.getElementById("waitlist-form");
+    const success = document.getElementById("waitlist-success");
+    if (form && success) {
+      form.addEventListener("submit", function(e){
+        e.preventDefault();
+        form.style.display = "none";
+        success.style.display = "block";
+      });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initPage);
+  } else {
+    initPage();
+  }
+  document.addEventListener("astro:page-load", initPage);
+</script>
+
+</body>
+</html>

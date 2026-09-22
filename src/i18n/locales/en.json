@@ -1,0 +1,693 @@
+{
+  "nav": {
+    "home": "Home",
+    "nosotros": "About Us",
+    "software": "Software",
+    "utilidades": "Utilities",
+    "precios": "Pricing",
+    "contacto": "Contact",
+    "blog": "Blog",
+    "theme_toggle_light": "Light mode",
+    "theme_toggle_dark": "Dark mode"
+  },
+  "common": {
+    "ingresa": "Sign In",
+    "registrate": "Sign Up"
+  },
+  "pricingPage": {
+    "meta": {
+      "description": "Find the pricing plan that best suits your needs. Plans include users, projects, support and more"
+    }
+  },
+  "pricing": {
+    "title": "Pricing",
+    "subtitle": "Boost your company, choose the best plan.",
+    "toggle_label": "Switch between monthly and annual plan",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "discount_annual_monthly_view": "30% annual discount",
+    "discount_annual_view": "Includes 30% discount.",
+    "buy_now": "Buy Now",
+    "cost_control_title": "Cost Control",
+    "integrations_title": "Integrations",
+    "per_month": "/month",
+    "per_year": "/year",
+    "plans": {
+      "emprendedor": {
+        "name": "Entrepreneur",
+        "description": "Ideal plan for consulting professionals such as architects and civil engineers",
+        "features": {
+          "users": "3 Users",
+          "projects": "20 Projects per year",
+          "apu_databases": "3 APU databases",
+          "storage": "10 GB storage",
+          "budget_scheduling": "Budget and Construction Scheduling (Gantt)",
+          "training": "4 Hours of training"
+        }
+      },
+      "pymes": {
+        "name": "SME",
+        "description": "The complete solution for small and medium-sized companies.",
+        "features": {
+          "users": "15 Users",
+          "projects": "Unlimited Projects",
+          "apu_databases": "10 APU databases",
+          "storage": "100 GB storage",
+          "budget_scheduling": "Budget and Construction Scheduling (Gantt)",
+          "labor_management": "Labor Management",
+          "materials_management": "Materials purchase and consumption management (kardex and inventory)",
+          "project_management": "Project management and control",
+          "training": "12 Hours of training"
+        }
+      },
+      "corporativo": {
+        "name": "Corporate",
+        "description": "For large companies with advanced integration and support needs.",
+        "features": {
+          "users": "75 Users",
+          "projects": "Unlimited Projects",
+          "apu_databases": "30 APU databases",
+          "storage": "1 TB storage",
+          "budget_scheduling": "Budget and Construction Scheduling (Gantt)",
+          "labor_management": "Labor Management",
+          "materials_management": "Materials purchase and consumption management (kardex and inventory)",
+          "project_management": "Project management and control",
+          "integrations": "Includes integrations with other platforms (accounting, crm, revit, etc.)",
+          "priority_support": "Priority support",
+          "training": "36 Hours of training"
+        }
+      }
+    }
+  },
+  "footer": {
+    "description": "metroKUBIKO is the easiest to use and 100% online software for construction companies. Powered by AI to create budgets, manage construction sites and optimize construction projects.",
+    "copyright": "© 2025 metroKUBIKO",
+    "links": {
+      "create_budgets": "Create construction budgets with AI for free",
+      "apus": "APUs",
+      "unit_price_analysis": "Unit Price Analysis",
+      "construction_budgets": "Construction Budgets",
+      "construction_scheduling": "Construction Scheduling",
+      "construction_platforms": "Construction Platforms",
+      "construction_software": "Construction Software",
+      "software_for_contractor": "Software for Construction Company",
+      "software_colombia": "Construction Software in Colombia",
+      "software_contractors": "Software for Contractors",
+      "construction_control_software": "Construction Control Software"
+    }
+  },
+  "cta": {
+    "title": "Still have questions?",
+    "description": "Write to us, we will be happy to assist you and answer any questions.",
+    "button": "Contact Us",
+    "shared": {
+      "title": "Ready to digitize your construction company?",
+      "description": "Join the construction companies that already manage their projects with metroKUBIKO.",
+      "button": "Start now - Try it free"
+    }
+  },
+  "utilities": {
+    "title": "Utilities",
+    "description": "Our community shares information that may be useful for your projects... discover it.",
+    "download_brochure": "Download Our Brochure",
+    "meta": {
+      "title": "Utilities · Metrokubiko",
+      "description": "Find the pricing plan that best suits your needs. Plans include seats, projects, support and more"
+    },
+    "sections": {
+      "apus": {
+        "name": "APU Databases: Unit Price Analysis",
+        "description": "Some of our users generously share their APU databases, which you can add to your account to budget with them.​<br>You can also share databases of the APUs you use in your country, this contributes to strengthening the construction industry and enhances the collective intelligence of our community.​<br>To search for unit price analyses in the form of activities, click the button:",
+        "button": "Search Unit Price Analysis APUs"
+      },
+      "proyecto": {
+        "name": "Project",
+        "description": "Some of our users, who are construction professionals, architects and engineers, publish their projects for the benefit of the metroKUBIKO community, this can be useful if you are going to build a similar project.​<br>The publication of a project includes, the construction budget, its activities, its unit price analyses and all project inputs, such as materials, equipment, labor, transportation, etc.  To add a published project to your account, click the button:",
+        "button": "Published Projects"
+      },
+      "terceros": {
+        "name": "Third Party Databases",
+        "description": "Some of our users generously publish their databases of suppliers, contractors and workers from the cities where they work.​<br>If you need new hires for your projects, you can check who has published their third party databases that you can add to your account.",
+        "proveedores": "Suppliers by country",
+        "contratistas": "Contractors by country",
+        "trabajadores": "Workers by country"
+      }
+    }
+  },
+  "software": {
+    "title": "Software",
+    "description": "Discover metroKUBIKO's features.",
+    "modules": {
+      "createAccount": {
+        "name": "Create and Activate Your Account",
+        "description": "Signing up for metroKUBIKO is quite simple. When you register on the platform, you'll create a freemium account that allows you to create two projects with all features so you can familiarize yourself with the tools and start learning cost control.<br>Then you can choose the plan that best suits your needs.",
+        "items": [
+          "Registration Manual",
+          "Login Manual",
+          "Edit profile and change password"
+        ],
+        "callToAction": "Create my account now"
+      },
+      "myAccount": {
+        "name": "My Account",
+        "description": "Once you've registered on the platform, you'll find an interface with three links, the first of which is \"My Account\", where you can configure your metroKUBIKO",
+        "items": [
+          "Edit my subscription",
+          "Add my Users",
+          "Registered user events",
+          "Roles and Permissions for users",
+          "My Publications",
+          "My Integrations"
+        ]
+      },
+      "databases": {
+        "name": "My Databases",
+        "description": "Another important link on your metroKUBIKO home page is the one that leads to databases. In these databases you can store information that you later need to prepare your budgets or execute your project. metroKUBIKO allows you to store multiple databases, created by yourself, shared by other users, or downloaded directly from our website www.metrokubiko.com",
+        "items": [
+          "Unit Price Analysis Database",
+          "Suppliers Database",
+          "Contractors Database"
+        ]
+      },
+      "projects": {
+        "name": "My Projects",
+        "description": "This is the most important section of metroKUBIKO, where you can create your own projects to budget and control on the platform",
+        "items": [
+          "Create simple project",
+          "Create project by phases",
+          "Edit projects",
+          "Duplicate a project",
+          "Share a project",
+          "Deactivate and delete a project"
+        ]
+      },
+      "budget": {
+        "name": "Construction Budget",
+        "description": "metroKUBIKO offers you several alternatives to create the budget for your construction project. You can do it from scratch or with the help of APU (Unit Price Analysis) databases previously defined in your database and collaboratively.",
+        "items": [
+          "Budget from scratch",
+          "Budget from databases",
+          "Imported budget",
+          "Budget by phases",
+          "Activity specifications",
+          "Quantity report",
+          "Reports",
+          "Create a Budget in just two steps"
+        ]
+      },
+      "scheduling": {
+        "name": "Construction Scheduling",
+        "description": "metroKUBIKO offers you a powerful tool to create a construction schedule through an online Gantt chart that allows collaborative work by multiple users. You can also link activities so that you define a critical path for your project. Once the activity linking is complete, you can automatically obtain a cash flow to know how many resources you need in each time period.",
+        "items": [
+          "Gantt chart",
+          "Cash flow"
+        ]
+      },
+      "warehouse": {
+        "name": "Warehouse",
+        "description": "Purchase and material consumption management",
+        "items": [
+          "Create and assign a warehouse to the project",
+          "Requisitions",
+          "Purchase orders",
+          "Warehouse entries",
+          "Warehouse exits",
+          "Returns",
+          "Transfers",
+          "Warehouse by phases",
+          "Reports"
+        ]
+      },
+      "laborContracts": {
+        "name": "Labor Contracts",
+        "description": "With metroKUBIKO's contract tool, you can pay your piecework labor, that is, through work cuts or progress reports.",
+        "items": [
+          "Create a contract",
+          "Edit a contract",
+          "Activity Assignment",
+          "Contract Minutes",
+          "Payment of Reports or Work Cuts"
+        ]
+      },
+      "payroll": {
+        "name": "Payroll or Administration Labor",
+        "description": "metroKUBIKO's Payroll pays your workers who you have hired by the administration method, that is, they are paid for a period of work time, for example monthly or biweekly. When paying labor by this method, it often prevents you from knowing what the labor cost is for each activity. However, with the metroKUBIKO platform you can know in each time period you pay the exact cost that that cost affects each of the project activities.",
+        "items": [
+          "Create a Work Front",
+          "Create a Payroll Period",
+          "Work Progress"
+        ]
+      },
+      "utilities": {
+        "name": "Utilities",
+        "description": "metroKUBIKO utilities allow you, on one hand, to keep a digital work log of your project, a logbook, where your users and guests can record the day-to-day events of your construction site. And on the other hand, Attachments, which allows you to share documents with your work team, such as plans, construction licenses, contract minutes, etc.",
+        "items": [
+          "Attachments",
+          "Logbook"
+        ]
+      },
+      "management": {
+        "name": "Management and Control",
+        "description": "Since your users feed information day by day, in the same project and focused on each of the activities, you can obtain real-time reports on the progress of your project not only in time but also in investment costs. You can detect in time activities that will generate losses of money or time and take timely corrective measures. Cost control is the best tool for decision-making.",
+        "items": [
+          "Cost Control",
+          "Time Control",
+          "Personnel Control",
+          "Equipment Control"
+        ]
+      },
+      "integrations": {
+        "name": "Integrations",
+        "description": "Since at metroKUBIKO we are experts in construction project control, we don't focus on other tools your company needs. However, we integrate the leading tools in the market. And our development team is always attentive to creating specific integrations with the tools you trust.",
+        "items": [
+          "Accounting integration - SIIGO",
+          "CRM integration - Briker",
+          "BiM integration - Revit"
+        ]
+      }
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "Please check the URL in the address bar and try again.",
+    "button": "Go back home"
+  },
+  "home": {
+    "meta": {
+      "description": "metroKUBIKO, construction company software, easier to use and 100% online. Powered by AI. It is a web platform that allows construction companies to manage their projects on the web. Focused mainly on ease of use and speed of implementation, collaborative work and rapid real-time reporting that optimizes management decision-making.",
+      "title": "metroKUBIKO · Software for construction companies . easy to use . 100% online"
+    },
+    "hero": {
+      "title": "Easy, collaborative and AI-powered construction management... make it happen.",
+      "description": "metroKUBIKO, construction company software, easier to use and 100% online. Powered by AI.",
+      "cta": "It's easy, check it out now"
+    },
+    "services": {
+      "title": "Advantages of ease of use",
+      "read_more": "Read more",
+      "items": [
+        {
+          "name": "Free training: competitive advantage for construction companies",
+          "description": "Discover how metroKUBIKO's free training enhances technological adoption and improves your construction team's productivity."
+        },
+        {
+          "name": "Quick implementation",
+          "description": "In a short time, you and your team will be able to start managing construction projects digitally on the web. This way you will have real-time reports at the click of a button, to improve your decision-making."
+        },
+        {
+          "name": "Better adoption",
+          "description": "Thanks to the platform's ease of use, your team quickly adapts to the digital environment and takes on their tasks with greater confidence. This improves ownership of their responsibilities, reduces errors and strengthens collaborative work."
+        }
+      ]
+    },
+    "about": {
+      "title": "Our Purpose",
+      "paragraph1": "At metroKUBIKO we believe that every construction project deserves to be executed with excellence. Our higher purpose is <strong>to empower construction companies</strong> to maintain total control over their projects and achieve their management objectives efficiently.",
+      "paragraph2": "We know that construction is a complex sector where every detail counts. That's why we develop tools that simplify management, optimize processes and provide the information needed to make sound decisions in real time.",
+      "paragraph3": "<strong>Your success is our success.</strong> We work day by day so you can focus on what really matters: building exceptional projects that transform communities.",
+      "button": "Learn more about us"
+    },
+    "callToAction": {
+      "title": "Ready to transform your project control?",
+      "description": "Join hundreds of construction companies that are already optimizing their projects with metroKUBIKO. Start today with our freemium mode.",
+      "button": "Start now - Sign up - Try it free for 3 months",
+      "subtext": "No commitments • No credit card • Immediate access"
+    },
+    "video": {
+      "title": "metroKUBIKO - Software for construction companies"
+    },
+    "gestionObra": {
+      "title": "Make it easy",
+      "subtitle": "Manage your construction site with teamwork and simultaneous work, get real-time reports and automate processes.",
+      "imageAlt": "Professional civil engineer",
+      "features": {
+        "presupuesto": {
+          "name": "Construction Budget",
+          "description": "In <strong>metroKUBIKO</strong> you can create construction budgets quickly, accurately and collaboratively. The platform offers you three flexible ways to do it:<br><br><strong>1. From scratch:</strong> Build your budget step by step by creating chapters, subchapters, activities, basic items, inputs and unit price analyses directly on the project sheet.<br><br><strong>2. Importing from Excel:</strong> If you already have your budget in spreadsheets, you can easily import it, including inputs and unit price analyses. You just need to ask Laura, our virtual assistant, for help and she will guide you step by step.<br><br><strong>3. Using the <strong>metroKUBIKO</strong> database:</strong> Access a library of unit price analyses that you can drag directly into your project budget and customize according to your needs.<br><br>Additionally, <strong>you can quote input prices online</strong>. With a single click, <strong>metroKUBIKO</strong> uses artificial intelligence to search for suppliers near your construction site location, automatically showing you updated prices and purchase links. Forget about making three quotes per product: the platform will deliver up to 10 real quotes in seconds.<br><br>With Laura's support, our virtual assistant, you will be able to streamline, automate and optimize the preparation of budgets for your construction projects."
+        },
+        "programacion": {
+          "name": "Construction Scheduling",
+          "description": "The <strong>metroKUBIKO</strong> platform provides you with a powerful construction scheduling tool based on a fully online Gantt chart. This functionality allows you to visualize the project activity list, each with its start and end date, automatically generating duration bars on the calendar. Duration can be calculated automatically from the performance of unit price analyses associated with each activity.<br><br>Additionally, you can establish dependency relationships between activities, such as start-finish, finish-start, start-start, among others, allowing you to dynamically build the project's critical path.<br><br>From the Gantt chart, the platform also automatically generates a cash flow, in which you can visualize both the costs associated with each activity in a given period, as well as the list of required inputs, which will facilitate advance planning of your purchases.<br><br>As with all <strong>metroKUBIKO</strong> tools, multiple collaborators can work simultaneously on construction scheduling, which speeds up processes and significantly improves team efficiency."
+        },
+        "inventarios": {
+          "name": "Inventory Management",
+          "description": "With <strong>metroKUBIKO</strong> you can comprehensively control construction input inventories, as well as all purchase and material consumption management in your projects. The platform offers tools for each stage of the process: from input requests to recording their consumption on site. Additionally, you will have real-time reports —such as Stock and Kardex— for all projects you are working on, and automatic alerts when budgeted quantities are exceeded or additional inputs are requested.<br><br><strong>Warehouse Module Tools</strong><br><br><strong>REQUISITIONS</strong><br>Resident engineers can easily register material requests needed for a specific period (for example, the following week). These requisitions are processed by the purchasing department, which automatically generates corresponding purchase orders for suppliers.<br><br><strong>PURCHASE ORDERS</strong><br>Allows the purchasing department to manage input orders to suppliers. These orders can be created manually or from requisitions. Each generated order activates alerts about material reception, helping to prevent delays on site.<br><br><strong>WAREHOUSE ENTRIES</strong><br>Warehouse keepers can digitally register the arrival of inputs to the site, automatically from purchase orders. This tool simplifies the process, avoids reprocessing and does not require advanced software knowledge, as the platform is intuitive. Registration increases project stock.<br><br><strong>WAREHOUSE EXITS</strong><br>Allows controlling material consumption by assigning them to specific activities where they will be used. The warehouse keeper, together with the resident engineer, records exits for contractors or workers, automatically unloading inputs from inventory and adding their cost to the corresponding activity.<br><br><strong>RETURNS</strong><br>Facilitates the return of defective or unused materials to suppliers. This process is associated with the purchase invoice and unloads inputs from inventory without generating additional costs for the project.<br><br><strong>REIMBURSEMENTS</strong><br>Allows re-entering into the warehouse materials not consumed by contractors or workers. These reimbursements are associated with the original Warehouse Exit and reduce the cost of the destination activity.<br><br><strong>TRANSFERS</strong><br>With this tool you can transfer materials between warehouses or between different projects. The system automatically performs the exit in the source project and generates the entry in the destination project, keeping the inventory of both locations updated.<br><br>Thanks to these tools, you will be able to keep all processes documented and under control, while accessing real-time reports on inventories, consumption by contractor, purchases by supplier, material use by activity, among many other key indicators to make better decisions in your projects."
+        },
+        "contratos": {
+          "name": "Piecework Labor Contracts",
+          "description": "The <strong>metroKUBIKO</strong> platform has a specialized tool for managing labor contracts under the piecework modality, ideal for tracking the execution progress of each project activity.<br><br>Each contract is assigned to a specific worker and includes the detailed list of activities they must execute, along with their quantities and prices. Additionally, you can easily configure parameters such as withholdings, indirect costs, taxes and other relevant values.<br><br>Being directly linked to the project budget, contracts do not allow assigned engineers to exceed the values defined in unit price analyses (APUs). If a cost overrun is required, it must be previously authorized by a user with a superior role. This ensures rigorous budget control from the contracting stage.<br><br><strong>Work Cuts</strong><br>The tool allows site residents to generate cuts quickly and easily, automatically obtaining all calculations of accumulated amounts, withholdings, advance amortizations and more, without errors or reprocessing.<br><br><strong>Contract Minutes</strong><br>It also includes a contract minutes editor, where you can save your predefined templates and use them easily when preparing each contractor's minutes.<br><br>With <strong>metroKUBIKO</strong>, you maintain financial and contractual control of labor in your project, in a structured, secure and efficient manner."
+        },
+        "nomina": {
+          "name": "Payroll Management",
+          "description": "When managing payment of your site personnel under the direct administration method —that is, through a formal payroll that includes days worked, legal withholdings, bonuses, and contributions to health and pension systems—, it is essential to have a tool that simplifies this task without losing detail.<br><br>For this purpose, <strong>metroKUBIKO</strong> offers you a specialized module for creating payroll sheets, where you can register all workers assigned to a specific work front. Each worker has their agreed salary, legal deductions, bonuses and other concepts, all in a clear and structured environment.<br><br>However, one of the great challenges of this payment method is associating real labor costs to each project activity. Traditionally, this task is solved with spreadsheets, estimated percentages and manual calculations, which consumes valuable time and opens room for errors.<br><br>This is where <strong>metroKUBIKO</strong> makes the difference.<br><br>Thanks to its \"Payroll Progress\" tool, you can automatically prorate the total payroll cost to each of the executed activities. Simply record the work progress in a period (for example, a fortnight), that is, enter the measurement or physical progress of each item. The system will calculate, based on each activity's incidence, the corresponding labor cost.<br><br>This approach not only saves time for technical personnel on site, but also allows you to know in real time how much it costs to execute each activity, with precise and traceable data. This way you can make better decisions, optimize resources and manage with a broader vision of the project."
+        },
+        "costos": {
+          "name": "Cost Management and Control",
+          "description": "Take total control of your project costs, in real time, with <strong>metroKUBIKO</strong><br><br>When you are in charge of project management, decisions must be quick, but many times you face the frustration of not having timely information. Questions like:<br><br>What is the real progress of an activity?<br><br>Am I within budget or do I already have deviations?<br><br>Why was a cost overrun generated?<br><br>Were incorrect inputs assigned to an activity?<br><br>How much money do I need to finish the project?<br><br>What inputs or resources are generating higher costs?<br><br>How does the budgeted unit price compare to the executed one?<br><br>What is the current value of my inventory?<br><br>How much should I charge for advances?<br><br>These doubts should not take days or weeks to resolve by depending on extensive or poorly consolidated reports.<br><br>With <strong>metroKUBIKO</strong> and its Cost Control tool, you get immediate, clear and reliable answers, without depending on third parties, without waiting and often with just one click.<br><br>This not only improves decision-making, but also gives you a complete view of the financial status of your site, allowing you to anticipate deviations, adjust course and optimize project resources.<br><br>The tool presents you with five key scenarios to have absolute control of the project:<br><br>🔹 1. Initial Budget<br>It is the baseline with which you start your site: chapters, subchapters, activities, inputs, unit price analyses and indirect costs. Everything you have projected, organized and loaded from the initial planning.<br><br>🔹 2. Modified Budget<br>During execution, conditions change. With this scenario you can update quantities and costs without losing sight of your original budget. Ideal for unforeseen new activities or scope adjustments.<br><br>🔹 3. Executed Budget<br>It is the real reflection of what has happened on site: consumed materials, paid labor, rented equipment and everything recorded by your team. The platform automatically consolidates this information to give you a faithful view of real costs.<br><br>🔹 4. Budget to Execute<br>Automatically calculated as the difference between the modified budget and the executed one. This way you know, at all times, how much money you need to invest to finish the project.<br><br>🔹 5. Projected Budget<br>It is the combination of the executed budget plus what remains to be executed. This scenario anticipates the total cost at which the site will end, allowing you to act in time, correct deviations and optimize results before it is too late.<br><br>With <strong>metroKUBIKO</strong>, you can identify from major expenses —such as installing an elevator— to minimal errors, such as a nail incorrectly assigned to an activity. Nothing goes unnoticed.<br><br>The information is there. What matters is having it in time to make decisions. And that is exactly what <strong>metroKUBIKO</strong> offers you."
+        },
+        "ventas": {
+          "name": "Sales Budget - for contractors and builders",
+          "description": "If you build for third parties —whether for the State, a company or a private client— <strong>metroKUBIKO</strong> puts in your hands a specialized tool to manage contracts under the piecework method that we call SALES BUDGET.<br><br>This tool starts from your project's initial cost budget, with its respective unit price analyses (APUs), and allows you to add a specific profitability to each activity, either in monetary value or as a percentage of its cost. This utility is calculated before applying the project's general indirect costs.<br><br>The contracting budget includes only the activities you decide to incorporate into the contract, leaving out those that, although they must be executed, do not generate direct billing. Each activity is defined with its unit of measure and work quantity, which makes preparing a billing certificate quick and simple: you just create the new certificate, enter the executed quantity and the platform automatically calculates profitability, progress, accumulated amounts and other key indicators.<br><br>Additionally, Sales Budget offers you detailed profitability reports for each activity, comparing what was contracted with actual execution. This way you can know effective profitability, costs by inputs, contracts and payrolls, as well as the total invested to date, including material in stock and pending advances to collect.<br><br>With Sales Budget, your contract will always be under control: you will have total visibility, make decisions with precise information and avoid losses due to lack of management."
+        },
+        "ia": {
+          "name": "AI Automations",
+          "description": "The <strong>metroKUBIKO</strong> platform incorporates automations driven by artificial intelligence that can reduce your process times by up to 60 days, especially in tasks such as material quoting or automatic budget generation. This allows your company to achieve greater efficiency and productivity in each project.<br><br><strong>Main AI automations:</strong><br><br><strong>1. Construction material quoting</strong><br>Once your project budget is finished, with the unit price analysis and complete material list, the quoting process begins. Traditionally, this can involve phone calls, price list requests or web searches, and take up to 60 days. With <strong>metroKUBIKO</strong>, this process is reduced to less than 20 minutes: automatically quote all your project materials in real time and immediately receive purchase links for each input, streamlining management and decision-making.<br><br><strong>2. Automatic budgets with AI</strong><br>With our Artificial Intelligence agent, you can generate a preliminary budget for your project in minutes. Just enter the basic data of your site —such as area, number of floors, foundation type, construction system— and, if you want greater precision, attach PDF plans. The platform will deliver a complete budget, with activity list, unit price analyses and necessary materials, ready to edit and adjust directly according to your needs.<br><br><div class=\"mt-4 mb-4 text-center\"><a href=\"/#presupuesto-automatico-ia-section\" class=\"inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5\">🤖 Create automatic budget with AI</a></div><br><br><strong>3. Virtual assistant Laura</strong><br>If you have files in Excel or PDF, such as construction budgets, purchase invoices or other documents, Laura imports them directly into your project. Additionally, you can request automated reports on budgets, execution, deviations or projections. With this real-time information, you will make more accurate and strategic decisions. Laura also manages scheduled notifications, keeping you always up to date with your project.<br><br>In summary, <strong>metroKUBIKO</strong>, powered by AI, will continue to grow in functions and automations, making the management of your projects easier, more efficient and safer, allowing you to control every detail and minimize the risks of not meeting budget or schedule."
+        },
+        "integraciones": {
+          "name": "Integrations",
+          "description": "Smart integrations that take your automation to the next level<br><br>To maximize the automation of your processes, <strong>metroKUBIKO</strong> incorporates strategic integrations with various platforms, making your favorite tools work in a connected and coordinated way. This continuous digital dialogue allows information to flow automatically between systems, eliminating duplicate tasks and minimizing human errors.<br><br>The result is a collaborative and frictionless experience, where your entire team accesses updated data in real time, coordinates activities and makes precise and timely decisions. Thanks to these integrations, the management of your projects becomes smarter, more efficient and smoother, boosting your company's productivity from day one.<br><br><strong>1. REST API: the core of connectivity in metroKUBIKO</strong><br><br>Our REST API is a powerful and flexible tool, designed to facilitate integration between <strong>metroKUBIKO</strong> and other technological platforms. Based on standard CRUD verbs (Create, Read, Update, Delete), it allows developers to interact with the platform in a simple, secure and efficient way.<br><br>With this API, programmers can write and query data in real time within <strong>metroKUBIKO</strong>: create projects, record progress, upload budgets or access key information such as site status, costs, resources or schedules.<br><br>This bidirectional capability makes <strong>metroKUBIKO</strong> an open and collaborative ecosystem, capable of integrating with ERPs, cost control systems or other management solutions, enhancing process automation and eliminating repetitive or manual tasks.<br><br><div class=\"mt-4 mb-4 text-center\"><a href=\"https://github.com/copres/metrokubiko-api-documentation\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5\">🚀 Learn about REST API</a></div><br><br><strong>2. Integration with Siigo accounting software</strong><br><br>Siigo is a cloud-based accounting and administrative platform, aimed at SMEs and accounting professionals, that allows managing accounting, electronic invoicing, payroll, inventories and commercial operations from any device connected to the internet. With more than one million users in Latin America, it offers functionalities such as POS, automated reports, regulatory compliance and continuous training.<br><br>If your company uses Siigo as accounting software, <strong>metroKUBIKO</strong> connects directly through Siigo's REST API, allowing you to consult and record accounting information in real time —for example, material purchases or labor cut certificates—. This way, you ensure synchronized, smooth and reprocessing-free management between your administrative and site systems.<br><br><strong>3. Custom integrations: we adapt to your digital ecosystem</strong><br><br>At <strong>metroKUBIKO</strong> we know that each company has a unique digital environment. That's why, if your organization uses other platforms —such as sales CRMs, horizontal property management software or accounting systems other than Siigo—, our technical team can develop integrations tailored to your needs.<br><br>We connect <strong>metroKUBIKO</strong> with the tools you already use, ensuring an automated and secure information flow between systems. This way, you eliminate reprocessing, optimize times and keep all your data —from sales and accounting to site management— synchronized and updated in real time."
+        }
+      }
+    },
+    "blog": {
+      "title": "Latest blog articles",
+      "description": "Discover the latest trends in construction, tips to optimize your projects and how to get the most out of <strong>metroKUBIKO</strong>.",
+      "button": "View all articles"
+    },
+    "cta": {
+      "quote": "Construction is the industry that moves the world's economy and by managing properly it is possible to reduce the costs of unforeseen events in projects by up to 95%",
+      "button": "Contact"
+    },
+    "testimonials": {
+      "items": [
+        {
+          "role": "Construction Director",
+          "message": "\"metroKUBIKO has completely transformed the way we manage our construction projects. Budgets are more accurate and construction control is exceptional.\""
+        },
+        {
+          "role": "Civil Engineer",
+          "message": "\"The ease of creating unit price analyses and scheduling construction projects in metroKUBIKO has allowed us to optimize our resources and deliver projects on time.\""
+        },
+        {
+          "role": "Construction Manager",
+          "message": "\"The most complete construction software we have used. The integration with AI for budgets has been a revolutionary change for our company.\""
+        }
+      ]
+    },
+    "presupuestoIA": {
+      "title": "Automatic construction budgets with AI",
+      "subtitle": "Generate professional and detailed budgets for your construction projects with artificial intelligence in minutes",
+      "powered_by": "Powered by AI",
+      "automatic_budgets": "Automatic Budgets",
+      "form": {
+        "title": "Create Automatic Budget",
+        "project_type": "Project Type",
+        "project_types": {
+          "single_family": "Single Family Housing",
+          "residential_building": "Residential Building",
+          "commercial": "Commercial Construction",
+          "infrastructure": "Infrastructure"
+        },
+        "built_area": "Built Area (m²)",
+        "built_area_placeholder": "Ex: 120",
+        "location": "Location",
+        "location_placeholder": "City, State",
+        "detail_level": "Detail Level",
+        "detail_levels": {
+          "basic": "Basic",
+          "intermediate": "Intermediate",
+          "detailed": "Detailed"
+        },
+        "button": "Generate Budget with AI"
+      },
+      "how_it_works": {
+        "title": "How does it work?",
+        "step1": "Complete the basic data of your construction project",
+        "step2": "Our AI analyzes and generates a detailed budget",
+        "step3": "Download, print or adjust according to your needs"
+      },
+      "placeholder": {
+        "title": "Your budget will appear here",
+        "description": "Complete the form and generate a professional budget with artificial intelligence"
+      }
+    },
+    "ai_budget": {
+      "section": {
+        "title": "Free Construction Budgets with AI",
+        "description": "Create accurate and detailed construction budgets using our artificial intelligence technology. Generate unit price analyses, calculate materials and labor, and obtain reliable estimates for your construction projects. All completely free and in just a few minutes.",
+        "primary_cta": "Create Free Budget",
+        "secondary_cta": "Learn more",
+        "image_alt": "Free Construction Budgets with AI"
+      },
+      "hero": {
+        "title": "Automatic construction budgets with Laura",
+        "description": "Generate professional and detailed budgets for your construction projects with Laura, the AI agent for construction, in minutes",
+        "powered_by": "Powered by AI",
+        "automatic_budgets": "Automatic Budgets",
+        "background_alt": "Construction site scene with equipment"
+      },
+      "steps": {
+        "title": "How does the automatic budget work?",
+        "items": [
+          {
+            "icon": "form",
+            "title": "Fill out the form",
+            "description": "Complete the data of your construction project."
+          },
+          {
+            "icon": "sparkles",
+            "title": "Laura thinks",
+            "description": "Laura, the AI agent for construction, analyzes your request."
+          },
+          {
+            "icon": "document",
+            "title": "The budget is generated",
+            "description": "A detailed budget is generated, with unit price analysis."
+          }
+        ],
+        "note": "You must be registered to be able to edit or generate budget reports."
+      },
+      "form": {
+        "title": "Complete the form and generate a budget with AI.",
+        "project_type_label": "Project Type",
+        "project_type_options": {
+          "empty": "Custom project",
+          "house": "House",
+          "building": "Building",
+          "buildingComplex": "Building complex",
+          "bridge": "Bridge"
+        },
+        "custom_project": {
+          "specifications_label": "Project specifications",
+          "specifications_placeholder": "Enter detailed specifications of your project..."
+        },
+        "house": {
+          "title": "House details",
+          "style_label": "Architectural style",
+          "floors_label": "Floors",
+          "bedrooms_label": "Bedrooms",
+          "bathrooms_label": "Bathrooms",
+          "parking_label": "Parking spaces",
+          "square_meters_label": "Square meters",
+          "garden_label": "Garden",
+          "pool_label": "Pool",
+          "finishing_quality_label": "Finishing quality level",
+          "construction_style_label": "Construction style",
+          "construction_style_placeholder": "E.g.: reinforced concrete and block structure",
+          "scope_label": "Scope"
+        },
+        "building": {
+          "title": "Building details",
+          "type_title": "Building type",
+          "volumetry_title": "Volume and Land",
+          "land_area_label": "Land Area (m²)",
+          "total_construction_area_label": "Total Construction Area (m²)",
+          "floors_label": "Levels (Height)",
+          "basements_label": "Basements (Underground levels)",
+          "density_title": "Density and Units",
+          "total_apartments_label": "Total number of apartments",
+          "apartments_per_floor_label": "Apartments per floor",
+          "structure_facade_title": "Structure and Facade Type",
+          "structure_type_label": "Structure",
+          "facade_type_label": "Facade"
+        },
+        "buildingComplex": {
+          "title": "Building complex details",
+          "masterplan_title": "1. Master Plan (Land and Urbanization)",
+          "total_land_area_label": "Total site area (m²)",
+          "infrastructure_status_label": "Infrastructure status",
+          "topography_label": "General topography",
+          "vertical_scope_title": "2. Vertical Scope (The Buildings)",
+          "building_count_label": "Number of Towers/Buildings",
+          "floors_per_building_label": "Levels per Tower",
+          "building_footprint_label": "Footprint of each building (m²)",
+          "total_units_label": "Total Housing Units",
+          "same_design_label": "Identical buildings (mirror type)?",
+          "amenities_title": "3. \"Club\" Amenities (General Facilities)",
+          "has_pool_label": "Pool",
+          "pool_type_label": "Pool type",
+          "has_sports_courts_label": "Sports courts",
+          "has_parks_label": "Parks",
+          "has_artificial_lakes_label": "Artificial lakes",
+          "has_jogging_track_label": "Jogging tracks",
+          "has_security_booth_label": "Security booths",
+          "has_perimeter_walls_label": "Perimeter walls"
+        },
+        "bridge": {
+          "title": "Bridge details",
+          "usage_title": "1. Use and Traffic",
+          "bridge_type_label": "Bridge type",
+          "traffic_intensity_label": "Traffic intensity",
+          "lanes_label": "Number of lanes",
+          "has_sidewalk_label": "Includes pedestrian sidewalk",
+          "geometry_title": "2. Geometry and \"Span\"",
+          "total_length_label": "Total Length (meters)",
+          "span_length_label": "Span - distance between supports (meters)",
+          "span_length_help": "The larger the distance without columns, the exponentially more expensive the bridge becomes.",
+          "clear_height_label": "Clear height - Clearance (meters)",
+          "width_label": "Total width (meters)",
+          "obstacle_title": "3. The Obstacle (What is crossed)",
+          "crossing_type_label": "Obstacle type",
+          "structure_title": "4. Structure Type (Materiality)",
+          "structure_type_label": "Structure type"
+        },
+        "submit": "Generate Budget with AI"
+      },
+      "preview": {
+        "title": "Your budget will appear here",
+        "description": "Complete the form and generate a professional budget with artificial intelligence",
+        "fullscreen_title": "Full screen",
+        "fullscreen_aria": "Open budget in full screen",
+        "close_fullscreen_aria": "Close full screen"
+      }
+    },
+    "lauraSection": {
+      "badge": "AI Agent",
+      "title": "Laura, your AI Agent for Construction",
+      "description": "Laura is an intelligent agent integrated into metroKUBIKO. She creates construction budgets, quotes material prices, helps you import data into the platform and answers your questions.",
+      "capabilities": {
+        "budgets": "Construction budgets",
+        "materials": "Quote materials",
+        "import": "Import data",
+        "questions": "Answer questions"
+      },
+      "primary_cta": "Talk to Laura",
+      "secondary_cta": "Learn more",
+      "avatar_alt": "Laura, AI agent for construction",
+      "section_aria_label": "Presentation of Laura, AI agent for construction"
+    }
+  },
+  "contact": {
+    "title": "Contact metroKUBIKO",
+    "description": "The easiest to use and completely online software for construction companies.",
+    "form": {
+      "full_name": "Full Name",
+      "email": "Email",
+      "message": "Message",
+      "send": "Send",
+      "sending": "Sending...",
+      "success": "Email sent successfully!",
+      "error": "Error sending email. Please try again.",
+      "validation": "Please fill in all required fields."
+    },
+    "address": "Calle 104 A # 21 - 57, en Bogotá, D.C., Colombia",
+    "address_label": "Postal address",
+    "phone": "+57 (316) 3719421",
+    "phone_label": "Phone number",
+    "email": "soporte@metrokubiko.com",
+    "email_label": "Email",
+    "connect": "Connect"
+  },
+  "laura": {
+    "title": "Talk to Laura",
+    "description": "Laura helps you create free construction budgets and answers your questions about metroKUBIKO.",
+    "create_budget": "Create free construction budget",
+    "ask_question": "Ask something interesting",
+    "chat": {
+      "title": "Laura",
+      "subtitle": "Construction Assistant",
+      "greeting": "Hello! I'm Laura, your construction assistant. How can I help you today?",
+      "placeholder": "Type your message here...",
+      "send": "Send",
+      "error": "Oops, I can't respond right now. Please try again later.",
+      "budget_opened": "A new tab has been opened so you can create the budget with Laura. You need to be logged into metroKUBIKO to create the budget. Go to the tab to review.",
+      "error_generic": "Sorry, something went wrong."
+    }
+  },
+  "aboutPage": {
+    "meta": {
+      "title": "About Us · Metrokubiko",
+      "description": "Find more information about our history, values, mission and more. We are a group of people who share the same values."
+    }
+  },
+  "about": {
+    "heading": {
+      "title": "About Us"
+    },
+    "mission": {
+      "paragraph1": "<strong style=\"color: #024057\">metroKUBIKO</strong> is a web platform, created from Colombia for the digital transformation of the construction industry throughout the Latin American continent. It has been developed since 2013 by a multidisciplinary team of professionals, including architects, civil engineers, computer engineers, teachers, builders, among others, some with more than 30 years of experience in construction.​",
+      "paragraph2": "We have seen that construction, in our countries, is a quite traditional sector regarding the use of information technologies, however, after the confinement, it became evident that companies would need their executives to work from home or from any other place different from the construction site and also that everyone would feed information into the same project.",
+      "paragraph3": "This would avoid reprocessing, delays in information and would allow project control at all times and from any device connected to the internet. Thus, company managers and decision makers would obtain real-time reports of their project, not only in general but in each of their particular activities.​",
+      "paragraph4": "<strong style=\"color: #024057\">metroKUBIKO</strong> is the answer to that need…",
+      "imageAlt": "Modern metroKUBIKO office",
+      "stats": {
+        "clients": "Clients",
+        "projects": "Projects",
+        "countries": "Countries",
+        "active_users": "Active Users"
+      }
+    },
+    "values": {
+      "title": "Constantly innovating",
+      "year": "Year",
+      "read_more": "Read more",
+      "read_less": "Read less",
+      "items": {
+        "potencia": {
+          "name": "PotencIA",
+          "year": "2024",
+          "description": "Colombia PotencIA Digital Project, driven by the Ministry of Information and Communications Technologies (MinTIC), is a comprehensive strategy with an investment of $2 trillion (2023–2026) designed to consolidate and accelerate innovation ecosystems and digital transformation in all regions of the country. Through the articulation of Government, companies, entrepreneurs, investors, academia and communities, PotencIA Digital promotes permanent connectivity, development of technical capabilities, creation of digital transformation indices and adoption of artificial intelligence as a growth engine.<br><br>Additionally, it implements 24/7 digital centers, training routes for one million people in ICT skills and dynamic governance models to generate high-impact regional and global solutions.<br><br><strong style=\"color: #024057\">metroKUBIKO</strong> was selected to obtain non-reimbursable resources for the implementation of AI and Business Intelligence, thus strengthening its capacity for technological innovation in the construction industry."
+        },
+        "nexo": {
+          "name": "Nexo Digital - ConexsurTic",
+          "year": "2024",
+          "description": "Product and service sophistication project led by the ConexSurTIC technology cluster (Pasto, Nariño), designed to boost the competitiveness of ICT companies through innovative strategies that allow the identification of new business opportunities, access to new markets and the execution of trade missions. This project sought to strengthen commercial capabilities, business intelligence, access to financing, internationalization, talent attraction and knowledge generation about the digital economy (conexsurtic.com)."
+        },
+        "appsco": {
+          "name": "Apps.co",
+          "year": "2023",
+          "description": "The APPS.CO 2023 Female Entrepreneurship Award recognized the trajectory and vision of <strong style=\"color: #024057\">LEIDY ERASO TORRES</strong>, founder of <strong style=\"color: #024057\">metroKUBIKO</strong>, a pioneering company in the development of cloud software solutions. During the Colombia 4.0 event, APPS.CO highlighted her innovative capacity and leadership in the Female Entrepreneurship category, underlining the positive impact of her project on regional digital transformation. This award reinforces APPS.CO's commitment to promoting women entrepreneurs who generate value and sustainable growth in the Colombian ICT ecosystem."
+        },
+        "sena2020": {
+          "name": "SENA INNOVA",
+          "year": "2020",
+          "description": "<strong style=\"color: #024057\">metroKUBIKO</strong> was again recognized in the SENA INNOVA 2020 call, obtaining non-reimbursable resources for the implementation of advanced integrations and comprehensive improvement of the user experience. This project allowed developing new connectivity functionalities with external systems, optimizing the user interface and creating more intuitive tools for construction professionals. The implementation of these improvements significantly strengthened the platform, offering a smoother and more efficient experience that facilitates construction project management throughout Latin America."
+        },
+        "sena2018": {
+          "name": "SENA INNOVA",
+          "year": "2018",
+          "description": "<strong style=\"color: #024057\">metroKUBIKO</strong> was recognized in the SENA INNOVA 2018 call, obtaining non-reimbursable resources as an innovation award for the project \"Improvement of <strong style=\"color: #024057\">metroKUBIKO</strong> server capacity to scale to thousands of users\". This recognition allowed strengthening the platform's technological infrastructure, optimizing its performance and capacity to serve the growing demand of users in the construction industry. The project focused on improving system scalability, guaranteeing a smooth and efficient experience for thousands of professionals who trust <strong style=\"color: #024057\">metroKUBIKO</strong> to manage their construction projects."
+        }
+      }
+    },
+    "team": {
+      "title": "Our team",
+      "description": "Meet the professionals who make innovation in construction possible",
+      "connect": "Connect",
+      "roles": {
+        "ceo": "Chief Executive Officer",
+        "coo": "Chief Operating Officer",
+        "cto": "Chief Technology Officer",
+        "projectManager": "Project Manager",
+        "communityManager": "Community Manager",
+        "ciao": "Chief AI Officer"
+      }
+    },
+    "video": {
+      "title": "Get to know our story",
+      "subtitle": "Discover how metroKUBIKO is transforming the construction industry",
+      "subscribe": "Subscribe to our channel"
+    }
+  },
+  "blog": {
+    "title": "metroKUBIKO Blog",
+    "search_placeholder": "Search articles by title, category or keywords...",
+    "read_more": "Read more",
+    "no_posts": "We will publish our first articles soon. Stay tuned!",
+    "no_results": "No articles found matching your search.",
+    "no_results_hint": "Try other keywords or check spelling.",
+    "results_count": "Found {count} article{plural}",
+    "tags": "Tags"
+  }
+}
+

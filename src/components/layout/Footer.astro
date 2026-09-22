@@ -1,0 +1,115 @@
+---
+import FooterWaves from './FooterWaves.astro';
+import { getTranslations, getLocaleFromPath, getLocalizedRoute } from '../../i18n/utils.js';
+
+// Detectar locale desde la URL usando la función centralizada
+const locale = getLocaleFromPath(Astro.url.pathname);
+const t = getTranslations(locale);
+
+// Enlaces del footer traducidos con rutas localizadas
+// @ts-ignore
+function getBottomLinks(t, locale) {
+  return [
+  {
+    links: [
+      {
+        name: t.footer?.links?.create_budgets || 'Crear presupuestos de obra con IA de forma gratuita',
+        href: getLocalizedRoute('crear-presupuestos-de-obra-con-ia-de-forma-gratuita', locale),
+      },
+      {
+        name: t.footer?.links?.apus || 'APUs',
+        href: getLocalizedRoute('apus', locale),
+      },
+      {
+        name: t.footer?.links?.unit_price_analysis || 'Análisis de Precios Unitarios',
+        href: getLocalizedRoute('analisis-de-precios-unitarios', locale),
+      },
+      {
+        name: t.footer?.links?.construction_budgets || 'Presupuestos de Obras',
+        href: getLocalizedRoute('presupuestos-de-obras', locale),
+      },
+      {
+        name: t.footer?.links?.construction_scheduling || 'Programación de obras',
+        href: getLocalizedRoute('programacion-de-obras', locale),
+      },
+      {
+        name: t.footer?.links?.construction_platforms || 'Plataformas de construcción',
+        href: getLocalizedRoute('plataformas-de-construccion', locale),
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        name: t.footer?.links?.construction_software || 'Software de construcción',
+        href: getLocalizedRoute('software-de-construccion', locale),
+      },
+      {
+        name: t.footer?.links?.software_for_contractor || 'Software para constructora',
+        href: getLocalizedRoute('software-para-constructora', locale),
+      },
+      {
+        name: t.footer?.links?.software_colombia || 'Software para constructoras en Colombia',
+        href: getLocalizedRoute('software-para-constructoras-en-colombia', locale),
+      },
+      {
+        name: t.footer?.links?.software_contractors || 'Software para contructoras',
+        href: getLocalizedRoute('software-para-constructoras', locale),
+      },
+      {
+        name: t.footer?.links?.construction_control_software || 'Software para control de obras de construcción',
+        href: getLocalizedRoute('software-para-control-de-obras-de-construccion', locale),
+      },
+    ],
+  }];
+}
+
+const bottomLinks = getBottomLinks(t, locale);
+---
+
+<FooterWaves />
+
+<footer
+  class="bg-[#d4d4d4] dark:bg-[#0f0e0c] py-16 lg:py-20"
+  aria-labelledby="footer-heading"
+>
+  <h2 id="footer-heading" class="sr-only">Footer</h2>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-16">
+      <!-- Columna 1: Información (25%) -->
+      <div class="flex flex-col items-start gap-6 sm:gap-8 lg:col-span-1">
+        <img
+          class="h-12 w-auto"
+          width="150"
+          height="48"
+          src="/assets/Logo m3 H.png"
+          alt="metroKUBIKO"
+        />
+        <p class="text-primary-950/70 dark:text-primary-200/70 text-xs" set:html={t.footer.description.replace(/metroKUBIKO/g, '<strong>metroKUBIKO</strong>')} />
+        <p class="text-xs" style="color: #024057">{t.footer.copyright}</p>
+      </div>
+      
+      <!-- Columna 2: Vacía (25%) -->
+      <div class="lg:col-span-1"></div>
+      
+      <!-- Columna 3: Campos (50%) -->
+      <div class="flex flex-col justify-end lg:col-span-2">
+        <!-- Bottom links -->
+        <div class="flex flex-wrap gap-1 items-end justify-end">
+          {
+            bottomLinks.flatMap((group) => 
+              group.links.map((link) => (
+                <a
+                  href={link.href}
+                  class="text-xs text-primary-700 dark:text-primary-300 bg-primary-100 dark:bg-primary-900/40 border border-primary-300 dark:border-primary-600 focus-visible:outline-primary-950 dark:focus-visible:outline-primary-200 inline-flex items-center gap-1 rounded-lg px-2 py-1 hover:bg-primary-200 dark:hover:bg-primary-900/60 hover:border-primary-400 dark:hover:border-primary-500 focus-visible:outline focus-visible:outline-2 transition-all duration-200"
+                >
+                  {link.name}
+                </a>
+              ))
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

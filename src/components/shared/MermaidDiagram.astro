@@ -1,0 +1,73 @@
+---
+interface Props {
+  content: string;
+  id?: string;
+  class?: string;
+}
+
+const { content, id, class: className } = Astro.props;
+const diagramId = id || `mermaid-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div 
+  id={diagramId}
+  class={`mermaid ${className || ''}`}
+  data-content={content}
+>
+  {content}
+</div>
+
+<style>
+  .mermaid {
+    @apply bg-white dark:bg-primary-900 rounded-lg p-4 my-6 border border-primary-200 dark:border-primary-700;
+  }
+  
+  .mermaid svg {
+    @apply max-w-full h-auto mx-auto;
+  }
+</style>
+
+<script>
+  import mermaid from 'mermaid';
+  
+  // Configurar Mermaid
+  const initializeMermaid = () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: isDark ? 'dark' : 'default',
+      themeVariables: {
+        primaryColor: '#3b82f6',
+        primaryTextColor: isDark ? '#dbeafe' : '#1e40af',
+        primaryBorderColor: '#2563eb',
+        lineColor: isDark ? '#9ca3af' : '#6b7280',
+        sectionBkgColor: isDark ? '#1f2937' : '#f8fafc',
+        altSectionBkgColor: isDark ? '#374151' : '#f1f5f9',
+        gridColor: isDark ? '#4b5563' : '#e5e7eb',
+        tertiaryColor: isDark ? '#1f2937' : '#f8fafc'
+      }
+    });
+  };
+
+  // Inicializar Mermaid
+  initializeMermaid();
+  
+  // Renderizar diagramas
+  mermaid.run();
+
+  // Configurar observador para cambios de tema
+  const observer = new MutationObserver(() => {
+    initializeMermaid();
+    
+    // Re-renderizar diagramas existentes
+    document.querySelectorAll('.mermaid').forEach((element) => {
+      element.removeAttribute('data-processed');
+    });
+    mermaid.run();
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
+  });
+</script> 

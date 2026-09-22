@@ -1,0 +1,51 @@
+---
+import HeaderSvelte from './Header.svelte';
+import { getTranslations, getLocaleFromPath, getLocalizedRoutes } from '../../i18n/utils.js';
+
+// Detectar locale desde la URL usando la función que maneja correctamente las rutas de blog
+const locale = getLocaleFromPath(Astro.url.pathname);
+const t = getTranslations(locale);
+
+// Obtener rutas localizadas desde el mapa centralizado
+const routes = getLocalizedRoutes(locale);
+
+const links = [
+  {
+    ref: '01',
+    name: t.nav.home,
+    href: routes.home,
+  },
+  {
+    ref: '02',
+    name: t.nav.software,
+    href: routes.software,
+  },
+  {
+    ref: '03',
+    name: t.nav.nosotros,
+    href: routes.nosotros,
+  },
+  {
+    ref: '04',
+    name: t.nav.utilidades,
+    href: routes.utilidades,
+  },
+  {
+    ref: '05',
+    name: t.nav.precios,
+    href: routes.precios,
+  },
+  {
+    ref: '06',
+    name: t.nav.contacto,
+    href: routes.contacto,
+  },
+  {
+    ref: '07',
+    name: t.nav.blog,
+    href: routes.blog,
+  },
+];
+---
+
+<HeaderSvelte client:load links={links} translations={t} />
