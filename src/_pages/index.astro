@@ -26,6 +26,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
+  <!-- Cloudflare Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
   <style is:inline>
     :root{
       --stone-950:#0c0a09;
@@ -864,15 +867,36 @@
     .cta-inner h2{font-size:clamp(26px,4vw,38px)}
     .cta-inner p{color:var(--stone-400);margin-top:14px;font-size:16.5px}
     .waitlist-form{
-      margin-top:32px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+      margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:16px;
+    }
+    .waitlist-input-group{
+      display:flex;gap:10px;justify-content:center;flex-wrap:wrap;width:100%;
     }
     .waitlist-form input[type=email]{
       background:var(--stone-900);border:1px solid var(--stone-700);color:var(--stone-50);
       padding:13px 16px;border-radius:999px;font-size:14.5px;min-width:280px;font-family:'Inter',sans-serif;
+      transition:border-color .15s ease;
     }
     .waitlist-form input[type=email]:focus{outline:2px solid var(--accent);outline-offset:2px}
+    .hp-field{
+      position:absolute !important;
+      left:-9999px !important;
+      top:-9999px !important;
+      opacity:0 !important;
+      pointer-events:none !important;
+      height:0 !important;
+      width:0 !important;
+      overflow:hidden !important;
+    }
+    .cf-turnstile-wrap{
+      /* display: none !important; */
+      display:flex;justify-content:center;min-height:50px;width:100%;margin-top:4px;
+    }
+    .btn.loading{opacity:0.75;cursor:not-allowed;pointer-events:none}
+    .btn-loader{display:none;align-items:center;gap:8px}
     .waitlist-note{margin-top:14px;color:var(--stone-500);font-size:13px}
     .waitlist-success{display:none;margin-top:28px;color:var(--ok);font-family:'IBM Plex Mono',monospace;font-size:14px}
+    .waitlist-error{display:none;margin-top:18px;color:#ff6b6b;font-family:'IBM Plex Mono',monospace;font-size:13.5px}
 
     /* ---------- Footer ---------- */
     footer{padding:56px 0 40px}
@@ -1454,10 +1478,26 @@
       <h2>Sé de los primeros en usar Planea</h2>
       <p>Estamos completando las pruebas de conexión BIM y el buscador web de proveedores. Déjanos tu correo para darte acceso prioritario.</p>
       <form class="waitlist-form" id="waitlist-form">
-        <input type="email" id="waitlist-email" placeholder="tu@empresa.com" required aria-label="Correo electrónico">
-        <button type="submit" class="btn btn-primary">Unirme a la lista de espera</button>
+        <!-- 1. Honeypot (campo trampa oculto para bots) -->
+        <div class="hp-field" aria-hidden="true">
+          <input type="text" name="b_company_phone" id="waitlist-hp" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="waitlist-input-group">
+          <input type="email" id="waitlist-email" name="email" placeholder="tu@empresa.com" required aria-label="Correo electrónico">
+          <button type="submit" id="waitlist-btn" class="btn btn-primary">
+            <span class="btn-text">Unirme a la lista de espera</span>
+            <span class="btn-loader">Enviando...</span>
+          </button>
+        </div>
+
+        <!-- 2. Cloudflare Turnstile -->
+        <div class="cf-turnstile-wrap">
+          <div class="cf-turnstile" id="cf-turnstile" data-sitekey="0x4AAAAAAFCbhERNXts-6Kab" data-theme="dark" data-size="flexible"></div>
+        </div>
       </form>
       <p class="waitlist-success" id="waitlist-success">Listo — quedaste en la lista. Te avisaremos con una invitación directa a la plataforma.</p>
+      <p class="waitlist-error" id="waitlist-error"></p>
       <p class="waitlist-note">Un solo correo de bienvenida. Cero spam.</p>
     </div>
   </section>
@@ -1499,381 +1539,7 @@
   </div>
 </footer>
 
-<script is:inline>
-  // ================================================================
-  // PLANEA TIMELINE ENGINE (LAURA IA + BÚSQUEDA WEB DE PRECIOS)
-  // ================================================================
-  const flowsData = {
-    bim: {
-      desc: "Sube tu archivo IFC y Planea extrae cantidades de obra automáticamente a partir del modelo. Laura IA busca los precios en la web o utiliza tus bases importadas para armar el presupuesto.",
-      badge: "IFC BIM",
-      label: "Extrayendo geometría IFC..."
-    },
-    prompt: {
-      desc: "Describe el proyecto en tus palabras — tipo de obra, área, acabados, alcance — y Planea rastrea en internet insumos acordes para estructurar el presupuesto y cronograma.",
-      badge: "LENGUAJE NATURAL",
-      label: "Interpretando prompt..."
-    },
-    manual: {
-      desc: "Arma actividades, cantidades y precios tú mismo, sube tus bases propias o deja que la IA busque precios y complementos en la web.",
-      badge: "MANUAL + IA",
-      label: "Cargando actividades y bases..."
-    }
-  };
-
-  const PlaneaDemo = {
-    flow: "bim",
-    state: "idle",
-    timerId: null,
-    stepTimeouts: [],
-    startTime: 0,
-    cycleDuration: 7200,
-    isInView: false,
-    isReducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-
-    init() {
-      this.cacheDOM();
-      this.bindEvents();
-      this.setupObserver();
-      this.setFlow("bim", false);
-    },
-
-    cacheDOM() {
-      this.dot = document.getElementById("demo-dot");
-      this.phaseText = document.getElementById("demo-phase-name");
-      this.timerText = document.getElementById("demo-timer-num");
-      this.inputBadge = document.getElementById("input-type-badge");
-      this.playbackBtn = document.getElementById("demo-playback-btn");
-      this.playbackIcon = document.getElementById("playback-icon");
-      this.playbackText = document.getElementById("playback-text");
-
-      // Views
-      this.viewBim = document.getElementById("view-bim");
-      this.viewPrompt = document.getElementById("view-prompt");
-      this.viewManual = document.getElementById("view-manual");
-      this.manualAiChip = document.getElementById("manual-ai-chip");
-
-      // Laura metrics
-      this.metrics = [
-        document.getElementById("m-1"),
-        document.getElementById("m-2"),
-        document.getElementById("m-3")
-      ];
-
-      // Budget
-      this.bRows = [
-        document.getElementById("b-1"),
-        document.getElementById("b-2"),
-        document.getElementById("b-3"),
-        document.getElementById("b-4"),
-        document.getElementById("b-5")
-      ];
-      this.bTotal = document.getElementById("b-tot");
-
-      // Gantt
-      this.gBars = [
-        document.getElementById("gb-1"),
-        document.getElementById("gb-2"),
-        document.getElementById("gb-3"),
-        document.getElementById("gb-4"),
-        document.getElementById("gb-5")
-      ];
-      this.gFoot = document.getElementById("g-foot");
-      this.readyBanner = document.getElementById("ready-banner");
-    },
-
-    bindEvents() {
-      const tabs = document.querySelectorAll(".flow-tab");
-      const descEl = document.getElementById("flow-desc");
-
-      tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-          tabs.forEach(t => t.classList.remove("active"));
-          tab.classList.add("active");
-          const flowKey = tab.dataset.flow;
-          if (descEl && flowsData[flowKey]) {
-            descEl.textContent = flowsData[flowKey].desc;
-          }
-          this.setFlow(flowKey, true);
-        });
-      });
-
-      if (this.playbackBtn) {
-        this.playbackBtn.addEventListener("click", () => {
-          if (this.state === "running") {
-            this.pause();
-          } else if (this.state === "paused") {
-            this.resume();
-          } else {
-            this.play();
-          }
-        });
-      }
-    },
-
-    setupObserver() {
-      const target = document.getElementById("como-funciona");
-      if (!target || !("IntersectionObserver" in window)) {
-        this.play();
-        return;
-      }
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            this.isInView = true;
-            if (this.state === "idle") {
-              this.play();
-            }
-          } else {
-            this.isInView = false;
-            if (this.state === "running") {
-              this.pause();
-            }
-          }
-        });
-      }, { threshold: 0.25 });
-      obs.observe(target);
-    },
-
-    setFlow(flowKey, restart = true) {
-      this.flow = flowKey;
-      this.clearTimeouts();
-
-      if (this.inputBadge) {
-        this.inputBadge.textContent = flowsData[flowKey].badge;
-      }
-
-      if (this.viewBim) this.viewBim.style.display = (flowKey === "bim") ? "flex" : "none";
-      if (this.viewPrompt) this.viewPrompt.style.display = (flowKey === "prompt") ? "flex" : "none";
-      if (this.viewManual) this.viewManual.style.display = (flowKey === "manual") ? "flex" : "none";
-
-      if (this.isReducedMotion) {
-        this.showInstantState();
-        return;
-      }
-
-      this.resetStates();
-      if (restart && this.isInView) {
-        this.play();
-      }
-    },
-
-    resetStates() {
-      [this.viewBim, this.viewPrompt, this.viewManual].forEach(el => el && el.classList.remove("show"));
-      if (this.manualAiChip) this.manualAiChip.classList.remove("show");
-
-      this.metrics.forEach(m => m && m.classList.remove("show"));
-      this.bRows.forEach(r => r && r.classList.remove("show"));
-      if (this.bTotal) this.bTotal.classList.remove("show");
-      this.gBars.forEach(b => b && b.classList.remove("active"));
-      if (this.gFoot) this.gFoot.classList.remove("show");
-      if (this.readyBanner) this.readyBanner.classList.remove("visible");
-      if (this.dot) {
-        this.dot.classList.remove("done");
-        this.dot.classList.remove("paused");
-      }
-    },
-
-    showInstantState() {
-      this.state = "finished";
-      const activeView = (this.flow === "bim") ? this.viewBim : (this.flow === "prompt" ? this.viewPrompt : this.viewManual);
-      if (activeView) activeView.classList.add("show");
-      if (this.manualAiChip) this.manualAiChip.classList.add("show");
-      this.metrics.forEach(m => m && m.classList.add("show"));
-      this.bRows.forEach(r => r && r.classList.add("show"));
-      if (this.bTotal) this.bTotal.classList.add("show");
-      this.gBars.forEach(b => b && b.classList.add("active"));
-      if (this.gFoot) this.gFoot.classList.add("show");
-      if (this.readyBanner) this.readyBanner.classList.add("visible");
-      if (this.dot) {
-        this.dot.classList.remove("paused");
-        this.dot.classList.add("done");
-      }
-      if (this.phaseText) this.phaseText.textContent = "Presupuesto y cronograma listos";
-      if (this.timerText) this.timerText.textContent = "7.2s / 7.2s · Finalizado";
-      this.updatePlaybackButton("finished");
-    },
-
-    clearTimeouts() {
-      this.stepTimeouts.forEach(t => clearTimeout(t));
-      this.stepTimeouts = [];
-      if (this.timerId) {
-        clearInterval(this.timerId);
-        this.timerId = null;
-      }
-    },
-
-    schedule(fn, delay) {
-      const id = setTimeout(fn, delay);
-      this.stepTimeouts.push(id);
-    },
-
-    play() {
-      this.clearTimeouts();
-      this.resetStates();
-      this.state = "running";
-      this.updatePlaybackButton("running");
-
-      if (this.isReducedMotion) {
-        this.showInstantState();
-        return;
-      }
-
-      this.startTime = Date.now();
-      this.runTimer();
-
-      // T: 0.1s -> Input
-      this.schedule(() => {
-        const v = (this.flow === "bim") ? this.viewBim : (this.flow === "prompt" ? this.viewPrompt : this.viewManual);
-        if (v) v.classList.add("show");
-        if (this.phaseText) this.phaseText.textContent = flowsData[this.flow].label;
-      }, 100);
-
-      // T: 0.7s -> Manual AI Chip
-      if (this.flow === "manual") {
-        this.schedule(() => {
-          if (this.manualAiChip) this.manualAiChip.classList.add("show");
-        }, 700);
-      }
-
-      // T: 1.2s -> Laura IA + Buscador Web
-      this.schedule(() => {
-        if (this.phaseText) this.phaseText.textContent = "Laura: rastreando precios web y aplicando bases...";
-      }, 1200);
-
-      // T: 1.6s - 2.3s -> Core metrics
-      this.schedule(() => { if (this.metrics[0]) this.metrics[0].classList.add("show"); }, 1600);
-      this.schedule(() => { if (this.metrics[1]) this.metrics[1].classList.add("show"); }, 1950);
-      this.schedule(() => { if (this.metrics[2]) this.metrics[2].classList.add("show"); }, 2300);
-
-      // T: 2.7s - 3.7s -> Budget rows
-      this.schedule(() => {
-        if (this.phaseText) this.phaseText.textContent = "Generando presupuesto detallado...";
-        if (this.bRows[0]) this.bRows[0].classList.add("show");
-      }, 2700);
-      this.schedule(() => { if (this.bRows[1]) this.bRows[1].classList.add("show"); }, 2950);
-      this.schedule(() => { if (this.bRows[2]) this.bRows[2].classList.add("show"); }, 3200);
-      this.schedule(() => { if (this.bRows[3]) this.bRows[3].classList.add("show"); }, 3450);
-      this.schedule(() => { if (this.bRows[4]) this.bRows[4].classList.add("show"); }, 3700);
-
-      // T: 4.1s -> Budget Total
-      this.schedule(() => {
-        if (this.bTotal) this.bTotal.classList.add("show");
-      }, 4100);
-
-      // T: 4.6s - 5.8s -> Gantt CPM Bars
-      this.schedule(() => {
-        if (this.phaseText) this.phaseText.textContent = "Armando cronograma de obra CPM...";
-        if (this.gBars[0]) this.gBars[0].classList.add("active");
-      }, 4600);
-      this.schedule(() => { if (this.gBars[1]) this.gBars[1].classList.add("active"); }, 4900);
-      this.schedule(() => { if (this.gBars[2]) this.gBars[2].classList.add("active"); }, 5200);
-      this.schedule(() => { if (this.gBars[3]) this.gBars[3].classList.add("active"); }, 5500);
-      this.schedule(() => { if (this.gBars[4]) this.gBars[4].classList.add("active"); }, 5800);
-
-      // T: 6.1s -> Schedule footer & Banner
-      this.schedule(() => {
-        if (this.gFoot) this.gFoot.classList.add("show");
-        if (this.readyBanner) this.readyBanner.classList.add("visible");
-        if (this.dot) {
-          this.dot.classList.remove("paused");
-          this.dot.classList.add("done");
-        }
-        if (this.phaseText) this.phaseText.textContent = "✓ Presupuesto y cronograma listos";
-      }, 6100);
-
-      // T: 7.2s -> Finish cycle
-      this.schedule(() => {
-        this.finishCycle();
-      }, this.cycleDuration);
-    },
-
-    finishCycle() {
-      this.state = "finished";
-      if (this.timerId) clearInterval(this.timerId);
-      if (this.timerText) this.timerText.textContent = "7.2s / 7.2s · Finalizado";
-      this.updatePlaybackButton("finished");
-    },
-
-    pause() {
-      if (this.state !== "running") return;
-      this.state = "paused";
-      this.clearTimeouts();
-      if (this.dot) this.dot.classList.add("paused");
-      if (this.phaseText) this.phaseText.textContent = "Animación pausada";
-      this.updatePlaybackButton("paused");
-    },
-
-    resume() {
-      this.play();
-    },
-
-    updatePlaybackButton(state) {
-      if (!this.playbackBtn || !this.playbackIcon || !this.playbackText) return;
-      this.playbackBtn.classList.remove("highlight");
-
-      if (state === "running") {
-        this.playbackIcon.textContent = "❚❚";
-        this.playbackText.textContent = "Pausar";
-      } else if (state === "paused") {
-        this.playbackIcon.textContent = "▶";
-        this.playbackText.textContent = "Reanudar";
-        this.playbackBtn.classList.add("highlight");
-      } else if (state === "finished") {
-        this.playbackIcon.textContent = "↺";
-        this.playbackText.textContent = "Reiniciar demo";
-        this.playbackBtn.classList.add("highlight");
-      }
-    },
-
-    runTimer() {
-      if (this.timerId) clearInterval(this.timerId);
-      this.timerId = setInterval(() => {
-        const elapsed = (Date.now() - this.startTime) / 1000;
-        if (elapsed <= 7.2 && this.timerText && this.state === "running") {
-          this.timerText.textContent = elapsed.toFixed(1) + "s / 7.2s";
-        }
-      }, 100);
-    }
-  };
-
-  // ---- Page Init ----
-  function initPage() {
-    PlaneaDemo.init();
-
-    // Mobile menu toggle
-    const menuToggle = document.querySelector(".menu-toggle");
-    const navLinks = document.querySelector("nav.links");
-    if (menuToggle && navLinks) {
-      menuToggle.addEventListener("click", () => {
-        navLinks.classList.toggle("open");
-      });
-      navLinks.querySelectorAll("a").forEach(link => {
-        link.addEventListener("click", () => {
-          navLinks.classList.remove("open");
-        });
-      });
-    }
-
-    // Waitlist form
-    const form = document.getElementById("waitlist-form");
-    const success = document.getElementById("waitlist-success");
-    if (form && success) {
-      form.addEventListener("submit", function(e){
-        e.preventDefault();
-        form.style.display = "none";
-        success.style.display = "block";
-      });
-    }
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initPage);
-  } else {
-    initPage();
-  }
-  document.addEventListener("astro:page-load", initPage);
-</script>
+<script src="./index.js"></script>
 
 </body>
 </html>
