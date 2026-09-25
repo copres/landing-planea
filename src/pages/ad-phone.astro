@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>metroKUBIKO Planea — Mobile Ad (9:16)</title>
+
+  <!-- Tipografías corporativas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ----------------------------------------------------
+       TEMA CLARO CORPORATIVO (ZERO DARK MODE)
+    ---------------------------------------------------- */
+    :root {
+      --canvas-bg: #FFFFFF;
+      --card-bg: #FFFFFF;
+      --subtle-bg: #F9FAFB;
+      --border: #E5E7EB;
+      --border-focus: #D1D5DB;
+      --text-main: #111827;
+      --text-sub: #4B5563;
+      --text-muted: #6B7280;
+      --orange: #FF6A1A;
+      --orange-light: rgba(255, 106, 26, 0.08);
+      --orange-border: rgba(255, 106, 26, 0.35);
+      --green: #10B981;
+      --green-light: rgba(16, 185, 129, 0.1);
+      --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 18px 36px rgba(0, 0, 0, 0.09);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #EAECEF; /* Fondo de entorno claro */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-main);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* CONTENEDOR 9:16 VERTICAL CLARO */
+    .mobile-canvas {
+      width: 420px;
+      height: 746px; /* Proporción estándar 9:16 */
+      background: var(--canvas-bg);
+      position: relative;
+      overflow: hidden;
+      border-radius: 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+      border: 1px solid #D1D5DB;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Trama milimétrica arquitectónica clara */
+    .mobile-canvas::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(0,0,0,0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.035) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+    .heading { font-family: 'Space Grotesk', sans-serif; }
+
+    /* Estilos para iconos SVG */
+    .svg-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .svg-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Barra Superior */
+    .top-bar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+    .top-logo {
+      height: 22px;
+      width: auto;
+    }
+    .top-badge {
+      background: var(--orange-light);
+      border: 1px solid var(--orange-border);
+      color: var(--orange);
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* Subtítulos Guía Superiores */
+    .scene-caption-area {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      right: 20px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 90;
+      pointer-events: none;
+    }
+    .scene-caption {
+      font-size: 16px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: var(--text-main);
+      transition: all 0.4s ease;
+      opacity: 0;
+      transform: translateY(-8px);
+      position: absolute;
+    }
+    .scene-caption.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Escenario Central */
+    .stage {
+      position: absolute;
+      inset: 125px 20px 20px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ----------------------------------------------------
+       SLIDE 1: HOOK VERTICAL
+    ---------------------------------------------------- */
+    .hook-container {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      position: absolute;
+      padding: 0 10px;
+    }
+    .hook-container.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .hook-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: #FFFFFF;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+      color: var(--orange);
+    }
+    .hook-title {
+      font-size: 34px;
+      line-height: 1.18;
+      color: var(--text-main);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .hook-title span { color: var(--orange); }
+    .hook-sub {
+      font-size: 15.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ----------------------------------------------------
+       SLIDE 2: ENTRADA (IFC + PROMPT)
+    ---------------------------------------------------- */
+    .input-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      align-items: center;
+      position: absolute;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .input-stage.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .input-stage.fly-to-laura {
+      transform: scale(0.1) translateY(-180px) !important;
+      opacity: 0 !important;
+      transition: all 0.85s cubic-bezier(0.5, 0, 0.2, 1) !important;
+    }
+
+    .bim-card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .file-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #F3F4F6;
+      border: 1px solid #E5E7EB;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+    .file-badge svg {
+      width: 15px;
+      height: 15px;
+      color: var(--orange);
+    }
+    .ifc-preview-box {
+      height: 110px;
+      background: var(--subtle-bg);
+      border-radius: 10px;
+      border: 1px solid #E5E7EB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .prompt-card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .prompt-header {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .prompt-field {
+      background: var(--subtle-bg);
+      border: 1px solid var(--border-focus);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13.5px;
+      line-height: 1.45;
+      min-height: 80px;
+      color: var(--text-main);
+    }
+    .cursor-blink {
+      display: inline-block;
+      width: 2px;
+      height: 15px;
+      background: var(--orange);
+      vertical-align: middle;
+      animation: blink 0.8s infinite;
+      margin-left: 2px;
+    }
+    @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+    /* ----------------------------------------------------
+       SLIDE 3: LAURA IA + HALO CONCÉNTRICO CENTRADO
+    ---------------------------------------------------- */
+    .laura-agent-node {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    .laura-agent-node.center {
+      opacity: 1;
+      transform: scale(1) translateY(-20px);
+    }
+    .laura-agent-node.dock-top {
+      opacity: 1;
+      transform: scale(0.72) translateY(-270px);
+    }
+
+    .laura-avatar-center-anchor {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .laura-avatar-wrapper {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      padding: 5px;
+      box-shadow: 0 0 0 4px var(--orange-light), var(--shadow-lg);
+      position: relative;
+      z-index: 2;
+    }
+    .laura-avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .laura-status-dot {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      width: 18px;
+      height: 18px;
+      background: var(--green);
+      border: 3px solid #FFFFFF;
+      border-radius: 50%;
+      z-index: 3;
+    }
+
+    .processing-halo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255, 106, 26, 0.5);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 1;
+      transform: translate(-50%, -50%) rotate(0deg);
+      transition: opacity 0.4s ease;
+    }
+    .processing-halo.active {
+      opacity: 1;
+      animation: rotateHalo 12s linear infinite;
+    }
+    @keyframes rotateHalo {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .laura-name-tag {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .laura-role-tag {
+      font-size: 12px;
+      color: var(--orange);
+      font-weight: 600;
+    }
+
+    /* Chips en Grid de 3x2 */
+    .pipeline-chips {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 18px;
+      width: 320px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+    }
+    .pipeline-chips.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .p-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 6px 0;
+      text-align: center;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      box-shadow: var(--shadow-sm);
+      opacity: 0.35;
+      transition: all 0.35s ease;
+    }
+    .p-chip.lit {
+      opacity: 1;
+      color: var(--orange);
+      border-color: var(--orange-border);
+      background: var(--orange-light);
+    }
+
+    /* ----------------------------------------------------
+       SLIDE 4 & 5: RESULTADOS Y EDICIÓN (STACK VERTICAL)
+    ---------------------------------------------------- */
+    .results-wrapper {
+      position: absolute;
+      top: 105px;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .results-wrapper.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .output-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+    }
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+    .output-title { font-size: 13px; font-weight: 700; }
+    .output-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .tag-orange { background: var(--orange-light); color: var(--orange); }
+    .tag-green { background: var(--green-light); color: var(--green); }
+
+    .table-mini { display: flex; flex-direction: column; gap: 6px; }
+    .t-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    .t-row .price {
+      font-weight: 600;
+      color: var(--text-main);
+      transition: all 0.4s ease;
+    }
+    .t-row.highlighted .price {
+      color: var(--orange);
+      transform: scale(1.1);
+    }
+    .t-total {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .t-total-val {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      transition: all 0.4s ease;
+    }
+    .t-total-val.updated {
+      color: var(--orange);
+      transform: scale(1.08);
+    }
+
+    .gantt-mini { display: flex; flex-direction: column; gap: 8px; }
+    .g-item { display: flex; flex-direction: column; gap: 2px; }
+    .g-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+    .g-bar-bg {
+      height: 7px;
+      background: #F3F4F6;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .g-bar-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background: var(--green);
+      border-radius: 4px;
+    }
+
+    /* Globo de edición centrado */
+    .edit-speech-box {
+      position: absolute;
+      top: 60px;
+      left: 10px;
+      right: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--orange-border);
+      box-shadow: var(--shadow-lg);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 12.5px;
+      line-height: 1.4;
+      color: var(--text-main);
+      z-index: 80;
+      opacity: 0;
+      transform: scale(0.9) translateY(-10px);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .edit-speech-box.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    /* ----------------------------------------------------
+       SLIDE 6: CIERRE BRANDING
+    ---------------------------------------------------- */
+    .closing-container {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      position: absolute;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 120;
+      padding: 0 10px;
+    }
+    .closing-container.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .closing-badge {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-sub);
+      box-shadow: var(--shadow-sm);
+    }
+    .closing-logo { height: 42px; width: auto; }
+    .closing-punchline {
+      font-size: 28px;
+      line-height: 1.25;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+    .closing-punchline span { color: var(--orange); }
+
+    /* ----------------------------------------------------
+       SLIDE 7: FINAL WAITLIST CTA VERTICAL
+    ---------------------------------------------------- */
+    .waitlist-container {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      position: absolute;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 130;
+      padding: 0 10px;
+      width: 100%;
+    }
+    .waitlist-container.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .waitlist-lead {
+      font-size: 27px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+    .waitlist-lead span { color: var(--orange); }
+    .waitlist-sub {
+      font-size: 15px;
+      color: var(--text-sub);
+      line-height: 1.4;
+    }
+    .btn-cta-waitlist {
+      margin-top: 6px;
+      width: 100%;
+      background: var(--orange);
+      color: #FFFFFF;
+      font-size: 14.5px;
+      font-weight: 700;
+      padding: 16px 20px;
+      border-radius: 999px;
+      border: none;
+      box-shadow: 0 8px 20px rgba(255, 106, 26, 0.4);
+      letter-spacing: 0.03em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CONTENEDOR MÓVIL 9:16 -->
+  <div class="mobile-canvas">
+
+    <!-- BARRA SUPERIOR -->
+    <header class="top-bar">
+      <img 
+        src="https://firebasestorage.googleapis.com/v0/b/copres-firebase.appspot.com/o/CoPres%2Flogo-planea%20-%20invertido.png?alt=media&token=1284529d-0d43-44c9-b851-c7aa91fccdfd" 
+        alt="metroKUBIKO Planea" 
+        class="top-logo"
+        style="filter: invert(1) hue-rotate(180deg);"
+      >
+      <div class="top-badge">IA + BIM</div>
+    </header>
+
+    <!-- SUBTÍTULOS GUÍA SUPERIORES -->
+    <div class="scene-caption-area">
+      <h2 class="scene-caption heading" id="caption-input">
+        Sube tu modelo IFC y agrega contexto para tu proyecto.
+      </h2>
+      <h2 class="scene-caption heading" id="caption-processing">
+        Laura analiza el modelo y genera presupuesto y cronograma.
+      </h2>
+      <h2 class="scene-caption heading" id="caption-editing">
+        Edita con Laura o sincroniza con tu modelo IFC.
+      </h2>
+    </div>
+
+    <!-- ESCENARIO CENTRAL -->
+    <main class="stage">
+
+      <!-- 1. HOOK -->
+      <section class="hook-container" id="hook-view">
+        <div class="hook-icon-wrap svg-icon">
+          <!-- Icono SVG Arquitectura / Edificio BIM -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18"/>
+            <path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/>
+            <path d="M9 7h1"/>
+            <path d="M9 11h1"/>
+            <path d="M9 15h1"/>
+            <path d="M14 7h1"/>
+            <path d="M14 11h1"/>
+            <path d="M14 15h1"/>
+          </svg>
+        </div>
+        <h1 class="hook-title heading">
+          ¿Tienes el <span>modelo BIM</span> de tu obra?
+        </h1>
+        <p class="hook-sub">
+          Genera tu presupuesto y cronograma con IA en <strong>metroKUBIKO Planea</strong>.
+        </p>
+      </section>
+
+      <!-- 2. ENTRADA (IFC + PROMPT) -->
+      <section class="input-stage" id="input-view">
+        <div class="bim-card">
+          <div class="file-badge mono">
+            <!-- Icono SVG Documento / Cubo -->
+            <span class="svg-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+            </span>
+            <span>torre_apts.ifc</span>
+            <span style="margin-left:auto;color:var(--text-muted)">18.4 MB</span>
+          </div>
+          <div class="ifc-preview-box">
+            <!-- Isométrico limpio -->
+            <svg width="110" height="90" viewBox="0 0 160 140" fill="none">
+              <polygon points="80,20 140,50 80,80 20,50" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1.5"/>
+              <polygon points="20,50 80,80 80,130 20,100" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1.5"/>
+              <polygon points="80,80 140,50 140,100 80,130" fill="#E5E7EB" stroke="#D1D5DB" stroke-width="1.5"/>
+              <line x1="50" y1="65" x2="50" y2="115" stroke="#FF6A1A" stroke-width="2"/>
+              <line x1="110" y1="65" x2="110" y2="115" stroke="#FF6A1A" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="prompt-card">
+          <div class="prompt-header mono">Contexto del proyecto</div>
+          <div class="prompt-field" id="prompt-typing">
+            <span id="prompt-text"></span><span class="cursor-blink"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. LAURA IA -->
+      <section class="laura-agent-node" id="laura-view">
+        <div class="laura-avatar-center-anchor">
+          <div class="processing-halo" id="halo"></div>
+
+          <div class="laura-avatar-wrapper">
+            <img 
+              src="https://firebasestorage.googleapis.com/v0/b/copres-firebase.appspot.com/o/CoPres%2Flaura%2Fprofile-2.png?alt=media&token=af875745-5d70-4d56-9c78-cddd27880410" 
+              alt="Laura IA" 
+              class="laura-avatar-img"
+            >
+            <div class="laura-status-dot"></div>
+          </div>
+        </div>
+
+        <div class="laura-name-tag heading">Laura</div>
+        <div class="laura-role-tag mono">Agente IA de Obra</div>
+
+        <!-- Chips 3x2 -->
+        <div class="pipeline-chips mono" id="chips-bar">
+          <div class="p-chip" id="c-1">Muros</div>
+          <div class="p-chip" id="c-2">Columnas</div>
+          <div class="p-chip" id="c-3">Puertas</div>
+          <div class="p-chip" id="c-4">Cantidades</div>
+          <div class="p-chip" id="c-5">Actividades</div>
+          <div class="p-chip" id="c-6">APUs</div>
+        </div>
+      </section>
+
+      <!-- GLOBO DE EDICIÓN (CON ICONO SVG SPARKLES) -->
+      <div class="edit-speech-box mono" id="speech-box">
+        <span style="color:var(--orange);display:inline-flex;align-items:center;gap:4px">
+          <span class="svg-icon" style="width:13px;height:13px">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L14.4 7.6L20 10L14.4 12.4L12 18L9.6 12.4L4 10L9.6 7.6L12 2Z"/>
+            </svg>
+          </span>
+          Laura:
+        </span> “Cambia el precio del concreto y actualiza el presupuesto.”
+      </div>
+
+      <!-- 4 & 5. RESULTADOS (APILADOS VERTICALMENTE) -->
+      <section class="results-wrapper" id="results-view">
+        
+        <!-- Tarjeta Presupuesto -->
+        <div class="output-card">
+          <div class="output-header">
+            <span class="output-title heading">Presupuesto</span>
+            <span class="output-tag tag-orange mono">COP / USD</span>
+          </div>
+          <div class="table-mini">
+            <div class="t-row">
+              <span>01 Cimentación</span>
+              <span class="price mono">$14,500</span>
+            </div>
+            <div class="t-row" id="row-concreto">
+              <span>02 Concreto Estructural</span>
+              <span class="price mono" id="price-concreto">$38,200</span>
+            </div>
+            <div class="t-row">
+              <span>03 Muros y Mampostería</span>
+              <span class="price mono">$19,400</span>
+            </div>
+          </div>
+          <div class="t-total">
+            <span class="mono" style="font-size:11px;color:var(--text-muted)">TOTAL</span>
+            <span class="t-total-val mono" id="total-val">$72,100</span>
+          </div>
+        </div>
+
+        <!-- Tarjeta Cronograma -->
+        <div class="output-card">
+          <div class="output-header">
+            <span class="output-title heading">Cronograma</span>
+            <span class="output-tag tag-green mono">CPM</span>
+          </div>
+          <div class="gantt-mini">
+            <div class="g-item">
+              <div class="g-meta">
+                <span>01 Preliminares</span>
+                <span class="mono">12d</span>
+              </div>
+              <div class="g-bar-bg"><div class="g-bar-fill" style="left:0;width:35%"></div></div>
+            </div>
+            <div class="g-item">
+              <div class="g-meta">
+                <span>02 Estructura</span>
+                <span class="mono">28d</span>
+              </div>
+              <div class="g-bar-bg"><div class="g-bar-fill" style="left:30%;width:48%"></div></div>
+            </div>
+          </div>
+          <div class="t-total">
+            <span class="mono" style="font-size:11px;color:var(--text-muted)">PLAZO</span>
+            <span class="mono" style="font-size:13.5px;font-weight:700;color:var(--green)">60 DÍAS</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 6. CIERRE DE MARCA -->
+      <section class="closing-container" id="closing-view">
+        <div class="closing-badge mono">Ecosistema metroKUBIKO Suite</div>
+        <img 
+          src="https://firebasestorage.googleapis.com/v0/b/copres-firebase.appspot.com/o/CoPres%2Flogo-planea%20-%20invertido.png?alt=media&token=1284529d-0d43-44c9-b851-c7aa91fccdfd" 
+          alt="metroKUBIKO Planea" 
+          class="closing-logo"
+          style="filter: invert(1) hue-rotate(180deg);"
+        >
+        <h2 class="closing-punchline heading">
+          Del modelo BIM al <span>presupuesto y cronograma.</span>
+        </h2>
+      </section>
+
+      <!-- 7. SLIDE FINAL: WAITLIST CTA -->
+      <section class="waitlist-container" id="waitlist-view">
+        <h2 class="waitlist-lead heading">
+          Lleva tu modelo BIM del IFC al <span>presupuesto y cronograma.</span>
+        </h2>
+        <p class="waitlist-sub">
+          Únete a la lista de espera de metroKUBIKO Planea.
+        </p>
+        <button class="btn-cta-waitlist heading" type="button">
+          [ UNIRME A LA LISTA DE ESPERA ]
+        </button>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- CONTROLADOR TIMELINE (~32S) -->
+  <script>
+    const MotionEngine = {
+      timeouts: [],
+
+      hookView: document.getElementById('hook-view'),
+      inputView: document.getElementById('input-view'),
+      lauraView: document.getElementById('laura-view'),
+      resultsView: document.getElementById('results-view'),
+      closingView: document.getElementById('closing-view'),
+      waitlistView: document.getElementById('waitlist-view'),
+      speechBox: document.getElementById('speech-box'),
+      halo: document.getElementById('halo'),
+      chipsBar: document.getElementById('chips-bar'),
+      promptTextEl: document.getElementById('prompt-text'),
+
+      capInput: document.getElementById('caption-input'),
+      capProcessing: document.getElementById('caption-processing'),
+      capEditing: document.getElementById('caption-editing'),
+
+      rowConcreto: document.getElementById('row-concreto'),
+      priceConcreto: document.getElementById('price-concreto'),
+      totalVal: document.getElementById('total-val'),
+
+      chips: [
+        document.getElementById('c-1'),
+        document.getElementById('c-2'),
+        document.getElementById('c-3'),
+        document.getElementById('c-4'),
+        document.getElementById('c-5'),
+        document.getElementById('c-6')
+      ],
+
+      schedule(fn, delay) {
+        const id = setTimeout(fn, delay);
+        this.timeouts.push(id);
+      },
+
+      clearAll() {
+        this.timeouts.forEach(clearTimeout);
+        this.timeouts = [];
+      },
+
+      typeText(text, targetEl, speed = 40, callback) {
+        let i = 0;
+        targetEl.textContent = "";
+        const interval = setInterval(() => {
+          targetEl.textContent += text.charAt(i);
+          i++;
+          if (i >= text.length) {
+            clearInterval(interval);
+            if (callback) callback();
+          }
+        }, speed);
+      },
+
+      reset() {
+        this.clearAll();
+
+        this.hookView.classList.remove('active');
+        this.inputView.classList.remove('active', 'fly-to-laura');
+        this.lauraView.classList.remove('center', 'dock-top');
+        this.resultsView.classList.remove('active');
+        this.closingView.classList.remove('active');
+        this.waitlistView.classList.remove('active');
+        this.speechBox.classList.remove('active');
+        this.halo.classList.remove('active');
+        this.chipsBar.classList.remove('active');
+
+        this.capInput.classList.remove('active');
+        this.capProcessing.classList.remove('active');
+        this.capEditing.classList.remove('active');
+
+        this.chips.forEach(c => c.classList.remove('lit'));
+        this.promptTextEl.textContent = "";
+
+        this.priceConcreto.textContent = "$38,200";
+        this.totalVal.textContent = "$72,100";
+        this.rowConcreto.classList.remove('highlighted');
+        this.totalVal.classList.remove('updated');
+      },
+
+      play() {
+        this.reset();
+
+        // T = 0.0s : SLIDE 1 (HOOK)
+        this.schedule(() => {
+          this.hookView.classList.add('active');
+        }, 200);
+
+        // T = 4.6s : SLIDE 2 (ENTRADA)
+        this.schedule(() => {
+          this.hookView.classList.remove('active');
+          this.capInput.classList.add('active');
+          this.inputView.classList.add('active');
+
+          this.schedule(() => {
+            this.typeText("Proyecto ubicado en Bogotá. Inicio: 1 de enero de 2027.", this.promptTextEl, 40);
+          }, 450);
+        }, 4600);
+
+        // T = 10.2s : SLIDE 3 (PROCESAMIENTO LAURA)
+        this.schedule(() => {
+          this.capInput.classList.remove('active');
+          this.capProcessing.classList.add('active');
+
+          this.lauraView.classList.add('center');
+          this.inputView.classList.add('fly-to-laura');
+
+          this.halo.classList.add('active');
+          this.chipsBar.classList.add('active');
+
+          this.schedule(() => this.chips[0].classList.add('lit'), 500);
+          this.schedule(() => this.chips[1].classList.add('lit'), 900);
+          this.schedule(() => this.chips[2].classList.add('lit'), 1300);
+          this.schedule(() => this.chips[3].classList.add('lit'), 1700);
+          this.schedule(() => this.chips[4].classList.add('lit'), 2100);
+          this.schedule(() => this.chips[5].classList.add('lit'), 2500);
+        }, 10200);
+
+        // T = 15.2s : SLIDE 4 (RESULTADOS STACK VERTICAL)
+        this.schedule(() => {
+          this.halo.classList.remove('active');
+          this.chipsBar.classList.remove('active');
+
+          this.lauraView.classList.remove('center');
+          this.lauraView.classList.add('dock-top');
+          this.resultsView.classList.add('active');
+        }, 15200);
+
+        // T = 19.5s : SLIDE 5 (EDICIÓN)
+        this.schedule(() => {
+          this.capProcessing.classList.remove('active');
+          this.capEditing.classList.add('active');
+          this.speechBox.classList.add('active');
+
+          this.schedule(() => {
+            this.rowConcreto.classList.add('highlighted');
+            this.priceConcreto.textContent = "$42,800";
+            
+            this.totalVal.classList.add('updated');
+            this.totalVal.textContent = "$76,700";
+          }, 1500);
+        }, 19500);
+
+        // T = 24.5s : SLIDE 6 (BRANDING)
+        this.schedule(() => {
+          this.capEditing.classList.remove('active');
+          this.speechBox.classList.remove('active');
+          this.lauraView.classList.remove('dock-top');
+          this.resultsView.classList.remove('active');
+
+          this.closingView.classList.add('active');
+        }, 24500);
+
+        // T = 28.0s : SLIDE 7 (WAITLIST CTA)
+        this.schedule(() => {
+          this.closingView.classList.remove('active');
+          this.waitlistView.classList.add('active');
+        }, 28000);
+
+        // T = 33.5s : LOOP
+        this.schedule(() => {
+          this.play();
+        }, 33500);
+      }
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      MotionEngine.play();
+    });
+  </script>
+</body>
+</html>
