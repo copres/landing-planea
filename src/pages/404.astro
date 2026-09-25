@@ -1,36 +1,176 @@
 ---
-import { getTranslations, getLocaleFromPath, getLocalizedRoute } from '../i18n/utils.js';
-import Layout from '../layouts/Layout.astro';
-
-// Detectar locale desde la URL usando la función centralizada
-const locale = getLocaleFromPath(Astro.url.pathname);
-const t = getTranslations(locale);
-const homePath = getLocalizedRoute('home', locale);
+// metroKUBIKO Planea — Página 404
 ---
 
-<Layout
-  description={t.notFound.description}
-  title={`${t.notFound.title} · Metrokubiko`}
->
-  <section class="py-16 sm:py-20">
-    <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-      <div class="flex flex-col items-start gap-8 sm:gap-10">
-        <div class="flex flex-col gap-4 sm:gap-6">
-          <h1 class="text-4xl font-medium tracking-tight sm:text-5xl lg:text-6xl">
-            <div>404</div>
-            <div>{t.notFound.title}</div>
-          </h1>
-          <p class="text-primary-950/70 dark:text-primary-200/70 text-lg sm:text-xl">
-            {t.notFound.description}
-          </p>
-        </div>
-        <a
-          href={homePath}
-          class="bg-primary-600 dark:bg-primary-400 hover:bg-primary-700 dark:hover:bg-primary-300 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 dark:text-primary-950 inline-flex items-center justify-center rounded-full border border-transparent px-5 py-3 text-base font-medium text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-        >
-          {t.notFound.button}
-        </a>
-      </div>
-    </div>
-  </section>
-</Layout>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Página no encontrada | metroKUBIKO Planea</title>
+  <link rel="icon" href="/assets/favicon_m3.png" type="image/png">
+  <meta name="robots" content="noindex, follow">
+
+  <!-- Redirección automática de respaldo -->
+  <meta http-equiv="refresh" content="5;url=/">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style is:inline>
+    :root {
+      --stone-950: #faf9f6;
+      --stone-900: #f4efe6;
+      --stone-700: #c5bcae;
+      --stone-500: #78716c;
+      --stone-400: #57534e;
+      --stone-200: #292524;
+      --stone-50: #141210;
+      --accent: #ea580c;
+      --accent-dim: rgba(234, 88, 12, 0.1);
+      --line: #e7e1d7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--stone-950);
+      color: var(--stone-200);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Brillo de fondo sutil del Hero */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: -10% -10% auto -10%;
+      height: 480px;
+      background: radial-gradient(50% 50% at 50% 20%, var(--accent-dim), transparent 70%);
+      pointer-events: none;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 48px 32px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand img {
+      height: 26px;
+      width: auto;
+      filter: invert(1) hue-rotate(180deg);
+      margin-bottom: 6px;
+    }
+
+    .badge-404 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(234, 88, 12, 0.25);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(28px, 4vw, 36px);
+      font-weight: 600;
+      color: var(--stone-50);
+      line-height: 1.15;
+    }
+
+    p {
+      color: var(--stone-400);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .countdown {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--stone-500);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 26px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 14.5px;
+      text-decoration: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(234, 88, 12, 0.22);
+      transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+      margin-top: 6px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: #c2410c;
+      box-shadow: 0 4px 14px rgba(234, 88, 12, 0.32);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <a class="brand" href="/">
+      <img src="https://firebasestorage.googleapis.com/v0/b/copres-firebase.appspot.com/o/CoPres%2Flogo-planea%20-%20invertido.png?alt=media&token=1284529d-0d43-44c9-b851-c7aa91fccdfd" alt="metroKUBIKO Planea">
+    </a>
+
+    <span class="badge-404">ERROR 404</span>
+
+    <h1>Página no encontrada</h1>
+    <p>El enlace que buscas no existe o ha sido movido. Te redirigiremos a la página principal automáticamente.</p>
+
+    <a class="btn" href="/">Volver al inicio</a>
+
+    <span class="countdown" id="timer">Redirigiendo en 5 segundos...</span>
+  </div>
+
+  <script is:inline>
+    let seconds = 5;
+    const timerEl = document.getElementById('timer');
+
+    const countdown = setInterval(() => {
+      seconds--;
+      if (seconds <= 0) {
+        clearInterval(countdown);
+        window.location.href = '/';
+      } else if (timerEl) {
+        timerEl.textContent = `Redirigiendo en ${seconds} segundo${seconds === 1 ? '' : 's'}...`;
+      }
+    }, 1000);
+  </script>
+
+</body>
+</html>
