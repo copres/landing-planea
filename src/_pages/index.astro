@@ -24,6 +24,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
+  <!-- Cloudflare Turnstile API -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
   <style is:inline>
     :root{
       --stone-950:#faf9f6;
@@ -405,7 +408,7 @@
     .plan li .v{color:var(--stone-400);font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-align:right}
     .plan .btn{margin-top:24px;width:100%}
 
-    /* ---------- CTA / waitlist ---------- */
+    /* ---------- CTA FINAL ---------- */
     .cta-section{
       border-top:1px solid var(--line);border-bottom:1px solid var(--line);
       background:radial-gradient(70% 100% at 50% 0%, #fff2ea, var(--stone-950));
@@ -535,7 +538,19 @@
       width:0 !important;
       overflow:hidden !important;
     }
-    .btn-block{width:100%;margin-top:8px}
+    
+    /* Turnstile wrapper inside modal */
+    .cf-turnstile-wrap{
+      display:flex;
+      justify-content:center;
+      min-height:65px;
+      width:100%;
+      margin:4px 0;
+    }
+    .btn.loading{opacity:0.75;cursor:not-allowed;pointer-events:none}
+    .btn-loader{display:none;align-items:center;gap:8px}
+
+    .btn-block{width:100%;margin-top:6px}
     .modal-error{
       display:none;
       margin:8px 0 0;
@@ -961,6 +976,11 @@
           <label for="m-phone">Teléfono / WhatsApp <span class="opt">(opcional)</span></label>
           <input type="tel" id="m-phone" name="phone" placeholder="+57 300 123 4567">
         </div>
+      </div>
+
+      <!-- Cloudflare Turnstile dentro del modal -->
+      <div class="cf-turnstile-wrap">
+        <div class="cf-turnstile" id="cf-turnstile" data-sitekey="0x4AAAAAAFCa7_-Jd7e4pEez" data-theme="light" data-size="flexible"></div>
       </div>
 
       <button type="submit" id="modal-submit-btn" class="btn btn-primary btn-block">

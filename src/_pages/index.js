@@ -1,15 +1,13 @@
 /**
- * metroKUBIKO Planea — Tab switcher, Waitlist Modal & Navigation
+ * metroKUBIKO Planea — Tab switcher, Waitlist Modal (with Cloudflare Turnstile) & Navigation
  */
 
 // ================================================================
 // CONFIGURACIÓN DE LA CLOUD FUNCTION (SEGÚN README)
 // ================================================================
 const WAITLIST_CONFIG = {
-  // Cambia esta URL a tu endpoint real de Cloud Function o API Proxy:
-  // Ejemplo: "https://us-central1-<PROJECT_ID>.cloudfunctions.net/app-waitlist-planea" o "/api/waitlist"
-  endpoint: "/api/waitlist",
-  token: "" // Token WAITLIST_TOKEN si tu Cloud Function requiere Authorization Bearer
+  endpoint: "/api/waitlist", // o tu Cloud Function directa
+  token: ""                  // WAITLIST_TOKEN si se llama directamente a Cloud Functions
 };
 
 // ================================================================
@@ -50,7 +48,7 @@ const DISPOSABLE_EMAIL_DOMAINS = new Set([
 ]);
 
 // ================================================================
-// 3. WAITLIST MODAL & SUBMISSION (COMPLIANT CON CLOUD FUNCTION)
+// 3. WAITLIST MODAL + TURNSTILE HANDLER
 // ================================================================
 function initWaitlistModal() {
   const modal = document.getElementById("waitlist-modal");
@@ -66,18 +64,29 @@ function initWaitlistModal() {
 
   if (!modal || !form) return;
 
+  function resetTurnstile() {
+    if (typeof window !== "undefined" && window.turnstile) {
+      try {
+        window.turnstile.reset();
+      } catch (err) {
+        console.warn("Turnstile reset error:", err);
+      }
+    }
+  }
+
   function openModal() {
     modal.classList.add("open");
     modal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden"; // Prevenir scroll de fondo
+    document.body.style.overflow = "hidden";
     clearError();
-    // Resetear formulario si ya fue completado previamente
+
     if (successBox && successBox.style.display === "flex") {
       successBox.style.display = "none";
       form.style.display = "flex";
       form.reset();
+      resetTurnstile();
     }
-    // Foco en el primer campo
+
     const nameInput = document.getElementById("m-name");
     nameInput?.focus();
   }
@@ -88,7 +97,6 @@ function initWaitlistModal() {
     document.body.style.overflow = "";
   }
 
-  // Escuchar todos los botones con data-open-waitlist o href="#lista-espera"
   document.querySelectorAll("[data-open-waitlist], a[href='#lista-espera']").forEach(trigger => {
     trigger.addEventListener("click", (e) => {
       e.preventDefault();
@@ -99,14 +107,12 @@ function initWaitlistModal() {
   closeBtn?.addEventListener("click", closeModal);
   closeSuccessBtn?.addEventListener("click", closeModal);
 
-  // Cerrar al hacer clic en el backdrop fuera de la tarjeta
   modal.addEventListener("click", (e) => {
     if (e.target === modal) {
       closeModal();
     }
   });
 
-  // Cerrar con la tecla ESC
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && modal.classList.contains("open")) {
       closeModal();
@@ -148,6 +154,7 @@ function initWaitlistModal() {
     // 1. Honeypot check
     const honeypotInput = document.getElementById("modal-hp");
     if (honeypotInput && honeypotInput.value.trim() !== "") {
+      console.warn("Bot submission prevented via honeypot.");
       form.style.display = "none";
       if (successBox) successBox.style.display = "flex";
       return;
@@ -194,22 +201,53 @@ function initWaitlistModal() {
       return;
     }
 
-    // 4. Preparar Payload según especificación README
+    // 4. Obtención y validación del token de Cloudflare Turnstile
+    let turnstileToken = "";
+    if (typeof window !== "undefined" && window.turnstile) {
+      try {
+        turnstileToken = window.turnstile.getResponse();
+      } catch (err) {
+        console.warn("Error getting Turnstile response:", err);
+      }
+    }
+
+    if (!turnstileToken) {
+      const tsHiddenInput = form.querySelector('[name="cf-turnstile-response"]');
+      if (tsHiddenInput && tsHiddenInput.value) {
+        turnstileToken = tsHiddenInput.value;
+      }
+    }
+
+    const tsContainer = document.querySelector(".cf-turnstile");
+    if (tsContainer && !turnstileToken && typeof window !== "undefined" && window.turnstile) {
+      const siteKey = tsContainer.getAttribute("data-sitekey");
+      if (siteKey && !siteKey.startsWith("1x00000000000000000000AA") && !siteKey.startsWith("2x00000000000000000000AB")) {
+        showError("Por favor completa la verificación de seguridad antes de continuar.");
+        return;
+      }
+    }
+
+    // 5. Preparar Payload con Turnstile y metadata completa
     const payload = {
       email: rawEmail,
       name: name,
       phone: phone || undefined,
       company: company || undefined,
       source: "planea_landing",
+      country: country,
+      role: role,
+      turnstileToken: turnstileToken,
       metadata: {
         country: country,
         role: role,
+        turnstileToken: turnstileToken,
         submittedAt: new Date().toISOString()
       }
     };
 
     const headers = {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "Accept": "application/json"
     };
 
     if (WAITLIST_CONFIG.token) {
@@ -227,7 +265,6 @@ function initWaitlistModal() {
 
       const data = await response.json().catch(() => ({}));
 
-      // Validar si el backend respondió formato { status: "success", response: { ... } }
       if (response.ok && (data.status === "success" || data.status === "ok" || !data.status)) {
         form.style.display = "none";
         if (successBox) {
@@ -236,16 +273,23 @@ function initWaitlistModal() {
             successMsg.textContent = data.response.message;
           }
         }
+      } else if (response.status === 409) {
+        form.style.display = "none";
+        if (successBox) {
+          successBox.style.display = "flex";
+          successMsg.textContent = data.response?.message || "¡Ya estás registrado en la lista de espera! Pronto recibirás tu invitación.";
+        }
       } else {
         const errorText = typeof data.response === "string" 
           ? data.response 
           : (data.error || data.message || "Ocurrió un error al procesar el registro. Intenta nuevamente.");
         showError(errorText);
+        resetTurnstile();
       }
     } catch (err) {
       console.error("Waitlist submit error:", err);
-      // Fallback si aún estás configurando el proxy/endpoint
       showError("No fue posible conectar con el servidor. Revisa tu conexión o intenta en unos minutos.");
+      resetTurnstile();
     } finally {
       setLoading(false);
     }
