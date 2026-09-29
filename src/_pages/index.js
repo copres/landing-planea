@@ -7,7 +7,6 @@
 // ================================================================
 const WAITLIST_CONFIG = {
   endpoint: "/api/waitlist", // o tu Cloud Function directa
-  token: ""                  // WAITLIST_TOKEN si se llama directamente a Cloud Functions
 };
 
 // ================================================================
@@ -249,10 +248,6 @@ function initWaitlistModal() {
       "Content-Type": "application/json",
       "Accept": "application/json"
     };
-
-    if (WAITLIST_CONFIG.token) {
-      headers["Authorization"] = `Bearer ${WAITLIST_CONFIG.token}`;
-    }
 
     setLoading(true);
 

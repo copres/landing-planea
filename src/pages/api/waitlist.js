@@ -35,7 +35,7 @@ const TURNSTILE_SECRET_KEY =
  */
 async function verifyTurnstile(token, clientIp) {
   if (!TURNSTILE_SECRET_KEY) {
-    // Si no está configurada la clave secreta, dejamos pasar al backend/Firebase Function
+    // Si no está configurada la clave secreta en variables de entorno, dejamos pasar a la función
     return { success: true };
   }
 
@@ -90,6 +90,10 @@ export async function POST({ request }) {
       name,
       phone,
       company,
+      country,
+      pais,
+      role,
+      cargo,
       source,
       metadata,
       turnstileToken,
@@ -104,7 +108,7 @@ export async function POST({ request }) {
     const trapValue = honeypot || hp || b_company_phone;
     if (trapValue && String(trapValue).trim().length > 0) {
       console.warn(`[Waitlist Honeypot Triggered] IP: ${clientIp}, Value: ${trapValue}`);
-      // Respondemos éxito falso 200 de inmediato para no dar pistas al bot y no saturar Firebase
+      // Respondemos éxito 200 de inmediato para no dar pistas al bot y no saturar Firestore
       return new Response(
         JSON.stringify({
           status: "success",
@@ -116,7 +120,7 @@ export async function POST({ request }) {
     }
 
     // ------------------------------------------------------------------
-    // 2. Validación y normalización de formato de correo
+    // 2. Normalización y validación de correo electrónico
     // ------------------------------------------------------------------
     const cleanEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -143,7 +147,16 @@ export async function POST({ request }) {
     }
 
     // ------------------------------------------------------------------
-    // 4. Verificación de Cloudflare Turnstile (si existe secret key)
+    // 4. Limpieza de nuevos campos (Nombre, País, Rol, Teléfono, Empresa)
+    // ------------------------------------------------------------------
+    const cleanName = typeof name === "string" ? name.trim() : "";
+    const cleanPhone = typeof phone === "string" ? phone.trim() : "";
+    const cleanCompany = typeof company === "string" ? company.trim() : "";
+    const cleanCountry = typeof (country || pais) === "string" ? (country || pais).trim() : "";
+    const cleanRole = typeof (role || cargo) === "string" ? (role || cargo).trim() : "";
+
+    // ------------------------------------------------------------------
+    // 5. Verificación de Cloudflare Turnstile (si existe secret key)
     // ------------------------------------------------------------------
     if (TURNSTILE_SECRET_KEY) {
       const turnstileCheck = await verifyTurnstile(turnstileToken, clientIp);
@@ -156,21 +169,24 @@ export async function POST({ request }) {
     }
 
     // ------------------------------------------------------------------
-    // 5. Conexión con Cloud Function: app-waitlist-planea
+    // 6. Conexión con Cloud Function: app-waitlist-planea
     // ------------------------------------------------------------------
-    console.log(`[Waitlist API] Enviando ${cleanEmail} a Cloud Function: ${FIREBASE_FUNCTION_URL}`);
+    console.log(`[Waitlist API] Enviando ${cleanEmail} (${cleanCountry} - ${cleanRole}) a Cloud Function: ${FIREBASE_FUNCTION_URL}`);
 
-    // Construcción del payload según el contrato de app-waitlist-planea
+    // Construcción del payload según el contrato de app-waitlist-planea y Firestore
     const payload = {
       email: cleanEmail,
-      ...(name ? { name: String(name).trim() } : {}),
-      ...(phone ? { phone: String(phone).trim() } : {}),
-      ...(company ? { company: String(company).trim() } : {}),
+      ...(cleanName ? { name: cleanName } : {}),
+      ...(cleanPhone ? { phone: cleanPhone } : {}),
+      ...(cleanCompany ? { company: cleanCompany } : {}),
+      ...(cleanCountry ? { country: cleanCountry } : {}),
+      ...(cleanRole ? { role: cleanRole } : {}),
       source: source || "planea_landing",
       metadata: {
         ...(metadata && typeof metadata === "object" ? metadata : {}),
+        ...(cleanCountry ? { country: cleanCountry } : {}),
+        ...(cleanRole ? { role: cleanRole } : {}),
         clientIp: clientIp || undefined,
-        turnstileToken: turnstileToken || undefined,
         submittedAt: new Date().toISOString()
       }
     };
