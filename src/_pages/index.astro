@@ -1,7 +1,3 @@
----
-// metroKUBIKO Planea — Landing Page
----
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -27,9 +23,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <!-- Cloudflare Turnstile -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <style is:inline>
     :root{
@@ -62,7 +55,7 @@
       line-height:1.6;
       -webkit-font-smoothing:antialiased;
     }
-    h1,h2,h3{
+    h1,h2,h3,h4{
       font-family:'Space Grotesk',sans-serif;
       color:var(--stone-50);
       margin:0;
@@ -352,7 +345,6 @@
       display:block;
     }
     .int-card h4{
-      font-family:'Space Grotesk',sans-serif;
       font-size:15px;
       color:var(--stone-50);
       margin:0;
@@ -421,19 +413,118 @@
     .cta-inner{text-align:center;max-width:640px;margin:0 auto}
     .cta-inner h2{font-size:clamp(26px,4vw,38px)}
     .cta-inner p{color:var(--stone-400);margin-top:14px;font-size:16.5px}
-    .waitlist-form{
-      margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:16px;
+    .cta-actions{margin-top:32px;display:flex;justify-content:center}
+    .waitlist-note{margin-top:16px;color:var(--stone-500);font-size:13px}
+
+    /* ---------- MODAL STYLES ---------- */
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      z-index:999;
+      background:rgba(20, 18, 16, 0.65);
+      backdrop-filter:blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      opacity:0;
+      transition:opacity .25s ease;
     }
-    .waitlist-input-group{
-      display:flex;gap:10px;justify-content:center;flex-wrap:wrap;width:100%;
+    .modal-backdrop.open{
+      display:flex;
+      opacity:1;
     }
-    .waitlist-form input[type=email]{
-      background:#ffffff;border:1px solid var(--stone-700);color:var(--stone-50);
-      padding:13px 16px;border-radius:999px;font-size:14.5px;min-width:280px;font-family:'Inter',sans-serif;
+    .modal-card{
+      background:#ffffff;
+      border:1px solid var(--line);
+      border-radius:20px;
+      max-width:540px;
+      width:100%;
+      position:relative;
+      box-shadow:0 24px 60px rgba(0,0,0,0.22);
+      padding:32px 30px;
+      transform:scale(0.96) translateY(8px);
+      transition:transform .25s ease;
+      max-height:92vh;
+      overflow-y:auto;
+    }
+    .modal-backdrop.open .modal-card{
+      transform:scale(1) translateY(0);
+    }
+    .modal-close{
+      position:absolute;
+      top:18px;
+      right:18px;
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      border:1px solid var(--line);
+      background:var(--stone-900);
+      color:var(--stone-400);
+      cursor:pointer;
+      font-size:20px;
+      line-height:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:all .15s ease;
+    }
+    .modal-close:hover{
+      background:var(--stone-800);
+      color:var(--stone-50);
+    }
+    .modal-header{margin-bottom:22px}
+    .modal-eyebrow{
+      font-size:11.5px;
+      color:var(--accent);
+      text-transform:uppercase;
+      letter-spacing:0.04em;
+      display:inline-block;
+      margin-bottom:6px;
+    }
+    .modal-header h3{font-size:22px;color:var(--stone-50)}
+    .modal-header p{color:var(--stone-400);font-size:14px;margin-top:6px}
+
+    .modal-form{display:flex;flex-direction:column;gap:14px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:560px){
+      .form-row{grid-template-columns:1fr;gap:14px}
+      .modal-card{padding:26px 20px}
+    }
+    .form-group{display:flex;flex-direction:column;gap:5px;text-align:left}
+    .form-group label{
+      font-size:12.5px;
+      font-weight:600;
+      color:var(--stone-200);
+    }
+    .form-group label .opt{font-weight:400;color:var(--stone-500);font-size:11.5px}
+    .form-group input,
+    .form-group select{
+      background:#ffffff;
+      border:1px solid var(--stone-700);
+      color:var(--stone-50);
+      padding:10px 13px;
+      border-radius:8px;
+      font-size:14px;
+      font-family:'Inter',sans-serif;
       transition:border-color .15s ease, box-shadow .15s ease;
-      box-shadow:0 2px 6px rgba(0,0,0,0.03);
+      outline:none;
+      width:100%;
     }
-    .waitlist-form input[type=email]:focus{outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent)}
+    .form-group input:focus,
+    .form-group select:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px var(--accent-dim);
+    }
+    .form-group select{
+      appearance:none;
+      background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2378716c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat:no-repeat;
+      background-position:right 10px center;
+      background-size:14px;
+      padding-right:32px;
+      cursor:pointer;
+    }
     .hp-field{
       position:absolute !important;
       left:-9999px !important;
@@ -444,14 +535,37 @@
       width:0 !important;
       overflow:hidden !important;
     }
-    .cf-turnstile-wrap{
-      display:flex;justify-content:center;min-height:50px;width:100%;margin-top:4px;
+    .btn-block{width:100%;margin-top:8px}
+    .modal-error{
+      display:none;
+      margin:8px 0 0;
+      color:#dc2626;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:12.5px;
+      text-align:center;
     }
-    .btn.loading{opacity:0.75;cursor:not-allowed;pointer-events:none}
-    .btn-loader{display:none;align-items:center;gap:8px}
-    .waitlist-note{margin-top:14px;color:var(--stone-500);font-size:13px}
-    .waitlist-success{display:none;margin-top:28px;color:var(--ok);font-family:'IBM Plex Mono',monospace;font-size:14px}
-    .waitlist-error{display:none;margin-top:18px;color:#dc2626;font-family:'IBM Plex Mono',monospace;font-size:13.5px}
+    .modal-success{
+      text-align:center;
+      padding:16px 8px;
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+    }
+    .success-icon{
+      width:52px;
+      height:52px;
+      border-radius:50%;
+      background:#dcfce7;
+      color:var(--ok);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      font-weight:700;
+    }
+    .modal-success h4{font-size:20px}
+    .modal-success p{color:var(--stone-400);font-size:14px;margin:0 0 8px}
 
     /* ---------- Footer ---------- */
     footer{padding:56px 0 40px;background:var(--stone-900);border-top:1px solid var(--line)}
@@ -460,7 +574,7 @@
     .foot-brand img{height:24px;margin-bottom:16px;filter:invert(1) hue-rotate(180deg)}
     .foot-brand p{color:var(--stone-500);font-size:14px}
     .foot-cols{display:flex;gap:56px;flex-wrap:wrap}
-    .foot-col h4{font-family:'Space Grotesk',sans-serif;color:var(--stone-50);font-size:13.5px;font-weight:600;margin-bottom:14px}
+    .foot-col h4{color:var(--stone-50);font-size:13.5px;font-weight:600;margin-bottom:14px}
     .foot-col a{display:block;color:var(--stone-500);font-size:13.5px;text-decoration:none;margin-bottom:10px}
     .foot-col a:hover{color:var(--stone-50)}
     .foot-bottom{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--stone-500);font-size:13px;flex-wrap:wrap;gap:10px}
@@ -480,7 +594,7 @@
       <a href="#control-obra">Control con metroKUBIKO</a>
       <a href="#planes">Planes</a>
     </nav>
-    <a class="btn btn-primary" href="#lista-espera">Unirme a la lista de espera</a>
+    <button class="btn btn-primary" data-open-waitlist type="button">Unirme a la lista de espera</button>
     <button class="menu-toggle" aria-label="Abrir menú">☰</button>
   </div>
 </header>
@@ -497,7 +611,7 @@
       <h1>El presupuesto y el cronograma de tu obra, listos en minutos</h1>
       <p class="sub">Sube tu modelo BIM, descríbelo en lenguaje natural o calcúlalo a mano. Planea busca precios en tiempo real con IA, permite cargar tus propias bases y se integra directamente con la plataforma principal metroKUBIKO para controlar la ejecución en terreno.</p>
       <div class="hero-ctas">
-        <a class="btn btn-primary" href="#lista-espera">Unirme a la lista de espera</a>
+        <button class="btn btn-primary" data-open-waitlist type="button">Unirme a la lista de espera</button>
         <a class="btn btn-ghost" href="#como-funciona">Ver cómo funciona</a>
       </div>
       <p class="hero-note">Sin tarjeta de crédito · Plan gratuito disponible al lanzamiento</p>
@@ -717,7 +831,7 @@
             <li>Créditos IA / Búsqueda <span class="v">200 · una sola vez</span></li>
             <li>Tipos de reportes <span class="v">20</span></li>
           </ul>
-          <a class="btn btn-ghost" href="#lista-espera">Unirme a la lista de espera</a>
+          <button class="btn btn-ghost" data-open-waitlist type="button">Unirme a la lista de espera</button>
         </div>
 
         <div class="plan">
@@ -734,7 +848,7 @@
             <li>Tableros BI <span class="v">incluidos</span></li>
           </ul>
           <div class="includes">Incluye todo lo de Freemium</div>
-          <a class="btn btn-ghost" href="#lista-espera">Unirme a la lista de espera</a>
+          <button class="btn btn-ghost" data-open-waitlist type="button">Unirme a la lista de espera</button>
         </div>
 
         <div class="plan featured">
@@ -751,44 +865,120 @@
             <li>Usuario adicional <span class="v">+200 créditos</span></li>
           </ul>
           <div class="includes">Incluye todo lo de Profesional</div>
-          <a class="btn btn-primary" href="#lista-espera">Unirme a la lista de espera</a>
+          <button class="btn btn-primary" data-open-waitlist type="button">Unirme a la lista de espera</button>
         </div>
 
       </div>
     </div>
   </section>
 
-  <!-- CTA / WAITLIST -->
+  <!-- CTA FINAL -->
   <section class="cta-section" id="lista-espera">
     <div class="wrap cta-inner">
       <h2>Sé de los primeros en usar Planea</h2>
-      <p>Estamos completando las pruebas de conexión BIM y el buscador web de proveedores. Déjanos tu correo para darte acceso prioritario.</p>
-      <form class="waitlist-form" id="waitlist-form">
-        <!-- Honeypot -->
-        <div class="hp-field" aria-hidden="true">
-          <input type="text" name="b_company_phone" id="waitlist-hp" tabindex="-1" autocomplete="off">
-        </div>
-
-        <div class="waitlist-input-group">
-          <input type="email" id="waitlist-email" name="email" placeholder="tu@empresa.com" required aria-label="Correo electrónico">
-          <button type="submit" id="waitlist-btn" class="btn btn-primary">
-            <span class="btn-text">Unirme a la lista de espera</span>
-            <span class="btn-loader">Enviando...</span>
-          </button>
-        </div>
-
-        <!-- Cloudflare Turnstile -->
-        <div class="cf-turnstile-wrap">
-          <div class="cf-turnstile" id="cf-turnstile" data-sitekey="0x4AAAAAAFCa7_-Jd7e4pEez" data-theme="dark" data-size="flexible"></div>
-        </div>
-      </form>
-      <p class="waitlist-success" id="waitlist-success">Listo — quedaste en la lista. Te avisaremos con una invitación directa a la plataforma.</p>
-      <p class="waitlist-error" id="waitlist-error"></p>
-      <p class="waitlist-note">Un solo correo de bienvenida. Cero spam.</p>
+      <p>Estamos completando las pruebas de conexión BIM y el buscador web de proveedores. Únete a la lista de espera para darte acceso prioritario.</p>
+      
+      <div class="cta-actions">
+        <button class="btn btn-primary" data-open-waitlist type="button">
+          Unirme a la lista de espera
+        </button>
+      </div>
+      <p class="waitlist-note">Sin tarjeta de crédito · Cero spam.</p>
     </div>
   </section>
 
 </main>
+
+<!-- MODAL COMPACTO DE REGISTRO EN LISTA DE ESPERA -->
+<div class="modal-backdrop" id="waitlist-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-card">
+    <button class="modal-close" id="modal-close-btn" type="button" aria-label="Cerrar modal">✕</button>
+    
+    <div class="modal-header">
+      <span class="mono modal-eyebrow">Acceso Prioritario</span>
+      <h3 id="modal-title">Únete a la lista de espera</h3>
+      <p>Sé parte del lanzamiento de metroKUBIKO Planea y presupuesta tu primera obra con IA.</p>
+    </div>
+
+    <form id="modal-waitlist-form" class="modal-form">
+      <!-- Honeypot oculto anti-bots -->
+      <div class="hp-field" aria-hidden="true">
+        <input type="text" name="b_company_phone" id="modal-hp" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="m-name">Nombre completo *</label>
+          <input type="text" id="m-name" name="name" placeholder="Ej. Carlos Gómez" required autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="m-email">Correo electrónico *</label>
+          <input type="email" id="m-email" name="email" placeholder="carlos@empresa.com" required autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="m-country">País *</label>
+          <select id="m-country" name="country" required>
+            <option value="" disabled selected>Selecciona tu país</option>
+            <option value="Colombia">Colombia</option>
+            <option value="México">México</option>
+            <option value="Chile">Chile</option>
+            <option value="Perú">Perú</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Ecuador">Ecuador</option>
+            <option value="Panamá">Panamá</option>
+            <option value="Costa Rica">Costa Rica</option>
+            <option value="Guatemala">Guatemala</option>
+            <option value="España">España</option>
+            <option value="Estados Unidos">Estados Unidos</option>
+            <option value="Otro">Otro país</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="m-role">Cargo / Rol *</label>
+          <select id="m-role" name="role" required>
+            <option value="" disabled selected>Selecciona tu rol</option>
+            <option value="Director / Gerente de Obra">Director / Gerente de Obra</option>
+            <option value="Ingeniero de Costos / Presupuestador">Ingeniero de Costos / Presupuestador</option>
+            <option value="Residente de Obra">Residente de Obra</option>
+            <option value="Arquitecto / Diseñador">Arquitecto / Diseñador</option>
+            <option value="Contratista independiente">Contratista independiente</option>
+            <option value="Gerente General / Socio">Gerente General / Socio</option>
+            <option value="Estudiante / Académico">Estudiante / Académico</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="m-company">Empresa <span class="opt">(opcional)</span></label>
+          <input type="text" id="m-company" name="company" placeholder="Constructora XYZ">
+        </div>
+        <div class="form-group">
+          <label for="m-phone">Teléfono / WhatsApp <span class="opt">(opcional)</span></label>
+          <input type="tel" id="m-phone" name="phone" placeholder="+57 300 123 4567">
+        </div>
+      </div>
+
+      <button type="submit" id="modal-submit-btn" class="btn btn-primary btn-block">
+        <span class="btn-text">Confirmar mi registro</span>
+        <span class="btn-loader" style="display:none;">Enviando...</span>
+      </button>
+
+      <p class="modal-error" id="modal-error"></p>
+    </form>
+
+    <div class="modal-success" id="modal-success">
+      <div class="success-icon">✓</div>
+      <h4>¡Registro exitoso!</h4>
+      <p id="modal-success-msg">Te has registrado exitosamente en la lista de espera de Planea. Revisa tu correo con la confirmación.</p>
+      <button type="button" class="btn btn-ghost" id="modal-close-success-btn">Cerrar</button>
+    </div>
+  </div>
+</div>
 
 <footer>
   <div class="wrap">

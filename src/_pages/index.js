@@ -1,6 +1,16 @@
 /**
- * metroKUBIKO Planea — Tab switcher, Waitlist Form Handling & Navigation
+ * metroKUBIKO Planea — Tab switcher, Waitlist Modal & Navigation
  */
+
+// ================================================================
+// CONFIGURACIÓN DE LA CLOUD FUNCTION (SEGÚN README)
+// ================================================================
+const WAITLIST_CONFIG = {
+  // Cambia esta URL a tu endpoint real de Cloud Function o API Proxy:
+  // Ejemplo: "https://us-central1-<PROJECT_ID>.cloudfunctions.net/app-waitlist-planea" o "/api/waitlist"
+  endpoint: "/api/waitlist",
+  token: "" // Token WAITLIST_TOKEN si tu Cloud Function requiere Authorization Bearer
+};
 
 // ================================================================
 // 1. TABS CONTENT HANDLER (CÓMO FUNCIONA)
@@ -40,26 +50,73 @@ const DISPOSABLE_EMAIL_DOMAINS = new Set([
 ]);
 
 // ================================================================
-// 3. WAITLIST FORM HANDLER (HONEYPOT + TURNSTILE + FETCH BACKEND)
+// 3. WAITLIST MODAL & SUBMISSION (COMPLIANT CON CLOUD FUNCTION)
 // ================================================================
-function initWaitlistForm() {
-  const form = document.getElementById("waitlist-form");
-  const successMsg = document.getElementById("waitlist-success");
-  const errorMsg = document.getElementById("waitlist-error");
-  const emailInput = document.getElementById("waitlist-email");
-  const honeypotInput = document.getElementById("waitlist-hp");
-  const submitBtn = document.getElementById("waitlist-btn");
+function initWaitlistModal() {
+  const modal = document.getElementById("waitlist-modal");
+  const closeBtn = document.getElementById("modal-close-btn");
+  const closeSuccessBtn = document.getElementById("modal-close-success-btn");
+  const form = document.getElementById("modal-waitlist-form");
+  const successBox = document.getElementById("modal-success");
+  const successMsg = document.getElementById("modal-success-msg");
+  const errorMsg = document.getElementById("modal-error");
+  const submitBtn = document.getElementById("modal-submit-btn");
   const btnText = submitBtn ? submitBtn.querySelector(".btn-text") : null;
   const btnLoader = submitBtn ? submitBtn.querySelector(".btn-loader") : null;
 
-  if (!form) return;
+  if (!modal || !form) return;
+
+  function openModal() {
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden"; // Prevenir scroll de fondo
+    clearError();
+    // Resetear formulario si ya fue completado previamente
+    if (successBox && successBox.style.display === "flex") {
+      successBox.style.display = "none";
+      form.style.display = "flex";
+      form.reset();
+    }
+    // Foco en el primer campo
+    const nameInput = document.getElementById("m-name");
+    nameInput?.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  // Escuchar todos los botones con data-open-waitlist o href="#lista-espera"
+  document.querySelectorAll("[data-open-waitlist], a[href='#lista-espera']").forEach(trigger => {
+    trigger.addEventListener("click", (e) => {
+      e.preventDefault();
+      openModal();
+    });
+  });
+
+  closeBtn?.addEventListener("click", closeModal);
+  closeSuccessBtn?.addEventListener("click", closeModal);
+
+  // Cerrar al hacer clic en el backdrop fuera de la tarjeta
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  // Cerrar con la tecla ESC
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) {
+      closeModal();
+    }
+  });
 
   function showError(msg) {
     if (errorMsg) {
       errorMsg.textContent = msg;
       errorMsg.style.display = "block";
-    } else {
-      alert(msg);
     }
   }
 
@@ -84,118 +141,111 @@ function initWaitlistForm() {
     }
   }
 
-  function resetTurnstile() {
-    if (typeof window !== "undefined" && window.turnstile) {
-      try {
-        window.turnstile.reset();
-      } catch (err) {
-        console.warn("Turnstile reset error:", err);
-      }
-    }
-  }
-
-  form.addEventListener("submit", async function (e) {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     clearError();
 
     // 1. Honeypot check
+    const honeypotInput = document.getElementById("modal-hp");
     if (honeypotInput && honeypotInput.value.trim() !== "") {
-      console.warn("Bot submission prevented via honeypot.");
       form.style.display = "none";
-      if (successMsg) {
-        successMsg.style.display = "block";
-        successMsg.textContent = "Listo — quedaste en la lista. Te avisaremos con una invitación directa a la plataforma.";
-      }
+      if (successBox) successBox.style.display = "flex";
       return;
     }
 
-    // 2. Validación de formato de email & descarte de temporales
-    const rawEmail = emailInput ? emailInput.value.trim().toLowerCase() : "";
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    // 2. Extraer campos
+    const name = document.getElementById("m-name")?.value.trim() || "";
+    const rawEmail = document.getElementById("m-email")?.value.trim().toLowerCase() || "";
+    const country = document.getElementById("m-country")?.value || "";
+    const role = document.getElementById("m-role")?.value || "";
+    const company = document.getElementById("m-company")?.value.trim() || "";
+    const phone = document.getElementById("m-phone")?.value.trim() || "";
 
+    // 3. Validaciones
+    if (!name) {
+      showError("Por favor ingresa tu nombre completo.");
+      document.getElementById("m-name")?.focus();
+      return;
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!rawEmail || !emailRegex.test(rawEmail)) {
       showError("Por favor ingresa un correo electrónico válido.");
-      emailInput?.focus();
+      document.getElementById("m-email")?.focus();
       return;
     }
 
     const emailDomain = rawEmail.split("@")[1];
     if (emailDomain && DISPOSABLE_EMAIL_DOMAINS.has(emailDomain)) {
-      showError("Por favor utiliza un correo corporativo o personal permanente (no correos temporales).");
-      emailInput?.focus();
+      showError("Por favor utiliza un correo corporativo o personal permanente.");
+      document.getElementById("m-email")?.focus();
       return;
     }
 
-    // 3. Obtención del token de Cloudflare Turnstile
-    let turnstileToken = "";
-    if (typeof window !== "undefined" && window.turnstile) {
-      try {
-        turnstileToken = window.turnstile.getResponse();
-      } catch (err) {
-        console.warn("Error getting Turnstile response:", err);
-      }
+    if (!country) {
+      showError("Por favor selecciona tu país.");
+      document.getElementById("m-country")?.focus();
+      return;
     }
 
-    if (!turnstileToken) {
-      const tsHiddenInput = form.querySelector('[name="cf-turnstile-response"]');
-      if (tsHiddenInput && tsHiddenInput.value) {
-        turnstileToken = tsHiddenInput.value;
-      }
+    if (!role) {
+      showError("Por favor selecciona tu cargo o rol.");
+      document.getElementById("m-role")?.focus();
+      return;
     }
 
-    const tsContainer = document.querySelector(".cf-turnstile");
-    if (tsContainer && !turnstileToken && typeof window !== "undefined" && window.turnstile) {
-      const siteKey = tsContainer.getAttribute("data-sitekey");
-      if (siteKey && !siteKey.startsWith("1x00000000000000000000AA") && !siteKey.startsWith("2x00000000000000000000AB")) {
-        showError("Por favor completa la verificación de seguridad antes de continuar.");
-        return;
+    // 4. Preparar Payload según especificación README
+    const payload = {
+      email: rawEmail,
+      name: name,
+      phone: phone || undefined,
+      company: company || undefined,
+      source: "planea_landing",
+      metadata: {
+        country: country,
+        role: role,
+        submittedAt: new Date().toISOString()
       }
+    };
+
+    const headers = {
+      "Content-Type": "application/json"
+    };
+
+    if (WAITLIST_CONFIG.token) {
+      headers["Authorization"] = `Bearer ${WAITLIST_CONFIG.token}`;
     }
 
-    // 4. Envío fetch() al backend
     setLoading(true);
 
     try {
-      const response = await fetch("/api/waitlist", {
+      const response = await fetch(WAITLIST_CONFIG.endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          email: rawEmail,
-          turnstileToken: turnstileToken,
-          honeypot: honeypotInput ? honeypotInput.value : "",
-          source: "planea-landing",
-          timestamp: new Date().toISOString()
-        })
+        headers: headers,
+        body: JSON.stringify(payload)
       });
 
-      const result = await response.json().catch(() => ({}));
+      const data = await response.json().catch(() => ({}));
 
-      if (response.ok) {
+      // Validar si el backend respondió formato { status: "success", response: { ... } }
+      if (response.ok && (data.status === "success" || data.status === "ok" || !data.status)) {
         form.style.display = "none";
-        if (successMsg) {
-          successMsg.style.display = "block";
-          if (result.message) {
-            successMsg.textContent = result.message;
+        if (successBox) {
+          successBox.style.display = "flex";
+          if (data.response?.message) {
+            successMsg.textContent = data.response.message;
           }
         }
-      } else if (response.status === 409) {
-        form.style.display = "none";
-        if (successMsg) {
-          successMsg.style.display = "block";
-          successMsg.textContent = result.message || "¡Ya estás registrado en la lista de espera! Pronto recibirás tu invitación.";
-        }
       } else {
-        const msg = result.error || result.message || "Ocurrió un error al procesar tu solicitud. Intenta nuevamente.";
-        showError(msg);
-        resetTurnstile();
+        const errorText = typeof data.response === "string" 
+          ? data.response 
+          : (data.error || data.message || "Ocurrió un error al procesar el registro. Intenta nuevamente.");
+        showError(errorText);
       }
     } catch (err) {
-      console.error("Fetch waitlist error:", err);
-      showError("No fue posible conectar con el servidor. Por favor verifica tu conexión a internet o intenta en unos minutos.");
-      resetTurnstile();
+      console.error("Waitlist submit error:", err);
+      // Fallback si aún estás configurando el proxy/endpoint
+      showError("No fue posible conectar con el servidor. Revisa tu conexión o intenta en unos minutos.");
     } finally {
       setLoading(false);
     }
@@ -226,7 +276,7 @@ function initMobileMenu() {
 function initPage() {
   initFlowTabs();
   initMobileMenu();
-  initWaitlistForm();
+  initWaitlistModal();
 }
 
 if (typeof document !== "undefined") {
