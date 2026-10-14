@@ -13,6 +13,34 @@ const WAITLIST_CONFIG = {
 };
 
 // ================================================================
+// UTM: se leen de la URL y se guardan en sessionStorage para no perderlos
+// si el usuario navega (p. ej. a la política de datos) antes de registrarse
+// ================================================================
+const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "utm_id"];
+const UTM_STORAGE_KEY = "planea_utm";
+
+function captureUtmParams() {
+  const params = new URLSearchParams(window.location.search);
+  const utm = {};
+  UTM_KEYS.forEach(key => {
+    const value = params.get(key);
+    if (value) utm[key] = value.trim().slice(0, 200);
+  });
+
+  try {
+    if (Object.keys(utm).length) {
+      sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(utm));
+      return utm;
+    }
+    return JSON.parse(sessionStorage.getItem(UTM_STORAGE_KEY) || "{}");
+  } catch (err) {
+    return utm;
+  }
+}
+
+const UTM_PARAMS = captureUtmParams();
+
+// ================================================================
 // 1. TABS CONTENT HANDLER (CÓMO FUNCIONA)
 // ================================================================
 const flowsDescriptions = {
@@ -252,6 +280,7 @@ function initWaitlistModal() {
         country: country,
         role: role,
         turnstileToken: turnstileToken,
+        ...(Object.keys(UTM_PARAMS).length ? { utm: UTM_PARAMS } : {}),
         submittedAt: new Date().toISOString()
       }
     };

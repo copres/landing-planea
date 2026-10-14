@@ -157,6 +157,16 @@ export async function POST({ request }) {
     const cleanCountry = typeof (country || pais) === "string" ? (country || pais).trim() : "";
     const cleanRole = typeof (role || cargo) === "string" ? (role || cargo).trim() : "";
 
+    // UTM de campaña (solo claves conocidas y valores string acotados)
+    const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "utm_id"];
+    const rawUtm = metadata && typeof metadata === "object" && metadata.utm && typeof metadata.utm === "object" ? metadata.utm : {};
+    const cleanUtm = {};
+    for (const key of UTM_KEYS) {
+      if (typeof rawUtm[key] === "string" && rawUtm[key].trim()) {
+        cleanUtm[key] = rawUtm[key].trim().slice(0, 200);
+      }
+    }
+
     // Autorización de tratamiento de datos (Ley 1581 de 2012)
     if (consent !== true) {
       return new Response(
@@ -196,6 +206,7 @@ export async function POST({ request }) {
         ...(metadata && typeof metadata === "object" ? metadata : {}),
         ...(cleanCountry ? { country: cleanCountry } : {}),
         ...(cleanRole ? { role: cleanRole } : {}),
+        utm: Object.keys(cleanUtm).length ? cleanUtm : undefined,
         clientIp: clientIp || undefined,
         submittedAt: new Date().toISOString(),
         privacyConsent: {
