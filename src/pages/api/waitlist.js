@@ -97,6 +97,8 @@ export async function POST({ request }) {
       source,
       metadata,
       turnstileToken,
+      consent,
+      consentPolicyVersion,
       honeypot,
       hp,
       b_company_phone
@@ -155,6 +157,14 @@ export async function POST({ request }) {
     const cleanCountry = typeof (country || pais) === "string" ? (country || pais).trim() : "";
     const cleanRole = typeof (role || cargo) === "string" ? (role || cargo).trim() : "";
 
+    // Autorización de tratamiento de datos (Ley 1581 de 2012)
+    if (consent !== true) {
+      return new Response(
+        JSON.stringify({ status: "error", error: "Debes autorizar el tratamiento de tus datos personales para continuar." }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     // ------------------------------------------------------------------
     // 5. Verificación de Cloudflare Turnstile (si existe secret key)
     // ------------------------------------------------------------------
@@ -187,7 +197,12 @@ export async function POST({ request }) {
         ...(cleanCountry ? { country: cleanCountry } : {}),
         ...(cleanRole ? { role: cleanRole } : {}),
         clientIp: clientIp || undefined,
-        submittedAt: new Date().toISOString()
+        submittedAt: new Date().toISOString(),
+        privacyConsent: {
+          accepted: true,
+          policyVersion: typeof consentPolicyVersion === "string" ? consentPolicyVersion : undefined,
+          acceptedAt: new Date().toISOString()
+        }
       }
     };
 

@@ -528,6 +528,9 @@
       padding-right:32px;
       cursor:pointer;
     }
+    .consent{display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:12.5px;line-height:1.5;color:var(--stone-400);cursor:pointer}
+    .consent input{margin-top:3px;accent-color:var(--accent);flex-shrink:0}
+    .consent a{color:var(--accent)}
     .hp-field{
       position:absolute !important;
       left:-9999px !important;
@@ -978,6 +981,11 @@
         </div>
       </div>
 
+      <label class="consent" for="m-consent">
+        <input type="checkbox" id="m-consent" name="consent" required>
+        <span>Autorizo el tratamiento de mis datos personales conforme a la <a href="/politica-de-datos" target="_blank" rel="noopener">Política de Tratamiento de Datos</a>. *</span>
+      </label>
+
       <!-- Cloudflare Turnstile dentro del modal -->
       <div class="cf-turnstile-wrap">
         <div class="cf-turnstile" id="cf-turnstile" data-sitekey="0x4AAAAAAFCa7_-Jd7e4pEez" data-theme="light" data-size="flexible"></div>
@@ -1025,6 +1033,7 @@
         <div class="foot-col">
           <h4>Contacto</h4>
           <a href="https://wa.me/573163719421?text=Hola,%20quiero%20más%20información%20sobre%20Planea" target="_blank" rel="noopener noreferrer">WhatsApp de soporte</a>
+          <a href="/politica-de-datos">Política de datos</a>
         </div>
       </div>
     </div>

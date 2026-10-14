@@ -5,6 +5,9 @@
 // ================================================================
 // CONFIGURACIÓN DE LA CLOUD FUNCTION (SEGÚN README)
 // ================================================================
+// Debe coincidir con VERSION en src/pages/politica-de-datos.astro
+const PRIVACY_POLICY_VERSION = "1.0";
+
 const WAITLIST_CONFIG = {
   endpoint: "/api/waitlist", // o tu Cloud Function directa
 };
@@ -200,6 +203,13 @@ function initWaitlistModal() {
       return;
     }
 
+    const consent = document.getElementById("m-consent")?.checked || false;
+    if (!consent) {
+      showError("Debes autorizar el tratamiento de tus datos personales para continuar.");
+      document.getElementById("m-consent")?.focus();
+      return;
+    }
+
     // 4. Obtención y validación del token de Cloudflare Turnstile
     let turnstileToken = "";
     if (typeof window !== "undefined" && window.turnstile) {
@@ -236,6 +246,8 @@ function initWaitlistModal() {
       country: country,
       role: role,
       turnstileToken: turnstileToken,
+      consent: true,
+      consentPolicyVersion: PRIVACY_POLICY_VERSION,
       metadata: {
         country: country,
         role: role,
