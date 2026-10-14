@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planea Reel</title>
+  <meta name="description" content="Reel vertical: qué es metroKUBIKO Planea y cómo funciona, del modelo BIM al presupuesto y cronograma de obra con Laura, el agente de IA.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Manrope:wght@500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink: #05070B;
+      --line: rgba(255, 255, 255, 0.10);
+      --text: #E8ECF2;
+      --muted: #8A93A6;
+      --accent: #FF6A1A;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: radial-gradient(1200px 700px at 50% 40%, #0E1322 0%, var(--ink) 70%);
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+    }
+    .stage {
+      width: min(560px, calc(100vw - 32px), calc((100vh - 96px) * 9 / 16));
+      padding: 16px 0;
+      display: grid;
+      gap: 14px;
+    }
+    canvas {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      display: block;
+      border-radius: 18px;
+      background: #070A11;
+      box-shadow: 0 0 0 1px var(--line), 0 40px 120px rgba(0, 0, 0, 0.6), 0 0 120px rgba(255, 106, 26, 0.06);
+      cursor: pointer;
+    }
+    .bar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font: 500 13px 'JetBrains Mono', monospace;
+      color: var(--muted);
+    }
+    .bar button {
+      all: unset;
+      cursor: pointer;
+      height: 36px;
+      min-width: 36px;
+      padding: 0 14px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--text);
+      font: 600 13px 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      transition: border-color .2s, background .2s;
+    }
+    .bar button:hover { border-color: rgba(255, 106, 26, 0.6); background: rgba(255, 106, 26, 0.08); }
+    .bar button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .bar button[disabled] { opacity: .4; cursor: not-allowed; }
+    .bar #rec { margin-left: auto; color: var(--accent); border-color: rgba(255, 106, 26, 0.4); }
+    .track {
+      position: relative;
+      flex: 1;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .track::before {
+      content: "";
+      position: absolute;
+      inset: 17px 0;
+      background: var(--line);
+      border-radius: 2px;
+    }
+    .track i {
+      position: absolute;
+      left: 0;
+      top: 17px;
+      height: 2px;
+      background: linear-gradient(90deg, #FF6A1A, #FFB36B);
+      border-radius: 2px;
+      box-shadow: 0 0 12px rgba(255, 106, 26, 0.7);
+    }
+    @media (max-width: 640px) {
+      .bar { gap: 8px; }
+      .bar #clock { display: none; }
+      .bar button { padding: 0 10px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <canvas id="film" width="1080" height="1920" aria-label="Reel vertical animado: qué es metroKUBIKO Planea y cómo funciona, paso a paso, con Laura"></canvas>
+    <div class="bar">
+      <button id="toggle" type="button" aria-label="Pausar">❚❚</button>
+      <button id="again" type="button" aria-label="Volver a empezar">↺</button>
+      <div class="track" id="track" role="slider" aria-label="Línea de tiempo" tabindex="0"><i id="fill"></i></div>
+      <span id="clock">0:00 / 0:00</span>
+      <button id="rec" type="button">Exportar .webm</button>
+    </div>
+  </main>
+
+  <script is:inline>
+  (() => {
+    // ================================================================
+    //  LIENZO Y CONSTANTES
+    // ================================================================
+    const film = document.getElementById('film');
+    const g = film.getContext('2d');
+    const W = 1080, H = 1920, TAU = Math.PI * 2;
+    const CX = W / 2;          // eje central del reel
+    const STAGE_Y = 1180;      // centro de la zona visual (bajo el texto)
+    const N = 1700;
+    const LAURA_URL = 'https://firebasestorage.googleapis.com/v0/b/copres-firebase.appspot.com/o/CoPres%2Flaura%2Fprofile-2.png?alt=media&token=af875745-5d70-4d56-9c78-cddd27880410';
+
+    const RGB = {
+      orange: [255, 106, 26],
+      amber: [255, 179, 107],
+      white: [226, 232, 240],
+      steel: [148, 163, 184],
+      cyan: [94, 234, 212],
+      blue: [96, 165, 250],
+      green: [52, 211, 153],
+      violet: [167, 139, 250]
+    };
+    const HEX = {
+      text: '#F3F5F9',
+      body: '#9AA3B5',
+      dim: '#6F7890',
+      orange: '#FF6A1A',
+      amber: '#FFB36B',
+      green: '#34D399',
+      cyan: '#5EEAD4'
+    };
+    const FONT = {
+      display: (w, s) => `${w} ${s}px Sora, sans-serif`,
+      body: (w, s) => `${w} ${s}px Manrope, sans-serif`,
+      mono: (w, s) => `${w} ${s}px "JetBrains Mono", monospace`
+    };
+
+    // ================================================================
+    //  MATEMÁTICA
+    // ================================================================
+    const clamp = (v, a = 0, b = 1) => v < a ? a : v > b ? b : v;
+    const span = (t, a, b) => clamp((t - a) / (b - a));
+    const mix = (a, b, k) => a + (b - a) * k;
+    const easeOut = k => 1 - Math.pow(1 - k, 4);
+    const easeInOut = k => k < 0.5 ? 8 * k * k * k * k : 1 - Math.pow(-2 * k + 2, 4) / 2;
+    const money = v => '$' + Math.round(v).toLocaleString('en-US');
+
+    function seeded(seed) {
+      return () => {
+        seed = (seed + 0x6D2B79F5) | 0;
+        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+    const rand = seeded(20270101);
+    const shuffle = arr => {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(rand() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    };
+
+    // Cada partícula tiene su propia "personalidad" determinista
+    const DNA = Array.from({ length: N }, () => ({
+      a: rand(), b: rand(), c: rand(), d: rand(),
+      lag: rand() * 0.75,
+      swirl: (rand() - 0.5) * 320,
+      size: 1.2 + rand() * 1.9
+    }));
+
+    // ================================================================
+    //  DATOS DEL PROYECTO DE EJEMPLO
+    // ================================================================
+    const CHAPTERS = [
+      { name: 'Preliminares', v: 6200, s: 0, e: 6, crit: true },
+      { name: 'Cimentación', v: 14500, s: 6, e: 16, crit: true },
+      { name: 'Estructura en concreto', v: 38200, s: 16, e: 40, crit: true },
+      { name: 'Mampostería y muros', v: 19400, s: 28, e: 48, crit: false, float: 54 },
+      { name: 'Acabados y pisos', v: 27300, s: 40, e: 60, crit: true }
+    ];
+    const BASE_TOTAL = CHAPTERS.reduce((s, c) => s + c.v, 0);
+    const rowY = b => 1010 + b * 108;
+    const BAR_X = 80, BAR_SCALE = 740 / 42800;
+    const BAR_RIGHT = 1000;
+    const dayX = d => 80 + (d / 60) * 800;
+
+    // Reparto fijo de partículas por capítulo, proporcional al valor inicial
+    const BAR_OF = new Uint8Array(N);
+    {
+      let acc = 0, b = 0;
+      const cuts = CHAPTERS.map(c => (acc += c.v / BASE_TOTAL));
+      for (let i = 0; i < N; i++) {
+        while ((i + 0.5) / N > cuts[b]) b++;
+        BAR_OF[i] = b;
+      }
+    }
+
+    // ================================================================
+    //  GEOMETRÍA DEL MODELO BIM (puntos 3D con categoría)
+    // ================================================================
+    const BIM = [];
+    {
+      const add = (x, y, z, cat) => BIM.push({ x, y, z, cat });
+      const seg = (x1, y1, z1, x2, y2, z2, step, cat) => {
+        const len = Math.hypot(x2 - x1, y2 - y1, z2 - z1);
+        const n = Math.max(1, Math.round(len / step));
+        for (let k = 0; k <= n; k++) add(mix(x1, x2, k / n), mix(y1, y2, k / n), mix(z1, z2, k / n), cat);
+      };
+      const rectXY = (x1, x2, y1, y2, z, step, cat) => {
+        seg(x1, y1, z, x2, y1, z, step, cat); seg(x2, y1, z, x2, y2, z, step, cat);
+        seg(x2, y2, z, x1, y2, z, step, cat); seg(x1, y2, z, x1, y1, z, step, cat);
+      };
+      const rectZY = (z1, z2, y1, y2, x, step, cat) => {
+        seg(x, y1, z1, x, y1, z2, step, cat); seg(x, y1, z2, x, y2, z2, step, cat);
+        seg(x, y2, z2, x, y2, z1, step, cat); seg(x, y2, z1, x, y1, z1, step, cat);
+      };
+      for (let k = 0; k <= 5; k++) {
+        seg(-2, k, -1.5, 2, k, -1.5, 0.14, 'slab'); seg(2, k, -1.5, 2, k, 1.5, 0.14, 'slab');
+        seg(2, k, 1.5, -2, k, 1.5, 0.14, 'slab'); seg(-2, k, 1.5, -2, k, -1.5, 0.14, 'slab');
+        if (k > 0) for (let x = -1.5; x <= 1.5; x += 0.75) for (let z = -1; z <= 1; z += 0.66) add(x, k, z, 'slab');
+      }
+      [[-2, -1.5], [0, -1.5], [2, -1.5], [-2, 1.5], [0, 1.5], [2, 1.5], [-2, 0], [2, 0]]
+        .forEach(([x, z]) => seg(x, 0, z, x, 5, z, 0.13, 'col'));
+      for (let f = 0; f < 5; f++) {
+        for (const x of [-1.5, -0.5, 0.5, 1.5]) {
+          if (f === 0 && Math.abs(x) < 1) continue;
+          rectXY(x - 0.22, x + 0.22, f + 0.3, f + 0.75, 1.5, 0.16, 'wall');
+          rectXY(x - 0.22, x + 0.22, f + 0.3, f + 0.75, -1.5, 0.16, 'wall');
+        }
+        for (const z of [-0.75, 0.75]) {
+          rectZY(z - 0.22, z + 0.22, f + 0.3, f + 0.75, 2, 0.16, 'wall');
+          rectZY(z - 0.22, z + 0.22, f + 0.3, f + 0.75, -2, 0.16, 'wall');
+        }
+      }
+      rectXY(-0.32, 0.32, 0, 0.85, 1.5, 0.08, 'door');
+      rectXY(-0.32, 0.32, 0, 0.85, -1.5, 0.08, 'door');
+      shuffle(BIM);
+    }
+    const CAT_RGB = { wall: RGB.blue, col: RGB.orange, slab: RGB.green, door: RGB.violet };
+
+    // ================================================================
+    //  MUESTREO DE TEXTO A PUNTOS
+    // ================================================================
+    function sampleText(text, cx, cy, size) {
+      const off = document.createElement('canvas');
+      off.width = W; off.height = H;
+      const o = off.getContext('2d');
+      o.font = FONT.display(700, size);
+      o.textAlign = 'center';
+      o.textBaseline = 'middle';
+      o.fillStyle = '#fff';
+      o.fillText(text, cx, cy);
+      const m = o.measureText(text);
+      const data = o.getImageData(0, 0, W, H).data;
+      const pts = [];
+      const step = 4;
+      for (let y = 0; y < H; y += step) {
+        for (let x = 0; x < W; x += step) {
+          if (data[(y * W + x) * 4 + 3] > 140) pts.push([x, y]);
+        }
+      }
+      shuffle(pts);
+      const left = cx - m.width / 2;
+      pts.forEach(p => { p[2] = clamp((p[0] - left) / m.width); });
+      return pts;
+    }
+    let WORD_INTRO = [[W / 2, H / 2, 0]], WORD_OUTRO = [[W / 2, H / 2, 0]];
+
+    // ================================================================
+    //  LAURA: TRAYECTORIA A LO LARGO DEL VIDEO
+    // ================================================================
+    let lauraImg = null;
+    let LAURA_KEYS = [];
+    const lauraNow = { x: 0, y: 0, r: 0, a: 0 };
+    function lauraAt(T) {
+      const K = LAURA_KEYS;
+      if (!K.length) return lauraNow;
+      let i = 0;
+      while (i < K.length - 2 && T > K[i + 1].T) i++;
+      const A = K[i], B = K[i + 1];
+      const k = easeInOut(span(T, A.T, B.T));
+      lauraNow.x = mix(A.x, B.x, k);
+      lauraNow.y = mix(A.y, B.y, k);
+      lauraNow.r = mix(A.r, B.r, k);
+      lauraNow.a = mix(A.a, B.a, k);
+      return lauraNow;
+    }
+
+    // ================================================================
+    //  FORMACIONES DE PARTÍCULAS
+    //  f(i, T, t, out) escribe x, y, z, rgb, a, s
+    // ================================================================
+    const nebula = (i, T, t, o) => {
+      const p = DNA[i];
+      const r = 40 + Math.pow(p.a, 0.6) * 560;
+      const ang = p.b * TAU + T * 0.28 * (260 / (r + 160));
+      o.x = CX + Math.cos(ang) * r * 0.85;
+      o.y = 960 + Math.sin(ang) * r * 0.62 + (p.c - 0.5) * 40;
+      o.rgb = r < 220 ? RGB.amber : r < 420 ? RGB.orange : RGB.steel;
+      o.a = 0.35 + 0.6 * p.c;
+      o.s = p.size;
+    };
+
+    const word = getPts => (i, T, t, o) => {
+      const pts = getPts();
+      const q = pts[i % pts.length];
+      const p = DNA[i];
+      o.x = q[0] + Math.sin(T * 1.4 + p.a * 30) * 1.4;
+      o.y = q[1] + Math.cos(T * 1.2 + p.b * 30) * 1.4;
+      o.rgb = q[2] < 0.5 ? RGB.orange : RGB.amber;
+      o.a = 0.75 + 0.25 * p.c;
+      o.s = 1.4 + p.d * 1.1;
+    };
+
+    const building = opts => (i, T, t, o) => {
+      const q = BIM[i % BIM.length];
+      const p = DNA[i];
+      const S = 100, cx = CX, cy = STAGE_Y, tilt = 0.42;
+      const th = T * 0.22 + 0.6;
+      const c = Math.cos(th), s = Math.sin(th);
+      const x1 = q.x * c - q.z * s;
+      const z1 = q.x * s + q.z * c;
+      const y = q.y - 2.5;
+      const y2 = y * Math.cos(tilt) - z1 * Math.sin(tilt);
+      const z2 = y * Math.sin(tilt) + z1 * Math.cos(tilt);
+      const persp = 1100 / (1100 + z2 * S);
+      o.x = cx + x1 * S * persp;
+      o.y = cy - y2 * S * persp;
+      const depth = clamp(0.5 - z2 / 6);
+      o.a = 0.3 + 0.7 * depth;
+      o.s = p.size * persp * (q.cat === 'col' ? 1.15 : 1);
+      o.rgb = q.cat === 'col' ? RGB.amber : RGB.white;
+      if (opts && opts.hl) {
+        const w = opts.hl(t, q.cat);
+        if (w > 0) { o.rgb = CAT_RGB[q.cat]; o.a = Math.min(1, o.a + 0.4 * w); o.s *= 1 + 0.5 * w; }
+      }
+      if (opts && opts.scan) {
+        const sy = opts.scan(t);
+        if (sy != null && Math.abs(q.y - sy) < 0.22) { o.rgb = RGB.orange; o.a = 1; o.s *= 1.7; }
+      }
+    };
+
+    const orbit = opts => (i, T, t, o) => {
+      const L = lauraAt(T);
+      const p = DNA[i];
+      const base = Math.max(L.r, 30);
+      let R = base * 1.25 + 24 + Math.pow(p.a, 1.4) * 210;
+      if (opts && opts.pulse) R *= 1 + 0.07 * Math.sin(T * 5 - p.a * 9) * opts.pulse(t);
+      const ang = p.b * TAU + T * (0.16 + 0.34 * (1 - p.a));
+      const sn = Math.sin(ang);
+      const x = Math.cos(ang) * R;
+      const y = sn * R * 0.34 + (p.d - 0.5) * 26;
+      const rot = -0.28;
+      o.x = L.x + x * Math.cos(rot) - y * Math.sin(rot);
+      o.y = L.y + x * Math.sin(rot) + y * Math.cos(rot);
+      o.z = sn;
+      o.rgb = p.c < 0.6 ? RGB.orange : p.c < 0.85 ? RGB.amber : RGB.white;
+      o.a = 0.3 + 0.7 * (sn * 0.5 + 0.5);
+      o.s = p.size * (0.75 + 0.45 * (sn * 0.5 + 0.5));
+    };
+
+    const bars = valuesAt => (i, T, t, o) => {
+      const b = BAR_OF[i], p = DNA[i];
+      const { vals, grow, flash } = valuesAt(t);
+      const len = vals[b] * BAR_SCALE * grow[b];
+      o.x = BAR_X + p.a * len;
+      o.y = rowY(b) + (p.b - 0.5) * 26 + Math.sin(T * 2 + p.c * 20) * 1.2;
+      o.rgb = p.a < 0.5 ? RGB.orange : RGB.amber;
+      if (flash[b] > 0.4) o.rgb = RGB.white;
+      o.a = 0.6 + 0.4 * p.c;
+      o.s = 1.2 + p.d * 1.3;
+    };
+
+    const gantt = (i, T, t, o) => {
+      const b = BAR_OF[i], p = DNA[i], ch = CHAPTERS[b];
+      const grow = easeOut(span(t, 0.6 + b * 0.25, 2.0 + b * 0.25));
+      const x0 = dayX(ch.s), x1 = dayX(ch.e);
+      o.x = x0 + p.a * (x1 - x0) * Math.max(grow, 0.02);
+      o.y = rowY(b) + (p.b - 0.5) * 22 + Math.sin(T * 2 + p.c * 20) * 1.2;
+      o.rgb = ch.crit ? (p.a < 0.5 ? RGB.orange : RGB.amber) : RGB.cyan;
+      o.a = 0.6 + 0.4 * p.c;
+      o.s = 1.2 + p.d * 1.3;
+    };
+
+    // ================================================================
+    //  PRIMITIVAS DE DIBUJO
+    // ================================================================
+    function alpha(a, fn) {
+      if (a <= 0.001) return;
+      g.save();
+      g.globalAlpha *= clamp(a);
+      fn();
+      g.restore();
+    }
+
+    function rounded(x, y, w, h, r) {
+      r = Math.min(r, w / 2, h / 2);
+      g.beginPath();
+      g.moveTo(x + r, y);
+      g.arcTo(x + w, y, x + w, y + h, r);
+      g.arcTo(x + w, y + h, x, y + h, r);
+      g.arcTo(x, y + h, x, y, r);
+      g.arcTo(x, y, x + w, y, r);
+      g.closePath();
+    }
+
+    function glass(x, y, w, h, r, glow) {
+      rounded(x, y, w, h, r);
+      g.fillStyle = 'rgba(255, 255, 255, 0.045)';
+      g.fill();
+      g.lineWidth = 1.5;
+      g.strokeStyle = glow ? 'rgba(255, 106, 26, 0.55)' : 'rgba(255, 255, 255, 0.14)';
+      g.stroke();
+    }
+
+    function label(s, x, y, font, color, align = 'left', base = 'alphabetic') {
+      g.font = font;
+      g.fillStyle = color;
+      g.textAlign = align;
+      g.textBaseline = base;
+      g.fillText(s, x, y);
+    }
+
+    // Texto cinético: cada palabra emerge desde una máscara y sale hacia arriba.
+    // Las palabras entre *asteriscos* se resaltan.
+    function parseWords(text) {
+      let hot = false;
+      return text.split(' ').map(raw => {
+        let t = raw;
+        if (t.startsWith('*')) { hot = true; t = t.slice(1); }
+        const h = hot;
+        if (t.includes('*')) { t = t.replace('*', ''); hot = false; }
+        return { t, hot: h };
+      });
+    }
+
+    function layoutWords(words, maxW, font) {
+      g.font = font;
+      const space = g.measureText(' ').width;
+      const lines = [];
+      let line = [], w = 0;
+      for (const wd of words) {
+        wd.w = g.measureText(wd.t).width;
+        if (line.length && w + space + wd.w > maxW) { lines.push(line); line = []; w = 0; }
+        if (line.length) w += space;
+        wd.x = w;
+        w += wd.w;
+        line.push(wd);
+      }
+      if (line.length) lines.push(line);
+      lines.forEach(l => { l.width = l[l.length - 1].x + l[l.length - 1].w; });
+      return lines;
+    }
+
+    function kinetic(text, x, y, o) {
+      const lines = layoutWords(parseWords(text), o.maxW ?? 1800, o.font);
+      let j = 0;
+      lines.forEach((ln, li) => {
+        const ly = y + li * o.lh;
+        const lx = o.align === 'center' ? x - ln.width / 2 : x;
+        ln.forEach(wd => {
+          const st = (o.delay ?? 0) + j * (o.stagger ?? 0.04);
+          const outSt = o.out != null ? o.out + j * 0.012 : null;
+          j++;
+          const k = easeOut(span(o.t, st, st + 0.8));
+          if (k <= 0) return;
+          const out = outSt != null ? easeInOut(span(o.t, outSt, outSt + 0.45)) : 0;
+          if (out >= 1) return;
+          g.save();
+          g.beginPath();
+          g.rect(lx + wd.x - 10, ly - o.size * 1.05, wd.w + 20, o.size * 1.5);
+          g.clip();
+          g.globalAlpha *= k * (1 - out);
+          label(wd.t, lx + wd.x, ly + (1 - k) * o.size * 1.1 - out * o.size * 0.7,
+            o.font, wd.hot ? (o.hot ?? HEX.orange) : o.color);
+          g.restore();
+        });
+      });
+      return y + (lines.length - 1) * o.lh;
+    }
+
+    function typed(text, t, cps) {
+      return text.slice(0, Math.max(0, Math.floor(t * cps)));
+    }
+
+    // Bloque editorial superior: etiqueta, título y explicación
+    function story(t, dur, tag, title, body) {
+      const out = dur - 0.75;
+      alpha(easeOut(span(t, 0.05, 0.6)) * (1 - span(t, out, out + 0.4)), () => {
+        const k = easeOut(span(t, 0.05, 0.8));
+        g.fillStyle = HEX.orange;
+        g.fillRect(80, 262, 44 * k, 3);
+        label(tag, 140, 272, FONT.mono(600, 24), HEX.orange);
+      });
+      const tb = kinetic(title, 80, 370, {
+        font: FONT.display(700, 78), size: 78, lh: 88, maxW: 920, t,
+        delay: 0.2, stagger: 0.07, color: HEX.text, out
+      });
+      return kinetic(body, 80, tb + 76, {
+        font: FONT.body(500, 35), size: 35, lh: 50, maxW: 900, t,
+        delay: 0.6, stagger: 0.018, color: HEX.body, out: out + 0.05
+      });
+    }
+
+    function ifcChip(x, y, name, a) {
+      alpha(a, () => {
+        g.font = FONT.mono(600, 24);
+        const w = g.measureText(name).width + 120;
+        glass(x - w / 2, y - 34, w, 68, 34, true);
+        rounded(x - w / 2 + 14, y - 20, 56, 40, 10);
+        g.fillStyle = HEX.orange;
+        g.fill();
+        label('IFC', x - w / 2 + 42, y + 1, FONT.mono(600, 18), '#0B0D12', 'center', 'middle');
+        label(name, x - w / 2 + 88, y + 1, FONT.mono(600, 24), HEX.text, 'left', 'middle');
+      });
+    }
+
+    function drawLaura(L, T) {
+      if (L.r < 1 || L.a <= 0.01) return;
+      alpha(L.a, () => {
+        const { x, y, r } = L;
+        const halo = g.createRadialGradient(x, y, r * 0.6, x, y, r * 2.4);
+        halo.addColorStop(0, 'rgba(255, 106, 26, 0.28)');
+        halo.addColorStop(1, 'rgba(255, 106, 26, 0)');
+        g.fillStyle = halo;
+        g.beginPath();
+        g.arc(x, y, r * 2.4, 0, TAU);
+        g.fill();
+
+        if (g.createConicGradient) {
+          const ring = g.createConicGradient(T * 1.3, x, y);
+          ring.addColorStop(0, 'rgba(255, 106, 26, 0)');
+          ring.addColorStop(0.55, 'rgba(255, 106, 26, 0.95)');
+          ring.addColorStop(0.8, 'rgba(255, 179, 107, 1)');
+          ring.addColorStop(1, 'rgba(255, 106, 26, 0)');
+          g.strokeStyle = ring;
+        } else {
+          g.strokeStyle = 'rgba(255, 106, 26, 0.8)';
+        }
+        g.lineWidth = Math.max(2, r * 0.035);
+        g.beginPath();
+        g.arc(x, y, r + r * 0.09, 0, TAU);
+        g.stroke();
+
+        g.save();
+        g.beginPath();
+        g.arc(x, y, r, 0, TAU);
+        g.clip();
+        if (lauraImg) {
+          const iw = lauraImg.naturalWidth, ih = lauraImg.naturalHeight, s = Math.min(iw, ih);
+          g.drawImage(lauraImg, (iw - s) / 2, (ih - s) * 0.3, s, s, x - r, y - r, r * 2, r * 2);
+        } else {
+          g.fillStyle = '#1A2030';
+          g.fillRect(x - r, y - r, r * 2, r * 2);
+          label('L', x, y + 2, FONT.display(700, Math.round(r)), HEX.orange, 'center', 'middle');
+        }
+        g.restore();
+        g.lineWidth = 1.5;
+        g.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+        g.beginPath();
+        g.arc(x, y, r, 0, TAU);
+        g.stroke();
+      });
+    }
+
+    function budgetLabels(t, a, vals, grow, flash, countUp) {
+      CHAPTERS.forEach((ch, b) => {
+        const y = rowY(b);
+        alpha(a * span(t, 1.0 + b * 0.12, 1.5 + b * 0.12), () => {
+          label(`0${b + 1}  ${ch.name}`, BAR_X, y - 28, FONT.mono(500, 24), HEX.dim);
+          const end = BAR_X + vals[b] * BAR_SCALE * grow[b];
+          label(money(vals[b] * countUp), Math.min(end + 22, BAR_RIGHT - 150), y + 9, FONT.mono(600, 28),
+            flash[b] > 0.3 ? HEX.amber : HEX.text);
+        });
+      });
+      const total = vals.reduce((s, v) => s + v, 0);
+      const hot = Math.max(...flash);
+      alpha(a * span(t, 1.8, 2.3), () => {
+        g.fillStyle = 'rgba(255, 255, 255, 0.10)';
+        g.fillRect(BAR_X, 1500, BAR_RIGHT - BAR_X, 1.5);
+        label('TOTAL ESTIMADO', BAR_X, 1552, FONT.mono(500, 22), HEX.dim);
+        label('48 ACTIVIDADES', BAR_X, 1588, FONT.mono(500, 22), HEX.dim);
+        label(money(total * countUp), BAR_RIGHT, 1590, FONT.display(700, 72), hot > 0.3 ? HEX.amber : HEX.text, 'right');
+      });
+    }
+
+    // ================================================================
+    //  ESCENAS
+    // ================================================================
+    const hlCycle = (t, cat) => {
+      const order = { wall: 0, col: 1, slab: 2, door: 3 };
+      const st = 2.2 + order[cat] * 1.15;
+      return span(t, st, st + 0.35) * (1 - 0.55 * span(t, st + 1.15, st + 1.5));
+    };
+    const scanAt = t => (t > 2.0 && t < 6.8 ? ((t - 2.0) / 4.8) * 5.4 - 0.2 : null);
+
+    const budgetStatic = t => ({
+      vals: CHAPTERS.map(c => c.v),
+      grow: CHAPTERS.map((c, b) => easeOut(span(t, 0.7 + b * 0.12, 2.3 + b * 0.12))),
+      flash: [0, 0, 0, 0, 0]
+    });
+    const budgetEdit = t => {
+      const vals = CHAPTERS.map(c => c.v);
+      vals[2] = mix(38200, 42800, easeInOut(span(t, 2.5, 3.3)));
+      vals[3] = mix(19400, 20150, easeInOut(span(t, 6.7, 7.5)));
+      const flash = [0, 0, 0, 0, 0];
+      flash[2] = span(t, 2.4, 2.6) * (1 - span(t, 3.8, 4.4));
+      flash[3] = span(t, 6.6, 6.8) * (1 - span(t, 8.0, 8.6));
+      return { vals, grow: [1, 1, 1, 1, 1], flash };
+    };
+
+    const scenes = [
+      // 0 · APERTURA
+      {
+        dur: 6.5,
+        form: word(() => WORD_INTRO),
+        enter: { at: 1.3, len: 2.4 },
+        draw(t) {
+          kinetic('metroKUBIKO  presenta', CX, 780, {
+            font: FONT.mono(500, 28), size: 28, lh: 34, t, delay: 2.4, stagger: 0.12,
+            color: HEX.dim, align: 'center', out: 5.8
+          });
+          kinetic('Tu presupuesto y cronograma de obra, *generados con IA.*', CX, 1190, {
+            font: FONT.display(400, 50), size: 50, lh: 64, maxW: 900, t, delay: 3.2, stagger: 0.06,
+            color: HEX.text, align: 'center', out: 5.8
+          });
+        }
+      },
+
+      // 1 · QUÉ ES PLANEA
+      {
+        dur: 6.5,
+        form: building(),
+        draw(t, T, dur) {
+          story(t, dur, '¿QUÉ ES PLANEA?', '¿Tienes el *modelo BIM* de tu obra?',
+            'Planea lo convierte en tu presupuesto y tu cronograma de obra, con la ayuda de Laura, su agente de inteligencia artificial.');
+        }
+      },
+
+      // 2 · PASO 1: SUBE EL IFC
+      {
+        dur: 8.5,
+        step: 1,
+        form: building({ hl: hlCycle, scan: scanAt }),
+        enter: { at: 0, len: 1.2 },
+        draw(t, T, dur) {
+          story(t, dur, 'PASO 01', 'Sube tu *modelo IFC*',
+            'Exporta tu proyecto desde Revit, ArchiCAD u otra herramienta BIM. Planea lee cada elemento del modelo.');
+
+          // El archivo viaja hasta el edificio y se disuelve en él
+          const m = easeInOut(span(t, 0.5, 1.9));
+          ifcChip(CX, mix(1640, STAGE_Y, m), 'torre_residencial.ifc',
+            span(t, 0.3, 0.6) * (1 - span(t, 1.8, 2.2)));
+
+          // Plano de escaneo
+          const sy = scanAt(t);
+          if (sy != null) {
+            const yScr = STAGE_Y - (sy - 2.5) * 100 * Math.cos(0.42);
+            const grd = g.createLinearGradient(CX - 330, 0, CX + 330, 0);
+            grd.addColorStop(0, 'rgba(255, 106, 26, 0)');
+            grd.addColorStop(0.5, 'rgba(255, 106, 26, 0.45)');
+            grd.addColorStop(1, 'rgba(255, 106, 26, 0)');
+            g.strokeStyle = grd;
+            g.lineWidth = 2;
+            g.beginPath();
+            g.ellipse(CX, yScr, 330, 330 * Math.sin(0.42) * 0.55, 0, 0, TAU);
+            g.stroke();
+          }
+
+          // Leyenda de elementos detectados
+          const rows = [
+            ['wall', 'Muros', 1840, 'm²', RGB.blue],
+            ['col', 'Columnas', 96, 'un', RGB.orange],
+            ['slab', 'Losas', 2150, 'm²', RGB.green],
+            ['door', 'Puertas', 120, 'un', RGB.violet]
+          ];
+          const out = dur - 0.75;
+          rows.forEach(([cat, name, val, unit, rgb], i) => {
+            const st = 2.2 + i * 1.15;
+            const x = i % 2 === 0 ? 80 : 570;
+            const y = 1570 + Math.floor(i / 2) * 64;
+            alpha(span(t, st, st + 0.4) * (1 - span(t, out, out + 0.4)), () => {
+              g.fillStyle = `rgb(${rgb})`;
+              g.beginPath();
+              g.arc(x + 9, y - 10, 9, 0, TAU);
+              g.fill();
+              label(name, x + 32, y, FONT.body(600, 31), HEX.text);
+              label(`${Math.round(val * easeOut(span(t, st, st + 1))).toLocaleString('en-US')} ${unit}`,
+                x + 430, y, FONT.mono(600, 28), `rgb(${rgb})`, 'right');
+            });
+          });
+        }
+      },
+
+      // 3 · CONOCE A LAURA
+      {
+        dur: 7,
+        form: orbit(),
+        enter: { at: 0, len: 2.4 },
+        draw(t, T, dur) {
+          story(t, dur, 'TU AGENTE DE IA', 'Conoce a *Laura*',
+            'Laura es la inteligencia artificial de Planea: lee tu modelo, calcula y organiza la información. Ella hace el trabajo pesado.');
+          alpha(span(t, 1.4, 2.0) * (1 - span(t, dur - 0.6, dur - 0.2)), () => {
+            label('LAURA', CX, 1450, FONT.display(700, 40), HEX.text, 'center');
+            label('Agente IA de obra', CX, 1496, FONT.mono(500, 26), HEX.orange, 'center');
+          });
+        }
+      },
+
+      // 4 · PASO 2: CONTEXTO
+      {
+        dur: 7.5,
+        step: 2,
+        form: orbit(),
+        draw(t, T, dur) {
+          story(t, dur, 'PASO 02', 'Agrega *contexto*',
+            'Dile a Laura dónde está la obra, cuándo inicia y cualquier detalle importante. Mientras más contexto, más precisos los resultados.');
+
+          const msg = 'Bogotá · Inicio 01/01/2027 · Vivienda, 5 niveles';
+          const a = span(t, 0.6, 1.0) * (1 - span(t, dur - 0.7, dur - 0.3));
+          alpha(a, () => {
+            glass(CX - 460, 1560, 920, 84, 42, t > 1 && t < 4.6);
+            const s = typed(msg, t - 1.1, 16);
+            g.font = FONT.mono(500, 27);
+            const tw = g.measureText(msg).width;
+            label(s, CX - tw / 2, 1603, FONT.mono(500, 27), HEX.text, 'left', 'middle');
+            if (t < 4.6 && Math.floor(T * 2.4) % 2 === 0) {
+              g.fillStyle = HEX.orange;
+              g.fillRect(CX - tw / 2 + g.measureText(s).width + 4, 1588, 3, 30);
+            }
+          });
+          // El contexto viaja hasta Laura
+          const pk = span(t, 4.4, 5.3);
+          if (pk > 0 && pk < 1) {
+            const y = mix(1560, STAGE_Y + 180, easeInOut(pk));
+            const gl = g.createRadialGradient(CX, y, 0, CX, y, 30);
+            gl.addColorStop(0, 'rgba(255, 179, 107, 1)');
+            gl.addColorStop(1, 'rgba(255, 106, 26, 0)');
+            g.fillStyle = gl;
+            g.beginPath();
+            g.arc(CX, y, 30, 0, TAU);
+            g.fill();
+          }
+          alpha(span(t, 5.3, 5.7) * (1 - span(t, dur - 0.7, dur - 0.3)), () =>
+            label('✓ Contexto recibido', CX, 1470, FONT.mono(600, 27), HEX.green, 'center'));
+        }
+      },
+
+      // 5 · PASO 3: ANÁLISIS
+      {
+        dur: 8,
+        step: 3,
+        form: orbit({ pulse: t => span(t, 0.3, 1) * (1 - span(t, 6.5, 7.5)) }),
+        draw(t, T, dur) {
+          story(t, dur, 'PASO 03', 'Laura *analiza*',
+            'Mide las cantidades de tu modelo y las convierte en actividades de obra, cada una con su análisis de precios unitarios (APU).');
+
+          const L = lauraAt(T);
+          const prog = easeInOut(span(t, 0.5, 6.2));
+          const fade = 1 - span(t, dur - 0.7, dur - 0.3);
+          alpha(fade, () => {
+            g.lineWidth = 4;
+            g.lineCap = 'round';
+            g.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+            g.beginPath();
+            g.arc(L.x, L.y, L.r + 30, 0, TAU);
+            g.stroke();
+            g.strokeStyle = prog < 1 ? HEX.orange : HEX.green;
+            g.beginPath();
+            g.arc(L.x, L.y, L.r + 30, -Math.PI / 2, -Math.PI / 2 + TAU * prog);
+            g.stroke();
+            label(prog < 1 ? `Analizando · ${Math.round(prog * 100)}%` : '✓ Análisis completo',
+              L.x, 1470, FONT.mono(600, 28), prog < 1 ? HEX.text : HEX.green, 'center');
+          });
+
+          const chain = ['Cantidades', '48 actividades', '48 APUs'];
+          g.font = FONT.mono(600, 27);
+          const widths = chain.map(s => g.measureText(s).width);
+          const gap = 70;
+          let x = CX - (widths.reduce((a, b) => a + b, 0) + gap * 2) / 2;
+          chain.forEach((s, i) => {
+            const on = span(t, 2.2 + i * 1.3, 2.6 + i * 1.3);
+            alpha(fade * (0.25 + 0.75 * on), () => {
+              label(s, x, 1580, FONT.mono(600, 27), on > 0.5 ? HEX.amber : HEX.dim);
+              if (i < 2) {
+                g.strokeStyle = on > 0.5 ? HEX.orange : 'rgba(255,255,255,0.2)';
+                g.lineWidth = 2;
+                g.beginPath();
+                g.moveTo(x + widths[i] + 16, 1571);
+                g.lineTo(x + widths[i] + gap - 16, 1571);
+                g.lineTo(x + widths[i] + gap - 24, 1565);
+                g.moveTo(x + widths[i] + gap - 16, 1571);
+                g.lineTo(x + widths[i] + gap - 24, 1577);
+                g.stroke();
+              }
+            });
+            x += widths[i] + gap;
+          });
+        }
+      },
+
+      // 6 · PASO 4: PRESUPUESTO
+      {
+        dur: 8,
+        step: 4,
+        form: bars(budgetStatic),
+        enter: { at: 0, len: 2.2 },
+        draw(t, T, dur) {
+          story(t, dur, 'PASO 04', 'Tu *presupuesto*',
+            'Organizado por capítulos, con sus actividades, APUs y el total estimado de tu obra, listo para revisar.');
+          const { vals, grow, flash } = budgetStatic(t);
+          budgetLabels(t, 1 - span(t, dur - 0.7, dur - 0.3), vals, grow, flash, easeOut(span(t, 1.0, 2.8)));
+          alpha(span(t, 2.6, 3.0) * (1 - span(t, dur - 0.7, dur - 0.3)), () =>
+            label('COP / USD', BAR_RIGHT, 930, FONT.mono(600, 24), HEX.orange, 'right'));
+        }
+      },
+
+      // 7 · PASO 5: CRONOGRAMA
+      {
+        dur: 8,
+        step: 5,
+        form: gantt,
+        enter: { at: 0, len: 1.8 },
+        draw(t, T, dur) {
+          story(t, dur, 'PASO 05', 'Tu *cronograma*',
+            'Arranca en la fecha de inicio que indicaste y marca la ruta crítica (CPM): las actividades que no pueden retrasarse.');
+          const fade = 1 - span(t, dur - 0.7, dur - 0.3);
+
+          alpha(span(t, 0.4, 0.9) * fade, () => {
+            for (let d = 0; d <= 60; d += 10) {
+              g.fillStyle = 'rgba(255, 255, 255, 0.05)';
+              g.fillRect(dayX(d), 950, 1, 520);
+            }
+            [[0, '1 ENE 2027', 'left'], [31, '1 FEB', 'center'], [59, '1 MAR', 'right']].forEach(([d, s, al]) =>
+              label(s, dayX(d), 930, FONT.mono(500, 23), HEX.dim, al));
+          });
+
+          CHAPTERS.forEach((ch, b) => {
+            const y = rowY(b);
+            alpha(span(t, 0.8 + b * 0.25, 1.3 + b * 0.25) * fade, () => {
+              label(`0${b + 1}  ${ch.name}`, Math.min(dayX(ch.s), 560), y - 26, FONT.mono(500, 23), HEX.dim);
+              label(`${ch.e - ch.s} d`, dayX(ch.e) + 16, y + 9, FONT.mono(600, 25), ch.crit ? HEX.amber : HEX.cyan);
+            });
+            if (ch.float) alpha(span(t, 3.4, 3.9) * fade, () => {
+              g.setLineDash([6, 6]);
+              g.strokeStyle = 'rgba(94, 234, 212, 0.5)';
+              g.lineWidth = 1.5;
+              rounded(dayX(ch.e) + 80, y - 12, dayX(ch.float) - dayX(ch.e), 24, 6);
+              g.stroke();
+              g.setLineDash([]);
+            });
+          });
+
+          // Ruta crítica
+          const path = [];
+          const crit = CHAPTERS.map((c, b) => ({ ...c, b })).filter(c => c.crit);
+          crit.forEach((c, j) => {
+            path.push([dayX(c.s), rowY(c.b)], [dayX(c.e), rowY(c.b)]);
+            if (j < crit.length - 1) path.push([dayX(c.e), rowY(crit[j + 1].b)]);
+          });
+          const p = easeInOut(span(t, 2.8, 4.6));
+          if (p > 0) alpha(fade, () => {
+            let total = 0;
+            for (let k = 1; k < path.length; k++) total += Math.hypot(path[k][0] - path[k - 1][0], path[k][1] - path[k - 1][1]);
+            let left = total * p;
+            g.save();
+            g.shadowColor = HEX.orange;
+            g.shadowBlur = 16;
+            g.strokeStyle = '#FFE2CC';
+            g.lineWidth = 2.5;
+            g.beginPath();
+            g.moveTo(path[0][0], path[0][1]);
+            for (let k = 1; k < path.length && left > 0; k++) {
+              const [ax, ay] = path[k - 1], [bx, by] = path[k];
+              const l = Math.hypot(bx - ax, by - ay);
+              const f = Math.min(1, left / l);
+              g.lineTo(mix(ax, bx, f), mix(ay, by, f));
+              left -= l;
+            }
+            g.stroke();
+            g.restore();
+          });
+
+          alpha(span(t, 4.4, 4.9) * fade, () => {
+            g.fillStyle = 'rgba(255, 255, 255, 0.10)';
+            g.fillRect(80, 1500, BAR_RIGHT - 80, 1.5);
+            g.fillStyle = HEX.orange; g.fillRect(80, 1544, 16, 3);
+            label('RUTA CRÍTICA', 108, 1553, FONT.mono(500, 22), HEX.amber);
+            g.fillStyle = HEX.cyan; g.fillRect(80, 1580, 16, 3);
+            label('CON HOLGURA', 108, 1589, FONT.mono(500, 22), HEX.cyan);
+            label('60 días', BAR_RIGHT, 1590, FONT.display(700, 72), HEX.text, 'right');
+          });
+        }
+      },
+
+      // 8 · PASO 6: AJUSTES
+      {
+        dur: 10,
+        step: 6,
+        form: bars(budgetEdit),
+        enter: { at: 0, len: 2.0 },
+        draw(t, T, dur) {
+          story(t, dur, 'PASO 06', 'Ajusta *cuando quieras*',
+            'Pídeselo a Laura, edita a mano o actualiza las cantidades desde un nuevo IFC: todo se recalcula.');
+          const fade = 1 - span(t, dur - 0.7, dur - 0.3);
+          const { vals, grow, flash } = budgetEdit(t);
+          budgetLabels(t, fade, vals, grow, flash, 1);
+
+          // Conversación con Laura
+          const msg = 'Cambia el precio del concreto a $42,800';
+          alpha(span(t, 0.7, 1.1) * (1 - span(t, 4.6, 5.0)), () => {
+            glass(180, 724, 820, 76, 38, t < 2.5);
+            label(typed(msg, t - 0.9, 26), 214, 763, FONT.body(600, 30), HEX.text, 'left', 'middle');
+          });
+          alpha(span(t, 3.0, 3.4) * (1 - span(t, 4.6, 5.0)), () =>
+            label('✓ Listo, presupuesto actualizado', 182, 856, FONT.mono(600, 25), HEX.green));
+
+          // Nuevo IFC
+          alpha(span(t, 5.0, 5.4) * fade, () => {
+            glass(180, 724, 820, 76, 38, t < 6.8);
+            g.save();
+            g.translate(226, 762);
+            g.rotate(easeInOut(span(t, 5.4, 6.8)) * TAU * 1.5);
+            g.strokeStyle = t < 6.8 ? HEX.orange : HEX.green;
+            g.lineWidth = 3.5;
+            g.lineCap = 'round';
+            g.beginPath(); g.arc(0, 0, 14, 0.4, Math.PI - 0.4); g.stroke();
+            g.beginPath(); g.arc(0, 0, 14, Math.PI + 0.4, TAU - 0.4); g.stroke();
+            g.restore();
+            label('torre_residencial_v2.ifc', 262, 763, FONT.mono(600, 27), HEX.text, 'left', 'middle');
+          });
+          alpha(span(t, 6.9, 7.3) * fade, () =>
+            label('✓ Muros 1,840 → 1,910 m² · recalculado', 182, 856, FONT.mono(600, 24), HEX.green));
+        }
+      },
+
+      // 9 · CIERRE
+      {
+        dur: 8.5,
+        form: word(() => WORD_OUTRO),
+        enter: { at: 0.2, len: 2.4 },
+        draw(t, T, dur) {
+          kinetic('metroKUBIKO', CX, 1020, {
+            font: FONT.display(600, 40), size: 40, lh: 46, t, delay: 1.2, color: HEX.body, align: 'center'
+          });
+          kinetic('Del modelo BIM a tu *presupuesto y cronograma.*', CX, 1370, {
+            font: FONT.display(400, 50), size: 50, lh: 64, maxW: 900, t, delay: 2.2, stagger: 0.06, color: HEX.text, align: 'center'
+          });
+          alpha(easeOut(span(t, 3.4, 4.0)), () => {
+            const w = 680, h = 96, x = CX - w / 2, y = 1500;
+            rounded(x, y, w, h, h / 2);
+            g.fillStyle = 'rgba(255, 106, 26, 0.10)';
+            g.fill();
+            if (g.createConicGradient) {
+              const ring = g.createConicGradient(T * 1.6, CX, y + h / 2);
+              ring.addColorStop(0, 'rgba(255, 106, 26, 0.15)');
+              ring.addColorStop(0.5, 'rgba(255, 179, 107, 1)');
+              ring.addColorStop(1, 'rgba(255, 106, 26, 0.15)');
+              g.strokeStyle = ring;
+            } else {
+              g.strokeStyle = HEX.orange;
+            }
+            g.lineWidth = 2.5;
+            g.stroke();
+            label('Únete a la lista de espera  →', CX, y + h / 2 + 1, FONT.display(600, 36), HEX.text, 'center', 'middle');
+          });
+        }
+      }
+    ];
+
+    let cursor = 0;
+    scenes.forEach(s => { s.start = cursor; cursor += s.dur; });
+    const TOTAL = cursor;
+    const STEPS = 6;
+    const at = (k, t) => scenes[k].start + t;
+
+    LAURA_KEYS = [
+      { T: 0, x: CX, y: STAGE_Y, r: 0, a: 0 },
+      { T: at(3, 0.2), x: CX, y: STAGE_Y, r: 0, a: 0 },
+      { T: at(3, 1.5), x: CX, y: STAGE_Y, r: 165, a: 1 },
+      { T: at(6, -0.5), x: CX, y: STAGE_Y, r: 165, a: 1 },
+      { T: at(6, 0.6), x: CX, y: STAGE_Y, r: 0, a: 0 },
+      { T: at(8, 0.2), x: 118, y: 762, r: 0, a: 0 },
+      { T: at(8, 0.9), x: 118, y: 762, r: 40, a: 1 },
+      { T: at(9, -0.4), x: 118, y: 762, r: 40, a: 1 },
+      { T: at(9, 1.0), x: CX, y: 820, r: 100, a: 1 },
+      { T: TOTAL + 1, x: CX, y: 820, r: 100, a: 1 }
+    ];
+
+    // ================================================================
+    //  FONDO Y HUD
+    // ================================================================
+    function backdrop(T) {
+      const base = g.createLinearGradient(0, 0, 0, H);
+      base.addColorStop(0, '#070A11');
+      base.addColorStop(1, '#0B1020');
+      g.fillStyle = base;
+      g.fillRect(0, 0, W, H);
+
+      const orb = (x, y, r, rgba) => {
+        const grd = g.createRadialGradient(x, y, 0, x, y, r);
+        grd.addColorStop(0, rgba);
+        grd.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        g.fillStyle = grd;
+        g.fillRect(x - r, y - r, r * 2, r * 2);
+      };
+      orb(CX + Math.sin(T * 0.13) * 220, 1150 + Math.cos(T * 0.11) * 200, 800, 'rgba(255, 106, 26, 0.09)');
+      orb(160 + Math.cos(T * 0.09) * 140, 420 + Math.sin(T * 0.12) * 120, 640, 'rgba(59, 130, 246, 0.07)');
+      orb(960 + Math.sin(T * 0.07) * 100, 1750, 560, 'rgba(167, 139, 250, 0.05)');
+
+      // Plano de referencia en perspectiva (estilo plano técnico)
+      g.save();
+      g.strokeStyle = 'rgba(255, 255, 255, 0.035)';
+      g.lineWidth = 1;
+      const vx = CX, vy = 1240;
+      for (let k = -12; k <= 12; k++) {
+        g.beginPath();
+        g.moveTo(vx + k * 14, vy + 60);
+        g.lineTo(vx + k * 130, H);
+        g.stroke();
+      }
+      const drift = (T * 0.25) % 1;
+      for (let k = 0; k < 9; k++) {
+        const f = (k + drift) / 9;
+        const y = vy + 60 + Math.pow(f, 2.2) * (H - vy - 60);
+        g.beginPath();
+        g.moveTo(0, y);
+        g.lineTo(W, y);
+        g.stroke();
+      }
+      g.restore();
+    }
+
+    function vignette() {
+      const v = g.createRadialGradient(W / 2, H / 2, W * 0.45, W / 2, H / 2, H * 0.72);
+      v.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      v.addColorStop(1, 'rgba(0, 0, 0, 0.55)');
+      g.fillStyle = v;
+      g.fillRect(0, 0, W, H);
+    }
+
+    function hud(scene, t, T) {
+      g.font = FONT.display(600, 32);
+      const w1 = g.measureText('metroKUBIKO').width;
+      label('metroKUBIKO', 80, 140, FONT.display(600, 32), 'rgba(243, 245, 249, 0.85)');
+      label('Planea', 80 + w1 + 10, 140, FONT.display(700, 32), HEX.orange);
+
+      if (scene.step) {
+        const a = span(t, 0, 0.5) * (1 - span(t, scene.dur - 0.4, scene.dur));
+        alpha(Math.max(a, 0.25), () => {
+          label(`PASO 0${scene.step} / 0${STEPS}`, 1000, 140, FONT.mono(600, 24), HEX.text, 'right');
+          for (let s = 0; s < STEPS; s++) {
+            const x = 1000 - (STEPS - s) * 40 + 6;
+            g.fillStyle = 'rgba(255, 255, 255, 0.12)';
+            g.fillRect(x, 162, 34, 3);
+            const f = s + 1 < scene.step ? 1 : s + 1 === scene.step ? t / scene.dur : 0;
+            if (f > 0) { g.fillStyle = HEX.orange; g.fillRect(x, 162, 34 * f, 3); }
+          }
+        });
+      }
+
+      g.fillStyle = 'rgba(255, 255, 255, 0.06)';
+      g.fillRect(0, H - 4, W, 4);
+      g.fillStyle = HEX.orange;
+      g.fillRect(0, H - 4, W * (T / TOTAL), 4);
+    }
+
+    // ================================================================
+    //  RENDER
+    // ================================================================
+    const PX = new Float32Array(N), PY = new Float32Array(N), PZ = new Float32Array(N);
+    const PA = new Float32Array(N), PS = new Float32Array(N);
+    const PR = new Uint8ClampedArray(N), PG = new Uint8ClampedArray(N), PB = new Uint8ClampedArray(N);
+    const A = {}, B = {};
+    const reset = o => { o.z = 1; return o; };
+
+    function solveParticles(T, idx, t) {
+      const sc = scenes[idx];
+      const prev = idx > 0 ? scenes[idx - 1] : null;
+      const prevForm = prev ? prev.form : nebula;
+      const tPrev = prev ? t + prev.dur : t;
+      const en = sc.enter ?? { at: 0, len: 1.8 };
+      const travel = Math.max(0.6, en.len - 0.75);
+
+      for (let i = 0; i < N; i++) {
+        const p = DNA[i];
+        const k = easeInOut(span(t, en.at + p.lag, en.at + p.lag + travel));
+        sc.form(i, T, t, reset(A));
+        let x = A.x, y = A.y, z = A.z, a = A.a, s = A.s;
+        let r = A.rgb[0], gg = A.rgb[1], b = A.rgb[2];
+        if (k < 1) {
+          prevForm(i, T, tPrev, reset(B));
+          const dx = A.x - B.x, dy = A.y - B.y;
+          const len = Math.hypot(dx, dy) || 1;
+          const arc = Math.sin(Math.PI * k) * p.swirl * Math.min(1, len / 300);
+          x = mix(B.x, A.x, k) - (dy / len) * arc;
+          y = mix(B.y, A.y, k) + (dx / len) * arc;
+          z = k < 0.5 ? B.z : A.z;
+          a = mix(B.a, A.a, k);
+          s = mix(B.s, A.s, k);
+          r = mix(B.rgb[0], A.rgb[0], k);
+          gg = mix(B.rgb[1], A.rgb[1], k);
+          b = mix(B.rgb[2], A.rgb[2], k);
+        }
+        PX[i] = x; PY[i] = y; PZ[i] = z; PA[i] = a; PS[i] = s;
+        PR[i] = r; PG[i] = gg; PB[i] = b;
+      }
+    }
+
+    function drawParticles(front) {
+      g.save();
+      g.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < N; i++) {
+        if ((PZ[i] >= 0) !== front) continue;
+        const col = `${PR[i]},${PG[i]},${PB[i]}`;
+        if (i % 2 === 0) {
+          g.fillStyle = `rgba(${col},${PA[i] * 0.09})`;
+          g.beginPath();
+          g.arc(PX[i], PY[i], PS[i] * 3.4, 0, TAU);
+          g.fill();
+        }
+        g.fillStyle = `rgba(${col},${PA[i]})`;
+        g.beginPath();
+        g.arc(PX[i], PY[i], PS[i], 0, TAU);
+        g.fill();
+      }
+      g.restore();
+    }
+
+    function render(T) {
+      let idx = scenes.findIndex(s => T < s.start + s.dur);
+      if (idx < 0) idx = scenes.length - 1;
+      const sc = scenes[idx];
+      const t = T - sc.start;
+
+      backdrop(T);
+      solveParticles(T, idx, t);
+
+      const intro = span(T, 0, 1.2);
+      alpha(intro, () => {
+        drawParticles(false);
+        drawLaura(lauraAt(T), T);
+        drawParticles(true);
+      });
+      sc.draw(t, T, sc.dur);
+      vignette();
+      hud(sc, t, T);
+
+      const outro = span(T, TOTAL - 0.9, TOTAL);
+      if (outro > 0) {
+        g.fillStyle = `rgba(5, 7, 11, ${outro})`;
+        g.fillRect(0, 0, W, H);
+      }
+    }
+
+    // ================================================================
+    //  REPRODUCTOR
+    // ================================================================
+    const $ = id => document.getElementById(id);
+    const ui = { toggle: $('toggle'), again: $('again'), track: $('track'), fill: $('fill'), clock: $('clock'), rec: $('rec') };
+    const player = { T: 0, playing: true, last: 0, recorder: null, chunks: [] };
+    const clockFmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+    function setPlaying(on) {
+      player.playing = on;
+      ui.toggle.textContent = on ? '❚❚' : '▶';
+      ui.toggle.setAttribute('aria-label', on ? 'Pausar' : 'Reproducir');
+    }
+
+    function tick(now) {
+      const dt = player.last ? Math.min(0.1, (now - player.last) / 1000) : 0;
+      player.last = now;
+      if (player.playing) {
+        player.T += dt;
+        if (player.T >= TOTAL) {
+          if (player.recorder) finishRecording();
+          player.T %= TOTAL;
+        }
+      }
+      render(player.T);
+      const f = player.T / TOTAL;
+      ui.fill.style.width = `${f * 100}%`;
+      ui.track.setAttribute('aria-valuenow', String(Math.round(f * 100)));
+      ui.clock.textContent = `${clockFmt(player.T)} / ${clockFmt(TOTAL)}`;
+      if (player.recorder) ui.rec.textContent = `Grabando ${Math.round(f * 100)}%`;
+      requestAnimationFrame(tick);
+    }
+
+    const scrub = e => {
+      if (player.recorder) return;
+      const r = ui.track.getBoundingClientRect();
+      player.T = clamp((e.clientX - r.left) / r.width) * TOTAL * 0.9999;
+    };
+    ui.track.addEventListener('pointerdown', e => {
+      scrub(e);
+      ui.track.setPointerCapture(e.pointerId);
+      ui.track.onpointermove = scrub;
+    });
+    ui.track.addEventListener('pointerup', () => { ui.track.onpointermove = null; });
+    ui.track.addEventListener('keydown', e => {
+      if (player.recorder) return;
+      if (e.key === 'ArrowRight') player.T = Math.min(TOTAL - 0.01, player.T + 5);
+      if (e.key === 'ArrowLeft') player.T = Math.max(0, player.T - 5);
+    });
+    ui.toggle.addEventListener('click', () => setPlaying(!player.playing));
+    ui.again.addEventListener('click', () => { if (!player.recorder) { player.T = 0; setPlaying(true); } });
+    film.addEventListener('click', () => { if (!player.recorder) setPlaying(!player.playing); });
+    window.addEventListener('keydown', e => {
+      if (e.code === 'Space' && e.target === document.body && !player.recorder) {
+        e.preventDefault();
+        setPlaying(!player.playing);
+      }
+    });
+
+    // Exportación a .webm grabando el lienzo en tiempo real
+    function startRecording() {
+      const type = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm']
+        .find(m => window.MediaRecorder && MediaRecorder.isTypeSupported(m));
+      if (!film.captureStream || !type) {
+        alert('Este navegador no permite exportar el video. Prueba con Chrome o Edge.');
+        return;
+      }
+      player.chunks = [];
+      const rec = new MediaRecorder(film.captureStream(60), { mimeType: type, videoBitsPerSecond: 12000000 });
+      rec.ondataavailable = e => { if (e.data.size) player.chunks.push(e.data); };
+      rec.onstop = () => {
+        const url = URL.createObjectURL(new Blob(player.chunks, { type: 'video/webm' }));
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'planea-reel.webm';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 3000);
+      };
+      player.T = 0;
+      setPlaying(true);
+      player.recorder = rec;
+      ui.toggle.disabled = ui.again.disabled = true;
+      rec.start();
+    }
+
+    function finishRecording() {
+      player.recorder.stop();
+      player.recorder = null;
+      ui.toggle.disabled = ui.again.disabled = false;
+      ui.rec.textContent = 'Exportar .webm';
+    }
+
+    ui.rec.addEventListener('click', () => { if (!player.recorder) startRecording(); });
+
+    // ================================================================
+    //  ARRANQUE
+    // ================================================================
+    const loadImage = (src, cors) => new Promise((resolve, reject) => {
+      const img = new Image();
+      if (cors) img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+
+    const canExport = img => {
+      try {
+        const c = document.createElement('canvas');
+        c.width = c.height = 2;
+        const x = c.getContext('2d');
+        x.drawImage(img, 0, 0, 2, 2);
+        x.getImageData(0, 0, 1, 1);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    };
+
+    async function boot() {
+      const fonts = [
+        FONT.display(400, 40), FONT.display(600, 40), FONT.display(700, 40),
+        FONT.body(500, 30), FONT.body(600, 30), FONT.mono(500, 20), FONT.mono(600, 20)
+      ].map(f => document.fonts.load(f));
+      await Promise.race([Promise.all(fonts), new Promise(r => setTimeout(r, 3500))]);
+
+      WORD_INTRO = sampleText('Planea', CX, 960, 230);
+      WORD_OUTRO = sampleText('Planea', CX, 1180, 210);
+
+      try { lauraImg = await loadImage(LAURA_URL, true); }
+      catch (err) {
+        try { lauraImg = await loadImage(LAURA_URL, false); } catch (err2) { lauraImg = null; }
+      }
+      if (lauraImg && !canExport(lauraImg)) {
+        ui.rec.disabled = true;
+        ui.rec.title = 'La imagen de Laura no tiene CORS habilitado, así que el navegador no permite exportar el lienzo.';
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    boot();
+  })();
+  </script>
+</body>
+</html>

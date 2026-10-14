@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>metroKUBIKO Planea — Cómo funciona</title>
+
+  <!-- Tipografías de marca -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #E5E7EB;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      color: #111827;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Reproductor (lienzo 16:9 escalado al viewport) */
+    .player {
+      width: min(1280px, 96vw, calc((100vh - 110px) * 16 / 9));
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .player canvas {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: block;
+      background: #F8F9FA;
+      border-radius: 16px;
+      border: 1px solid #D1D5DB;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #FFFFFF;
+      border: 1px solid #D1D5DB;
+      border-radius: 999px;
+      padding: 8px 10px 8px 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+    .controls button {
+      border: none;
+      background: #F3F4F6;
+      color: #111827;
+      font: 600 14px 'Inter', sans-serif;
+      height: 38px;
+      min-width: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .controls button:hover { background: #E5E7EB; }
+    .controls button.primary { background: #FF6A1A; color: #FFFFFF; }
+    .controls button.primary:hover { background: #F25A0A; }
+    .controls button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .controls input[type="range"] {
+      flex: 1;
+      min-width: 60px;
+      accent-color: #FF6A1A;
+    }
+    .controls .time {
+      font: 500 13px 'IBM Plex Mono', monospace;
+      color: #6B7280;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 640px) {
+      .controls { gap: 6px; }
+      .controls .time { display: none; }
+      .controls button { padding: 0 10px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="player">
+    <canvas id="video" width="1920" height="1080" aria-label="Video animado: qué es metroKUBIKO Planea y cómo funciona"></canvas>
+    <div class="controls">
+      <button id="btn-play" class="primary" type="button" aria-label="Pausar">❚❚</button>
+      <button id="btn-restart" type="button" aria-label="Reiniciar">↺</button>
+      <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Posición del video">
+      <span id="time" class="time">0:00 / 0:00</span>
+      <button id="btn-download" type="button">Descargar video</button>
+    </div>
+  </div>
+
+  <script lang="js">
+    // ----------------------------------------------------
+    // CONFIGURACIÓN
+    // ----------------------------------------------------
+    const LAURA_SRC = 'https://firebasestorage.googleapis.com/v0/b/copres-firebase.appspot.com/o/CoPres%2Flaura%2Fprofile-2.png?alt=media&token=af875745-5d70-4d56-9c78-cddd27880410';
+
+    const cv = document.getElementById('video');
+    const ctx = cv.getContext('2d');
+    const W = 1920, H = 1080;
+
+    const C = {
+      bg: '#F8F9FA',
+      surface: '#FFFFFF',
+      border: '#E5E7EB',
+      borderFocus: '#D1D5DB',
+      main: '#111827',
+      muted: '#6B7280',
+      sub: '#4B5563',
+      soft: '#F3F4F6',
+      orange: '#FF6A1A',
+      orangeL: 'rgba(255, 106, 26, 0.10)',
+      orangeB: 'rgba(255, 106, 26, 0.40)',
+      green: '#10B981',
+      greenL: 'rgba(16, 185, 129, 0.12)',
+      blue: '#3B82F6',
+      violet: '#8B5CF6'
+    };
+
+    const F = {
+      h: (w, s) => `${w} ${s}px "Space Grotesk", sans-serif`,
+      b: (w, s) => `${w} ${s}px Inter, sans-serif`,
+      m: (w, s) => `${w} ${s}px "IBM Plex Mono", monospace`
+    };
+
+    // ----------------------------------------------------
+    // UTILIDADES DE TIEMPO Y DIBUJO
+    // ----------------------------------------------------
+    const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+    const P = (t, a, b) => clamp((t - a) / (b - a));
+    const lerp = (a, b, k) => a + (b - a) * k;
+    const ease = {
+      out: k => 1 - Math.pow(1 - k, 3),
+      inOut: k => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2),
+      back: k => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); }
+    };
+    const money = v => '$' + Math.round(v).toLocaleString('en-US');
+    const num = v => Math.round(v).toLocaleString('en-US');
+
+    let laura = null; // imagen de Laura (null si no cargó)
+
+    function withAlpha(a, fn) {
+      if (a <= 0) return;
+      ctx.save();
+      ctx.globalAlpha *= clamp(a);
+      fn();
+      ctx.restore();
+    }
+
+    function rr(x, y, w, h, r) {
+      r = Math.min(r, w / 2, h / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function card(x, y, w, h, o = {}) {
+      const r = o.r ?? 24;
+      ctx.save();
+      if (o.shadow !== false) {
+        ctx.shadowColor = 'rgba(17, 24, 39, 0.10)';
+        ctx.shadowBlur = o.blur ?? 40;
+        ctx.shadowOffsetY = o.oy ?? 14;
+      }
+      rr(x, y, w, h, r);
+      ctx.fillStyle = o.fill ?? C.surface;
+      ctx.fill();
+      ctx.restore();
+      if (o.stroke !== null) {
+        ctx.save();
+        rr(x, y, w, h, r);
+        ctx.lineWidth = o.lw ?? 2;
+        ctx.strokeStyle = o.stroke ?? C.border;
+        if (o.dash) { ctx.setLineDash(o.dash); ctx.lineDashOffset = o.dashOffset ?? 0; }
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    function txt(s, x, y, font, color, align = 'left', base = 'alphabetic') {
+      ctx.font = font;
+      ctx.fillStyle = color;
+      ctx.textAlign = align;
+      ctx.textBaseline = base;
+      ctx.fillText(s, x, y);
+    }
+
+    function wrap(str, maxW, font) {
+      ctx.font = font;
+      const out = [];
+      for (const para of str.split('\n')) {
+        let line = '';
+        for (const word of para.split(' ')) {
+          const test = line ? line + ' ' + word : word;
+          if (ctx.measureText(test).width > maxW && line) { out.push(line); line = word; }
+          else line = test;
+        }
+        out.push(line);
+      }
+      return out;
+    }
+
+    // Texto multilinea que se "escribe" carácter a carácter
+    function typeBlock(full, n, x, y, maxW, lh, font, color, cursor) {
+      const lines = wrap(full, maxW, font);
+      let left = Math.floor(n);
+      let cx = x, cy = y;
+      lines.forEach((ln, i) => {
+        if (left <= 0) return;
+        const part = ln.slice(0, left);
+        txt(part, x, y + i * lh, font, color);
+        ctx.font = font;
+        cx = x + ctx.measureText(part).width;
+        cy = y + i * lh;
+        left -= ln.length + 1;
+      });
+      if (cursor) {
+        const size = parseInt(font.match(/(\d+)px/)[1], 10);
+        ctx.fillStyle = C.orange;
+        ctx.fillRect(cx + 4, cy - size * 0.82, 3, size);
+      }
+      return lines.length;
+    }
+
+    // Texto con tramos de distinto color/fuente centrado en cx
+    function segs(list, cx, y, font) {
+      const widths = list.map(s => { ctx.font = s.f || font; return ctx.measureText(s.t).width; });
+      let x = cx - widths.reduce((a, b) => a + b, 0) / 2;
+      list.forEach((s, i) => {
+        txt(s.t, x, y, s.f || font, s.o ? C.orange : (s.c || C.main));
+        x += widths[i];
+      });
+    }
+
+    function pill(x, cy, label, o = {}) {
+      const font = o.font ?? F.m(600, 22);
+      ctx.font = font;
+      const padX = o.padX ?? 22, h = o.h ?? 48;
+      const w = ctx.measureText(label).width + padX * 2;
+      const left = o.align === 'left' ? x : o.align === 'right' ? x - w : x - w / 2;
+      rr(left, cy - h / 2, w, h, h / 2);
+      ctx.fillStyle = o.fill ?? C.surface;
+      ctx.fill();
+      if (o.stroke !== null) { ctx.lineWidth = 2; ctx.strokeStyle = o.stroke ?? C.border; ctx.stroke(); }
+      txt(label, left + w / 2, cy + 1, font, o.color ?? C.sub, 'center', 'middle');
+      return { x: left, w };
+    }
+
+    function wordmark(cx, y, size) {
+      segs([
+        { t: 'metro', f: F.h(500, size) },
+        { t: 'KUBIKO', f: F.h(700, size) },
+        { t: ' Planea', f: F.h(700, size), o: 1 }
+      ], cx, y);
+    }
+
+    function check(cx, cy, r, color = C.green) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(cx - r * 0.42, cy + r * 0.02);
+      ctx.lineTo(cx - r * 0.1, cy + r * 0.34);
+      ctx.lineTo(cx + r * 0.45, cy - r * 0.3);
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = r * 0.24;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+    }
+
+    function fileIcon(x, y, w, h, label, color = C.orange) {
+      const f = w * 0.32;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + w - f, y);
+      ctx.lineTo(x + w, y + f);
+      ctx.lineTo(x + w, y + h);
+      ctx.lineTo(x, y + h);
+      ctx.closePath();
+      ctx.fillStyle = C.surface;
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x + w - f, y);
+      ctx.lineTo(x + w - f, y + f);
+      ctx.lineTo(x + w, y + f);
+      ctx.stroke();
+      rr(x - w * 0.18, y + h * 0.5, w * 0.95, h * 0.32, 4);
+      ctx.fillStyle = color;
+      ctx.fill();
+      txt(label, x - w * 0.18 + w * 0.475, y + h * 0.66 + 1, F.m(600, Math.round(h * 0.2)), '#FFFFFF', 'center', 'middle');
+    }
+
+    function fileBadge(x, y, w, h, name, size) {
+      card(x, y, w, h, { r: 16, blur: 24, oy: 8 });
+      fileIcon(x + 30, y + h * 0.2, h * 0.48, h * 0.6, 'IFC');
+      txt(name, x + 30 + h * 0.48 + 22, y + h / 2 + 1, F.m(600, Math.round(h * 0.3)), C.main, 'left', 'middle');
+      if (size) txt(size, x + w - 26, y + h / 2 + 1, F.m(500, Math.round(h * 0.26)), C.muted, 'right', 'middle');
+    }
+
+    function bubble(x, y, w, h, o = {}) {
+      const fill = o.fill ?? C.surface, stroke = o.stroke ?? C.orangeB;
+      card(x, y, w, h, { r: o.r ?? 22, fill, stroke, blur: 30, oy: 10 });
+      if (!o.tail) return;
+      const { side, at } = o.tail;
+      ctx.beginPath();
+      if (side === 'left') { ctx.moveTo(x + 2, at - 14); ctx.lineTo(x - 22, at); ctx.lineTo(x + 2, at + 14); }
+      else { ctx.moveTo(at - 14, y + 2); ctx.lineTo(at, y - 22); ctx.lineTo(at + 14, y + 2); }
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.beginPath();
+      if (side === 'left') { ctx.moveTo(x, at - 14); ctx.lineTo(x - 22, at); ctx.lineTo(x, at + 14); }
+      else { ctx.moveTo(at - 14, y); ctx.lineTo(at, y - 22); ctx.lineTo(at + 14, y); }
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    function arrow(x1, y1, x2, y2, color, lw = 3) {
+      const a = Math.atan2(y2 - y1, x2 - x1);
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = lw;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2 - Math.cos(a) * 10, y2 - Math.sin(a) * 10);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - Math.cos(a - 0.45) * 18, y2 - Math.sin(a - 0.45) * 18);
+      ctx.lineTo(x2 - Math.cos(a + 0.45) * 18, y2 - Math.sin(a + 0.45) * 18);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Curva bezier dibujada parcialmente (p = 0..1) con trazo animado
+    function flowCurve(pts, p, color, T, o = {}) {
+      if (p <= 0) return;
+      const [a, b, c, d] = pts;
+      const at = k => {
+        const m = 1 - k;
+        return [
+          m * m * m * a[0] + 3 * m * m * k * b[0] + 3 * m * k * k * c[0] + k * k * k * d[0],
+          m * m * m * a[1] + 3 * m * m * k * b[1] + 3 * m * k * k * c[1] + k * k * k * d[1]
+        ];
+      };
+      const steps = 60;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(a[0], a[1]);
+      for (let i = 1; i <= Math.round(steps * p); i++) { const q = at(i / steps); ctx.lineTo(q[0], q[1]); }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = o.lw ?? 4;
+      ctx.lineCap = 'round';
+      ctx.setLineDash(o.dash ?? [14, 12]);
+      ctx.lineDashOffset = -T * 40;
+      ctx.stroke();
+      ctx.restore();
+      if (p >= 1) {
+        const q1 = at(0.97), q2 = at(1);
+        arrow(q1[0], q1[1], q2[0], q2[1], color, o.lw ?? 4);
+      }
+    }
+
+    // ----------------------------------------------------
+    // LAURA (AVATAR CON HALO)
+    // ----------------------------------------------------
+    function drawLaura(cx, cy, r, o = {}) {
+      if (o.halo) {
+        const k = (o.T * 0.7) % 1;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * (1.08 + 0.45 * k), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 106, 26, ${0.16 * (1 - k)})`;
+        ctx.fill();
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(o.T * 0.5);
+        ctx.beginPath();
+        ctx.arc(0, 0, r * 1.42, 0, Math.PI * 2);
+        ctx.setLineDash([12, 14]);
+        ctx.strokeStyle = 'rgba(255, 106, 26, 0.55)';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.restore();
+      }
+      // Marco blanco con sombra
+      ctx.save();
+      ctx.shadowColor = 'rgba(17, 24, 39, 0.18)';
+      ctx.shadowBlur = r * 0.5;
+      ctx.shadowOffsetY = r * 0.12;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = C.surface;
+      ctx.fill();
+      ctx.restore();
+      ctx.beginPath();
+      ctx.arc(cx, cy, r + r * 0.04, 0, Math.PI * 2);
+      ctx.strokeStyle = C.orangeL;
+      ctx.lineWidth = r * 0.07;
+      ctx.stroke();
+      // Foto
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * 0.93, 0, Math.PI * 2);
+      ctx.clip();
+      if (laura) {
+        const iw = laura.naturalWidth, ih = laura.naturalHeight, s = Math.min(iw, ih);
+        ctx.drawImage(laura, (iw - s) / 2, (ih - s) * 0.3, s, s, cx - r * 0.93, cy - r * 0.93, r * 1.86, r * 1.86);
+      } else {
+        ctx.fillStyle = C.orange;
+        ctx.fillRect(cx - r, cy - r, 2 * r, 2 * r);
+        txt('L', cx, cy + 2, F.h(700, Math.round(r)), '#FFFFFF', 'center', 'middle');
+      }
+      ctx.restore();
+      // Punto de estado
+      const d = r * 0.7;
+      ctx.beginPath();
+      ctx.arc(cx + d, cy + d, r * 0.13, 0, Math.PI * 2);
+      ctx.fillStyle = C.green;
+      ctx.fill();
+      ctx.lineWidth = r * 0.05;
+      ctx.strokeStyle = C.surface;
+      ctx.stroke();
+    }
+
+    // ----------------------------------------------------
+    // EDIFICIO ISOMÉTRICO (MODELO BIM)
+    // ----------------------------------------------------
+    function drawBuilding(centerX, bottomY, s, prog, o = {}) {
+      const A = 4, B = 3, N = o.floors ?? 5, fh = 0.9, k = 0.866;
+      const hl = o.hl ?? {};
+      const cx = centerX - (A - B) / 2 * s * k;
+      const cy = bottomY - (A + B) * s * 0.5;
+      const I = (x, y, z) => [cx + (x - y) * s * k, cy + (x + y) * s * 0.5 - z * s];
+      const poly = (pts, fill, stroke, lw = 1.5) => {
+        ctx.beginPath();
+        pts.forEach((p, i) => { const q = I(...p); i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); });
+        ctx.closePath();
+        if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+        if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.lineJoin = 'round'; ctx.stroke(); }
+      };
+      const line = (p1, p2, color, lw) => {
+        const a = I(...p1), b = I(...p2);
+        ctx.beginPath();
+        ctx.moveTo(a[0], a[1]);
+        ctx.lineTo(b[0], b[1]);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lw;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      };
+      const edge = '#C4CAD3';
+
+      // Huella en el suelo
+      poly([[-0.4, -0.4, 0], [A + 0.4, -0.4, 0], [A + 0.4, B + 0.4, 0], [-0.4, B + 0.4, 0]], 'rgba(17, 24, 39, 0.05)');
+      if (prog <= 0) return;
+
+      let topZ = 0;
+      for (let f = 0; f < N; f++) {
+        const r = ease.out(clamp(prog * N - f));
+        if (r <= 0) break;
+        const z0 = f * fh, z1 = z0 + fh * r;
+        topZ = z1;
+        poly([[0, B, z0], [A, B, z0], [A, B, z1], [0, B, z1]], '#F3F4F6', edge);
+        poly([[A, 0, z0], [A, B, z0], [A, B, z1], [A, 0, z1]], '#E5E7EB', edge);
+        if (hl.walls) {
+          const c = `rgba(59, 130, 246, ${0.3 * hl.walls})`;
+          poly([[0, B, z0], [A, B, z0], [A, B, z1], [0, B, z1]], c);
+          poly([[A, 0, z0], [A, B, z0], [A, B, z1], [A, 0, z1]], c);
+        }
+        if (r > 0.7) {
+          const win = hl.walls ? '#BFDBFE' : '#DBEAFE';
+          for (let x = 0.5; x < A; x += 1) {
+            if (f === 0 && x > 1.6 && x < 2.4) continue;
+            poly([[x - 0.22, B, z0 + 0.28], [x + 0.22, B, z0 + 0.28], [x + 0.22, B, z0 + 0.68], [x - 0.22, B, z0 + 0.68]], win);
+          }
+          for (let y = 0.5; y < B; y += 1) {
+            poly([[A, y - 0.22, z0 + 0.28], [A, y + 0.22, z0 + 0.28], [A, y + 0.22, z0 + 0.68], [A, y - 0.22, z0 + 0.68]], win);
+          }
+          if (f === 0) {
+            const dc = hl.doors ? `rgba(139, 92, 246, ${0.35 + 0.65 * hl.doors})` : '#D1D5DB';
+            poly([[1.75, B, 0], [2.25, B, 0], [2.25, B, 0.72], [1.75, B, 0.72]], dc);
+            poly([[A, 1.25, 0], [A, 1.75, 0], [A, 1.75, 0.72], [A, 1.25, 0.72]], dc);
+          }
+        }
+        if (hl.slabs && f > 0) {
+          const c = `rgba(16, 185, 129, ${0.4 + 0.6 * hl.slabs})`;
+          line([0, B, z0], [A, B, z0], c, 2 + 4 * hl.slabs);
+          line([A, B, z0], [A, 0, z0], c, 2 + 4 * hl.slabs);
+        }
+      }
+      poly([[0, 0, topZ], [A, 0, topZ], [A, B, topZ], [0, B, topZ]],
+        hl.slabs ? `rgba(16, 185, 129, ${0.12 + 0.25 * hl.slabs})` : '#FFFFFF', edge);
+
+      // Columnas
+      const colA = 0.55 + 0.45 * (hl.cols ?? 0);
+      const colW = 2 + 5 * (hl.cols ?? 0);
+      [[0, B], [2, B], [A, B], [A, 1.5], [A, 0]].forEach(([x, y]) =>
+        line([x, y, 0], [x, y, topZ], `rgba(255, 106, 26, ${colA})`, colW));
+
+      // Línea de escaneo de Laura
+      if (o.scan != null) {
+        const z = o.scan * topZ;
+        ctx.save();
+        ctx.shadowColor = C.orange;
+        ctx.shadowBlur = 18;
+        line([0, B, z], [A, B, z], C.orange, 4);
+        line([A, B, z], [A, 0, z], C.orange, 4);
+        ctx.restore();
+      }
+    }
+
+    // ----------------------------------------------------
+    // DATOS DEL PROYECTO DE EJEMPLO
+    // ----------------------------------------------------
+    const CH = [
+      { n: '01 Preliminares', a: 6, v: 6200 },
+      { n: '02 Cimentación', a: 8, v: 14500 },
+      { n: '03 Estructura en concreto', a: 12, v: 38200 },
+      { n: '04 Mampostería y muros', a: 10, v: 19400 },
+      { n: '05 Acabados y pisos', a: 12, v: 27300 }
+    ];
+
+    const GANTT = [
+      { n: '01 Preliminares', s: 0, e: 6, c: 1 },
+      { n: '02 Cimentación', s: 6, e: 16, c: 1 },
+      { n: '03 Estructura en concreto', s: 16, e: 40, c: 1 },
+      { n: '04 Mampostería y muros', s: 28, e: 48, c: 0, fl: 54 },
+      { n: '05 Acabados y pisos', s: 40, e: 60, c: 1 }
+    ];
+
+    const CATS = [
+      { k: 'walls', label: 'Muros', val: 1840, unit: 'm²', col: C.blue },
+      { k: 'cols', label: 'Columnas', val: 96, unit: 'un', col: C.orange },
+      { k: 'slabs', label: 'Losas', val: 2150, unit: 'm²', col: C.green },
+      { k: 'doors', label: 'Puertas', val: 120, unit: 'un', col: C.violet }
+    ];
+
+    // ----------------------------------------------------
+    // ESCENAS
+    // ----------------------------------------------------
+    const scenes = [
+      // 0. INTRO ------------------------------------------------
+      {
+        dur: 6,
+        caps: [{ at: 0.6, text: 'Esto es metroKUBIKO Planea. Te mostramos qué es y cómo funciona.' }],
+        draw(t, T) {
+          withAlpha(0.6, () => {
+            drawBuilding(330, 840, 36, ease.out(P(t, 0.2, 3.2)), { floors: 4 });
+            drawBuilding(1590, 840, 44, ease.out(P(t, 0.6, 3.8)), { floors: 6 });
+          });
+          withAlpha(P(t, 0.3, 0.9), () =>
+            pill(W / 2, 360, 'PRESUPUESTO + CRONOGRAMA DE OBRA CON IA',
+              { fill: C.orangeL, stroke: C.orangeB, color: C.orange, h: 56 }));
+          const k = ease.back(P(t, 0.6, 1.5));
+          withAlpha(P(t, 0.6, 1.1), () => {
+            ctx.save();
+            ctx.translate(W / 2, 500);
+            ctx.scale(0.85 + 0.15 * k, 0.85 + 0.15 * k);
+            wordmark(0, 0, 130);
+            ctx.restore();
+          });
+          withAlpha(P(t, 1.5, 2.1), () =>
+            txt('Del modelo BIM al presupuesto y cronograma de obra.', W / 2, 610, F.b(500, 42), C.sub, 'center'));
+        }
+      },
+
+      // 1. CONOCE A LAURA ---------------------------------------
+      {
+        dur: 7.5,
+        head: [{ t: 'Conoce a ' }, { t: 'Laura', o: 1 }],
+        caps: [{ at: 0.3, text: 'Laura es el agente de inteligencia artificial de Planea: hace el trabajo pesado por ti.' }],
+        draw(t, T) {
+          const k = ease.back(P(t, 0, 0.8));
+          ctx.save();
+          ctx.translate(560, 500);
+          ctx.scale(0.6 + 0.4 * k, 0.6 + 0.4 * k);
+          drawLaura(0, 0, 150, { halo: true, T });
+          ctx.restore();
+          withAlpha(P(t, 0.5, 1.0), () => {
+            txt('Laura', 560, 790, F.h(700, 52), C.main, 'center');
+            txt('Agente IA de Obra', 560, 836, F.m(600, 26), C.orange, 'center');
+          });
+
+          withAlpha(P(t, 0.8, 1.2), () => {
+            bubble(860, 280, 880, 290, { tail: { side: 'left', at: 440 } });
+            txt('✦ Laura', 905, 338, F.m(600, 24), C.orange);
+            typeBlock('¡Hola! Soy Laura, tu agente de IA para la construcción. Leo tu modelo BIM y preparo el presupuesto y el cronograma de tu obra.',
+              (t - 1.2) * 45, 905, 392, 790, 48, F.b(500, 33), C.main, t < 4.4 && Math.floor(T * 2) % 2 === 0);
+          });
+
+          ['Lee tu modelo IFC', 'Calcula cantidades, actividades y APUs', 'Genera tu presupuesto y cronograma']
+            .forEach((s, i) => {
+              const a = P(t, 4.2 + i * 0.4, 4.6 + i * 0.4);
+              withAlpha(a, () => {
+                const y = 650 + i * 72 + (1 - ease.out(a)) * 16;
+                check(890, y, 20);
+                txt(s, 928, y + 1, F.b(600, 30), C.main, 'left', 'middle');
+              });
+            });
+        }
+      },
+
+      // 2. PASO 1 · SUBIR IFC -----------------------------------
+      {
+        dur: 8,
+        step: 1,
+        head: [{ t: 'Paso 1 · ' }, { t: 'Sube tu modelo IFC', o: 1 }],
+        caps: [
+          { at: 0.2, text: 'Exporta tu proyecto en formato IFC desde tu herramienta BIM (Revit, ArchiCAD…) y súbelo a Planea.' },
+          { at: 3.4, text: 'Planea lee la geometría del modelo: niveles, muros, columnas, losas y puertas.' }
+        ],
+        draw(t, T) {
+          const hover = P(t, 0.6, 1.0) * (1 - P(t, 1.6, 2.0));
+          card(510, 250, 900, 610, {
+            stroke: hover > 0 ? C.orange : C.borderFocus, dash: [14, 10], dashOffset: -T * 30, lw: 2.5,
+            fill: hover > 0 ? `rgba(255, 106, 26, ${0.05 * hover})` : C.surface
+          });
+
+          // Estado vacío
+          withAlpha(1 - P(t, 1.3, 1.7), () => {
+            ctx.beginPath();
+            ctx.arc(960, 500, 70, 0, Math.PI * 2);
+            ctx.fillStyle = C.orangeL;
+            ctx.fill();
+            arrow(960, 530, 960, 462, C.orange, 7);
+            txt('Arrastra tu archivo .ifc aquí', 960, 640, F.b(600, 34), C.sub, 'center');
+            txt('Formato IFC · exportado desde tu software BIM', 960, 690, F.b(400, 26), C.muted, 'center');
+          });
+
+          // Archivo que vuela hacia la zona de carga
+          const m = ease.inOut(P(t, 0.3, 1.6));
+          const bx = lerp(90, 700, m), by = lerp(150, 285, m);
+          ctx.save();
+          ctx.translate(bx + 260, by + 42);
+          ctx.rotate((1 - m) * -0.12);
+          fileBadge(-260, -42, 520, 84, 'torre_residencial.ifc', '18.4 MB');
+          ctx.restore();
+
+          // Progreso de carga
+          const up = P(t, 1.7, 3.3);
+          withAlpha(P(t, 1.6, 1.8) * (1 - P(t, 6.0, 6.4)), () => {
+            rr(700, 392, 520, 12, 6);
+            ctx.fillStyle = C.soft;
+            ctx.fill();
+            if (up > 0) {
+              rr(700, 392, 520 * ease.out(up), 12, 6);
+              ctx.fillStyle = up < 1 ? C.orange : C.green;
+              ctx.fill();
+            }
+            const label = up < 1 ? `Subiendo… ${Math.round(up * 100)}%` : 'Modelo cargado';
+            txt(label, 960, 438, F.m(600, 22), up < 1 ? C.muted : C.green, 'center');
+          });
+
+          // El modelo se construye
+          drawBuilding(960, 795, 44, ease.out(P(t, 3.3, 6.0)), { floors: 5 });
+
+          withAlpha(P(t, 6.0, 6.5), () => {
+            check(700, 828, 17);
+            txt('Modelo leído · 5 niveles · 1,284 elementos', 730, 829, F.b(600, 28), C.green, 'left', 'middle');
+          });
+        }
+      },
+
+      // 3. PASO 2 · CONTEXTO ------------------------------------
+      {
+        dur: 7.5,
+        step: 2,
+        head: [{ t: 'Paso 2 · ' }, { t: 'Agrega contexto', o: 1 }],
+        caps: [
+          { at: 0.2, text: 'Escribe el contexto de tu obra: ubicación, fecha de inicio y lo que Laura deba tener en cuenta.' },
+          { at: 4.0, text: 'Mientras más contexto le des, más precisos serán tu presupuesto y tu cronograma.' }
+        ],
+        draw(t, T) {
+          card(170, 260, 560, 600);
+          fileBadge(200, 290, 500, 72, 'torre_residencial.ifc');
+          drawBuilding(450, 805, 38, 1, { floors: 5 });
+
+          card(790, 260, 960, 600);
+          txt('CONTEXTO DEL PROYECTO', 840, 318, F.m(600, 22), C.muted);
+          card(830, 345, 880, 230, { r: 16, fill: '#F9FAFB', stroke: t < 3.8 ? C.orangeB : C.borderFocus, shadow: false });
+          typeBlock('Proyecto ubicado en Bogotá. Inicio: 1 de enero de 2027. Vivienda multifamiliar de 5 niveles.',
+            (t - 0.5) * 30, 865, 410, 810, 52, F.b(500, 34), C.main, Math.floor(T * 2) % 2 === 0 && t < 5);
+
+          let x = 830;
+          ['Ubicación · Bogotá', 'Inicio · 01/01/2027', 'Uso · Vivienda'].forEach((s, i) => {
+            const a = P(t, 3.8 + i * 0.4, 4.2 + i * 0.4);
+            ctx.font = F.m(600, 22);
+            const w = ctx.measureText(s).width + 44;
+            withAlpha(a, () => pill(x, 625 + (1 - ease.out(a)) * 12, s,
+              { align: 'left', fill: C.greenL, stroke: 'rgba(16, 185, 129, 0.35)', color: '#047857' }));
+            x += w + 16;
+          });
+
+          withAlpha(P(t, 5.0, 5.5), () => {
+            const press = 1 - 0.04 * Math.sin(Math.PI * P(t, 6.2, 6.6));
+            ctx.save();
+            ctx.translate(1270, 770);
+            ctx.scale(press, press);
+            ctx.save();
+            ctx.shadowColor = 'rgba(255, 106, 26, 0.35)';
+            ctx.shadowBlur = 30;
+            ctx.shadowOffsetY = 10;
+            rr(-440, -45, 880, 90, 45);
+            ctx.fillStyle = C.orange;
+            ctx.fill();
+            ctx.restore();
+            txt('Generar presupuesto y cronograma con Laura', 0, 2, F.h(700, 32), '#FFFFFF', 'center', 'middle');
+            ctx.restore();
+            const rp = P(t, 6.2, 7.2);
+            if (rp > 0 && rp < 1) {
+              ctx.beginPath();
+              ctx.arc(1270, 770, 40 + 420 * rp, 0, Math.PI * 2);
+              ctx.strokeStyle = `rgba(255, 106, 26, ${0.5 * (1 - rp)})`;
+              ctx.lineWidth = 4;
+              ctx.stroke();
+            }
+          });
+        }
+      },
+
+      // 4. PASO 3 · ANÁLISIS ------------------------------------
+      {
+        dur: 9,
+        step: 3,
+        head: [{ t: 'Paso 3 · ' }, { t: 'Laura analiza tu modelo', o: 1 }],
+        caps: [
+          { at: 0.3, text: 'Laura recorre el modelo e identifica cada elemento: muros, columnas, losas y puertas.' },
+          { at: 5.0, text: 'Con las cantidades crea las actividades de obra y su análisis de precios unitarios (APU).' }
+        ],
+        draw(t, T) {
+          const hl = {};
+          CATS.forEach((c, i) => {
+            const st = 0.6 + i * 1.1;
+            hl[c.k] = P(t, st, st + 0.3) * (1 - 0.65 * P(t, st + 1.1, st + 1.4));
+          });
+          const scan = t > 0.6 && t < 5.0 ? ((t - 0.6) % 1.1) / 1.1 : null;
+          drawBuilding(420, 800, 44, 1, { floors: 5, hl, scan });
+
+          // Partículas del modelo hacia Laura
+          const flow = P(t, 0.4, 0.8) * (1 - P(t, 7.2, 7.8));
+          if (flow > 0) {
+            const p0 = [560, 600], p1 = [700, 380], p2 = [820, 500];
+            for (let i = 0; i < 22; i++) {
+              const ph = (T * 0.55 + i / 22) % 1;
+              const m = 1 - ph;
+              const x = m * m * p0[0] + 2 * m * ph * p1[0] + ph * ph * p2[0];
+              const y = m * m * p0[1] + 2 * m * ph * p1[1] + ph * ph * p2[1] + Math.sin(i * 7.3) * 26 * m;
+              ctx.beginPath();
+              ctx.arc(x, y, 5 + (i % 3) * 2, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(255, 106, 26, ${0.75 * Math.sin(ph * Math.PI) * flow})`;
+              ctx.fill();
+            }
+          }
+
+          drawLaura(960, 480, 120, { halo: true, T });
+          const dots = '.'.repeat(1 + (Math.floor(T * 3) % 3));
+          txt(t < 7.2 ? 'Analizando' + dots : 'Análisis completo', 960, 692, F.h(700, 32), t < 7.2 ? C.main : C.green, 'center');
+
+          // Cadena: cantidades → actividades → APUs
+          const chips = ['Cantidades', '48 Actividades', '48 APUs'];
+          ctx.font = F.m(600, 22);
+          const ws = chips.map(c => ctx.measureText(c).width + 40);
+          const gap = 46;
+          let x = 960 - (ws.reduce((a, b) => a + b, 0) + gap * 2) / 2;
+          chips.forEach((c, i) => {
+            const lit = P(t, 5.2 + i * 0.8, 5.5 + i * 0.8);
+            withAlpha(0.35 + 0.65 * lit, () => pill(x, 770, c, {
+              align: 'left', h: 50, padX: 20,
+              fill: lit > 0.5 ? C.orangeL : C.surface,
+              stroke: lit > 0.5 ? C.orangeB : C.border,
+              color: lit > 0.5 ? C.orange : C.muted
+            }));
+            if (i < 2) withAlpha(0.3 + 0.7 * P(t, 5.6 + i * 0.8, 5.9 + i * 0.8), () =>
+              arrow(x + ws[i] + 8, 770, x + ws[i] + gap - 8, 770, C.orange, 3));
+            x += ws[i] + gap;
+          });
+
+          // Panel de elementos detectados
+          card(1270, 260, 500, 600);
+          txt('Elementos detectados', 1310, 325, F.h(700, 32), C.main);
+          txt('Del modelo IFC', 1310, 362, F.m(500, 20), C.muted);
+          CATS.forEach((c, i) => {
+            const st = 0.6 + i * 1.1;
+            const a = P(t, st, st + 0.3);
+            const y = 430 + i * 92;
+            withAlpha(a, () => {
+              if (hl[c.k] > 0.5) {
+                rr(1290, y - 36, 460, 72, 14);
+                ctx.fillStyle = C.soft;
+                ctx.fill();
+              }
+              ctx.beginPath();
+              ctx.arc(1320, y, 10, 0, Math.PI * 2);
+              ctx.fillStyle = c.col;
+              ctx.fill();
+              txt(c.label, 1346, y + 1, F.b(600, 30), C.main, 'left', 'middle');
+              txt(`${num(c.val * ease.out(P(t, st, st + 0.9)))} ${c.unit}`, 1730, y + 1, F.m(600, 28), C.main, 'right', 'middle');
+            });
+          });
+          withAlpha(P(t, 5.0, 5.4), () => {
+            ctx.fillStyle = C.border;
+            ctx.fillRect(1310, 790, 420, 2);
+            check(1325, 825, 15);
+            txt('Cantidades calculadas', 1352, 826, F.b(600, 26), C.green, 'left', 'middle');
+          });
+        }
+      },
+
+      // 5. PASO 4 · PRESUPUESTO ---------------------------------
+      {
+        dur: 8.5,
+        step: 4,
+        head: [{ t: 'Paso 4 · ' }, { t: 'Recibe tu presupuesto', o: 1 }],
+        caps: [
+          { at: 0.3, text: 'Laura entrega el presupuesto organizado por capítulos, con sus actividades y valores.' },
+          { at: 4.6, text: 'Cada actividad trae su APU: materiales, mano de obra y equipo, listos para revisar.' }
+        ],
+        draw(t, T) {
+          drawLaura(320, 370, 95, { T });
+
+          withAlpha(P(t, 0.4, 0.8) * (1 - P(t, 4.2, 4.6)), () => {
+            bubble(130, 520, 400, 170, { tail: { side: 'top', at: 320 } });
+            typeBlock('¡Listo! Tu presupuesto está organizado por capítulos.', (t - 0.6) * 40,
+              160, 580, 340, 42, F.b(600, 30), C.main, false);
+          });
+
+          // Tarjeta de presupuesto
+          card(600, 250, 1170, 620);
+          txt('Presupuesto de obra', 650, 318, F.h(700, 36), C.main);
+          pill(1720, 306, 'COP / USD', { align: 'right', fill: C.orangeL, stroke: null, color: C.orange, h: 40, padX: 16, font: F.m(600, 20) });
+          txt('CAPÍTULO', 650, 380, F.m(600, 20), C.muted);
+          txt('ACTIVIDADES', 1330, 380, F.m(600, 20), C.muted, 'center');
+          txt('VALOR', 1720, 380, F.m(600, 20), C.muted, 'right');
+          ctx.fillStyle = C.border;
+          ctx.fillRect(650, 398, 1070, 2);
+
+          const apuOn = P(t, 4.6, 5.0);
+          CH.forEach((r, i) => {
+            const st = 0.5 + i * 0.35;
+            const a = P(t, st, st + 0.4);
+            const y = 448 + i * 68;
+            withAlpha(a, () => {
+              ctx.save();
+              ctx.translate((1 - ease.out(a)) * 40, 0);
+              if (i === 2 && apuOn > 0) {
+                withAlpha(apuOn, () => { rr(630, y - 32, 1110, 60, 12); ctx.fillStyle = C.orangeL; ctx.fill(); });
+              }
+              txt(r.n, 650, y + 1, F.b(500, 29), C.sub, 'left', 'middle');
+              txt(String(r.a), 1330, y + 1, F.m(600, 26), C.muted, 'center', 'middle');
+              txt(money(r.v * ease.out(P(t, st, st + 1.0))), 1720, y + 1, F.m(600, 29), C.main, 'right', 'middle');
+              ctx.restore();
+            });
+          });
+
+          withAlpha(P(t, 2.4, 2.8), () => {
+            ctx.fillStyle = C.border;
+            ctx.fillRect(650, 778, 1070, 2);
+            txt('TOTAL ESTIMADO · 48 ACTIVIDADES', 650, 830, F.m(600, 22), C.muted, 'left', 'middle');
+            const total = CH.reduce((s, r) => s + r.v, 0);
+            txt(money(total * ease.out(P(t, 2.5, 4.0))), 1720, 830, F.h(700, 46), C.main, 'right', 'middle');
+          });
+
+          // APU de concreto
+          withAlpha(apuOn, () => {
+            ctx.strokeStyle = C.orangeB;
+            ctx.lineWidth = 3;
+            ctx.setLineDash([8, 8]);
+            ctx.beginPath();
+            ctx.moveTo(560, 590);
+            ctx.lineTo(628, 584);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            card(110, 480, 450, 390, { stroke: C.orangeB });
+            txt('APU · Concreto 3000 psi', 140, 530, F.h(700, 28), C.main);
+            txt('Unidad: m³', 140, 566, F.m(500, 20), C.muted);
+            [['Materiales', 0.52, C.orange], ['Mano de obra', 0.30, C.blue], ['Equipo', 0.18, C.green]].forEach(([n, v, col], i) => {
+              const y = 625 + i * 78;
+              const g = ease.out(P(t, 5.0 + i * 0.3, 5.8 + i * 0.3));
+              txt(n, 140, y, F.b(600, 24), C.sub);
+              txt(`${Math.round(v * 100 * g)}%`, 530, y, F.m(600, 22), C.main, 'right');
+              rr(140, y + 14, 390, 12, 6);
+              ctx.fillStyle = C.soft;
+              ctx.fill();
+              if (g > 0) { rr(140, y + 14, 390 * v * g, 12, 6); ctx.fillStyle = col; ctx.fill(); }
+            });
+          });
+        }
+      },
+
+      // 6. PASO 5 · CRONOGRAMA ----------------------------------
+      {
+        dur: 8,
+        step: 5,
+        head: [{ t: 'Paso 5 · ' }, { t: 'Obtén tu cronograma', o: 1 }],
+        caps: [
+          { at: 0.3, text: 'Al mismo tiempo genera el cronograma de obra, desde la fecha de inicio que indicaste.' },
+          { at: 4.0, text: 'Calcula la ruta crítica (CPM) para que sepas qué actividades no pueden retrasarse.' }
+        ],
+        draw(t, T) {
+          card(150, 250, 1620, 620);
+          txt('Cronograma de obra', 200, 318, F.h(700, 36), C.main);
+          pill(1720, 306, 'CPM · RUTA CRÍTICA', { align: 'right', fill: C.greenL, stroke: null, color: '#047857', h: 40, padX: 16, font: F.m(600, 20) });
+
+          const x0 = 650, x1 = 1710, X = d => x0 + (d / 60) * (x1 - x0);
+          for (let d = 0; d <= 60; d += 10) {
+            ctx.fillStyle = C.soft;
+            ctx.fillRect(X(d), 395, 2, 380);
+          }
+          [[0, '1 ene 2027'], [31, '1 feb'], [59, '1 mar']].forEach(([d, l], i) =>
+            txt(l, X(d), 380, F.m(600, 20), C.muted, i === 0 ? 'left' : i === 2 ? 'right' : 'center'));
+
+          GANTT.forEach((g, i) => {
+            const y = 425 + i * 74;
+            const st = 0.5 + i * 0.5;
+            const a = P(t, st - 0.2, st);
+            const grow = ease.out(P(t, st, st + 0.7));
+            withAlpha(a, () => {
+              txt(g.n, 200, y + 18, F.b(500, 26), C.sub, 'left', 'middle');
+              txt(`${g.e - g.s} d`, 620, y + 18, F.m(600, 22), C.muted, 'right', 'middle');
+              if (g.fl && t > 4.0) {
+                withAlpha(P(t, 4.0, 4.5), () => {
+                  rr(X(g.e) - 8, y, X(g.fl) - X(g.e) + 8, 36, 8);
+                  ctx.fillStyle = 'rgba(16, 185, 129, 0.12)';
+                  ctx.fill();
+                  ctx.setLineDash([6, 6]);
+                  ctx.strokeStyle = 'rgba(16, 185, 129, 0.6)';
+                  ctx.lineWidth = 2;
+                  ctx.stroke();
+                  ctx.setLineDash([]);
+                });
+              }
+              if (grow > 0) {
+                rr(X(g.s), y, (X(g.e) - X(g.s)) * grow, 36, 8);
+                ctx.fillStyle = g.c ? C.orange : C.green;
+                ctx.fill();
+              }
+            });
+          });
+
+          // Dependencias de la ruta crítica
+          const dep = P(t, 3.4, 4.4);
+          if (dep > 0) {
+            const crit = GANTT.map((g, i) => ({ ...g, i })).filter(g => g.c);
+            withAlpha(dep, () => {
+              for (let j = 0; j < crit.length - 1; j++) {
+                const a = crit[j], b = crit[j + 1];
+                const ya = 425 + a.i * 74 + 18, yb = 425 + b.i * 74;
+                ctx.strokeStyle = C.main;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(X(a.e), ya);
+                ctx.lineTo(X(a.e) + 14, ya);
+                ctx.lineTo(X(a.e) + 14, yb - 14);
+                ctx.lineTo(X(b.s) + 14, yb - 14);
+                ctx.stroke();
+                arrow(X(b.s) + 14, yb - 14, X(b.s) + 14, yb - 1, C.main, 2);
+              }
+            });
+          }
+
+          withAlpha(P(t, 4.6, 5.1), () => {
+            ctx.fillStyle = C.border;
+            ctx.fillRect(200, 790, 1520, 2);
+            rr(200, 816, 22, 22, 5); ctx.fillStyle = C.orange; ctx.fill();
+            txt('Ruta crítica', 234, 828, F.b(500, 24), C.sub, 'left', 'middle');
+            rr(410, 816, 22, 22, 5); ctx.fillStyle = C.green; ctx.fill();
+            txt('Con holgura', 444, 828, F.b(500, 24), C.sub, 'left', 'middle');
+            txt('Inicio 01/01/2027 · Plazo total', 1560, 828, F.b(500, 26), C.sub, 'right', 'middle');
+            txt('60 DÍAS', 1720, 828, F.h(700, 34), C.green, 'right', 'middle');
+          });
+        }
+      },
+
+      // 7. PASO 6 · EDICIÓN -------------------------------------
+      {
+        dur: 11,
+        step: 6,
+        head: [{ t: 'Paso 6 · ' }, { t: 'Ajusta y actualiza', o: 1 }],
+        caps: [
+          { at: 0.2, text: 'Pídele cambios a Laura en lenguaje natural y ella actualiza el presupuesto.' },
+          { at: 3.6, text: 'También puedes editar cualquier valor manualmente, como en una hoja de cálculo.' },
+          { at: 7.0, text: '¿Cambió el diseño? Sube el nuevo IFC y las cantidades se actualizan desde el modelo.' }
+        ],
+        draw(t, T) {
+          const mode = t < 3.6 ? 0 : t < 7.0 ? 1 : 2;
+
+          // Pestañas de modo
+          const tabs = ['Con Laura', 'Manual', 'Desde el IFC'];
+          ctx.font = F.b(600, 26);
+          const tw = tabs.map(s => ctx.measureText(s).width + 56);
+          let tx = W / 2 - (tw.reduce((a, b) => a + b, 0) + 32) / 2;
+          tabs.forEach((s, i) => {
+            const on = i === mode;
+            pill(tx, 262, s, {
+              align: 'left', h: 54, padX: 28, font: F.b(600, 26),
+              fill: on ? C.orange : C.surface, stroke: on ? null : C.border, color: on ? '#FFFFFF' : C.sub
+            });
+            tx += tw[i] + 16;
+          });
+
+          // Valores con sus cambios
+          const vals = CH.map(r => r.v);
+          const k1 = ease.inOut(P(t, 2.3, 2.9)), k2 = P(t, 5.7, 5.8), k3 = ease.inOut(P(t, 8.8, 9.4));
+          vals[2] = lerp(38200, 42800, k1);
+          vals[4] = lerp(27300, 25900, k2);
+          vals[3] = lerp(19400, 20150, k3);
+          const flash = [0, 0, 0, 0, 0];
+          flash[2] = P(t, 2.2, 2.4) * (1 - P(t, 3.2, 3.6));
+          flash[4] = P(t, 5.7, 5.9) * (1 - P(t, 6.6, 7.0));
+          flash[3] = P(t, 8.7, 8.9) * (1 - P(t, 10.2, 10.6));
+
+          // Tarjeta de presupuesto
+          card(880, 320, 890, 550);
+          txt('Presupuesto', 920, 380, F.h(700, 32), C.main);
+          txt('Se recalcula al instante', 1730, 380, F.m(500, 20), C.muted, 'right');
+          CH.forEach((r, i) => {
+            const y = 450 + i * 62;
+            if (flash[i] > 0) withAlpha(flash[i], () => { rr(900, y - 28, 850, 56, 12); ctx.fillStyle = C.orangeL; ctx.fill(); });
+            txt(r.n, 920, y + 1, F.b(500, 26), C.sub, 'left', 'middle');
+            const editing = i === 4 && t > 4.9 && t < 5.75;
+            if (editing) {
+              rr(1530, y - 24, 210, 48, 8);
+              ctx.fillStyle = C.surface;
+              ctx.fill();
+              ctx.strokeStyle = C.orange;
+              ctx.lineWidth = 2.5;
+              ctx.stroke();
+              const typed = '25900'.slice(0, Math.floor((t - 5.0) * 10));
+              txt(typed, 1720, y + 1, F.m(600, 26), C.main, 'right', 'middle');
+            } else {
+              txt(money(vals[i]), 1720, y + 1, F.m(600, 26), flash[i] > 0.3 ? C.orange : C.main, 'right', 'middle');
+            }
+          });
+          ctx.fillStyle = C.border;
+          ctx.fillRect(920, 760, 810, 2);
+          txt('TOTAL ESTIMADO', 920, 815, F.m(600, 22), C.muted, 'left', 'middle');
+          const totFlash = Math.max(...flash);
+          txt(money(vals.reduce((a, b) => a + b, 0)), 1730, 815, F.h(700, 42), totFlash > 0.3 ? C.orange : C.main, 'right', 'middle');
+
+          // Panel izquierdo según el modo
+          card(150, 320, 680, 550);
+          const fadeIn = s => P(t, s, s + 0.35);
+
+          if (mode === 0) withAlpha(fadeIn(0) * (1 - P(t, 3.3, 3.6)), () => {
+            drawLaura(205, 380, 30, { T });
+            txt('Chat con Laura', 252, 381, F.h(700, 28), C.main, 'left', 'middle');
+            const ua = P(t, 0.3, 0.5);
+            withAlpha(ua, () => {
+              card(300, 440, 500, 150, { r: 20, fill: C.soft, stroke: null, shadow: false });
+              typeBlock('Cambia el precio del concreto a $42,800 y actualiza el presupuesto.', (t - 0.4) * 40,
+                328, 492, 450, 38, F.b(500, 27), C.main, false);
+            });
+            withAlpha(P(t, 2.1, 2.4), () => {
+              bubble(180, 630, 520, 120, { fill: C.orangeL, stroke: C.orangeB, shadow: false });
+              txt('✦ Laura', 210, 672, F.m(600, 22), C.orange);
+              txt('Hecho. Actualicé el concreto y el total.', 210, 716, F.b(600, 27), C.main);
+            });
+          });
+
+          if (mode === 1) withAlpha(fadeIn(3.6) * (1 - P(t, 6.7, 7.0)), () => {
+            txt('Edición manual', 190, 390, F.h(700, 30), C.main);
+            wrap('Haz clic en cualquier celda del presupuesto y escribe el nuevo valor.', 600, F.b(500, 28))
+              .forEach((l, i) => txt(l, 190, 450 + i * 42, F.b(500, 28), C.sub));
+            // Mini celda ilustrativa
+            card(190, 560, 600, 110, { r: 16, fill: '#F9FAFB', stroke: C.border, shadow: false });
+            txt('05 Acabados y pisos', 220, 616, F.b(500, 26), C.sub, 'left', 'middle');
+            txt(t > 5.75 ? '$25,900' : '$27,300', 760, 616, F.m(600, 26), t > 5.75 ? C.orange : C.main, 'right', 'middle');
+            txt('Puedes editar cantidades, precios y APUs.', 190, 730, F.b(500, 24), C.muted);
+          });
+
+          if (mode === 2) withAlpha(fadeIn(7.0), () => {
+            txt('Actualizar desde el IFC', 190, 390, F.h(700, 30), C.main);
+            fileBadge(190, 425, 600, 80, 'torre_residencial_v2.ifc', 'Nuevo');
+            // Icono de sincronización
+            const spin = P(t, 7.4, 8.6);
+            ctx.save();
+            ctx.translate(490, 590);
+            ctx.rotate(ease.inOut(spin) * Math.PI * 2);
+            ctx.strokeStyle = spin < 1 ? C.orange : C.green;
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.arc(0, 0, 34, 0.3, Math.PI - 0.3); ctx.stroke();
+            ctx.beginPath(); ctx.arc(0, 0, 34, Math.PI + 0.3, Math.PI * 2 - 0.3); ctx.stroke();
+            ctx.restore();
+            withAlpha(P(t, 8.4, 8.8), () => {
+              card(190, 660, 600, 80, { r: 14, fill: C.soft, stroke: null, shadow: false });
+              txt('Muros', 220, 701, F.b(600, 26), C.main, 'left', 'middle');
+              txt('1,840 → 1,910 m²', 760, 701, F.m(600, 26), C.blue, 'right', 'middle');
+            });
+            withAlpha(P(t, 9.2, 9.6), () => {
+              check(205, 790, 15);
+              txt('Mampostería recalculada', 232, 791, F.b(600, 26), C.green, 'left', 'middle');
+            });
+          });
+
+          // Cursor del modo manual
+          if (t > 3.7 && t < 6.6) {
+            const m = ease.inOut(P(t, 3.9, 4.8));
+            const cx = lerp(760, 1650, m), cy = lerp(780, 710, m);
+            const pressed = t > 4.85 && t < 5.0;
+            ctx.save();
+            ctx.translate(cx, cy);
+            if (pressed) ctx.scale(0.88, 0.88);
+            ctx.beginPath();
+            ctx.moveTo(0, 0); ctx.lineTo(0, 34); ctx.lineTo(9, 26); ctx.lineTo(16, 41);
+            ctx.lineTo(22, 38); ctx.lineTo(15, 24); ctx.lineTo(26, 24); ctx.closePath();
+            ctx.fillStyle = C.main;
+            ctx.fill();
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      },
+
+      // 8. RESUMEN ----------------------------------------------
+      {
+        dur: 8,
+        head: [{ t: 'Así funciona ' }, { t: 'Planea', o: 1 }],
+        caps: [
+          { at: 0.3, text: 'Entran tu modelo IFC y el contexto; Laura los analiza; salen tu presupuesto y tu cronograma.' },
+          { at: 4.2, text: 'Y puedes seguir ajustándolos con Laura, manualmente o desde un nuevo IFC.' }
+        ],
+        draw(t, T) {
+          const node = (cx, cy, label, sub, icon, a) => withAlpha(a, () => {
+            const s = 0.9 + 0.1 * ease.back(a);
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.scale(s, s);
+            card(-170, -78, 340, 156);
+            icon(-110, 0);
+            txt(label, -55, -8, F.h(700, 30), C.main, 'left', 'middle');
+            txt(sub, -55, 30, F.m(500, 19), C.muted, 'left', 'middle');
+            ctx.restore();
+          });
+
+          const iconIfc = (x, y) => fileIcon(x - 22, y - 30, 44, 58, 'IFC');
+          const iconCtx = (x, y) => {
+            rr(x - 28, y - 26, 56, 52, 12); ctx.fillStyle = C.greenL; ctx.fill();
+            [-10, 2, 14].forEach((dy, i) => { ctx.fillStyle = C.green; ctx.fillRect(x - 16, y + dy - 3, i === 2 ? 20 : 32, 5); });
+          };
+          const iconBudget = (x, y) => {
+            rr(x - 28, y - 28, 56, 56, 12); ctx.fillStyle = C.orangeL; ctx.fill();
+            for (let i = 0; i < 4; i++) { ctx.fillStyle = i === 3 ? C.orange : '#FDBA8C'; ctx.fillRect(x - 17, y - 17 + i * 10, 34, 5); }
+          };
+          const iconGantt = (x, y) => {
+            rr(x - 28, y - 28, 56, 56, 12); ctx.fillStyle = C.greenL; ctx.fill();
+            [[-18, 16], [-6, 18], [4, 14]].forEach(([dx, w], i) => { rr(x + dx, y - 15 + i * 12, w, 7, 3); ctx.fillStyle = C.green; ctx.fill(); });
+          };
+
+          const L = [960, 555];
+          flowCurve([[550, 430], [700, 430], [700, 555], [L[0] - 175, L[1] - 20]], P(t, 0.9, 1.6), C.orangeB, T);
+          flowCurve([[550, 680], [700, 680], [700, 555], [L[0] - 175, L[1] + 20]], P(t, 1.1, 1.8), C.orangeB, T);
+          flowCurve([[L[0] + 175, L[1] - 20], [1220, 555], [1220, 430], [1360, 430]], P(t, 2.4, 3.1), C.orangeB, T);
+          flowCurve([[L[0] + 175, L[1] + 20], [1220, 555], [1220, 680], [1360, 680]], P(t, 2.6, 3.3), C.orangeB, T);
+
+          node(380, 430, 'Modelo IFC', 'Tu modelo BIM', iconIfc, P(t, 0.3, 0.7));
+          node(380, 680, 'Contexto', 'Ubicación y fecha', iconCtx, P(t, 0.6, 1.0));
+          node(1540, 430, 'Presupuesto', 'Capítulos y APUs', iconBudget, P(t, 2.9, 3.3));
+          node(1540, 680, 'Cronograma', 'Ruta crítica (CPM)', iconGantt, P(t, 3.1, 3.5));
+
+          const la = ease.back(P(t, 1.4, 2.1));
+          if (la > 0) {
+            ctx.save();
+            ctx.translate(L[0], L[1]);
+            ctx.scale(la, la);
+            drawLaura(0, 0, 110, { halo: t > 1.8 && t < 3.6, T });
+            ctx.restore();
+            withAlpha(P(t, 1.8, 2.2), () => txt('Laura IA', L[0], L[1] + 165, F.h(700, 32), C.main, 'center'));
+          }
+
+          // Ciclo de edición
+          const lp = P(t, 4.0, 5.0);
+          if (lp > 0) {
+            flowCurve([[1540, 345], [1540, 250], [1100, 250], [L[0] + 40, L[1] - 160]], lp, C.green, T, { lw: 3, dash: [10, 10] });
+            withAlpha(P(t, 4.6, 5.0), () => pill(1300, 268, 'Edita y actualiza',
+              { fill: C.greenL, stroke: 'rgba(16, 185, 129, 0.35)', color: '#047857', h: 46 }));
+          }
+        }
+      },
+
+      // 9. CTA --------------------------------------------------
+      {
+        dur: 8,
+        caps: [{ at: 0.6, text: 'Únete a la lista de espera de metroKUBIKO Planea.' }],
+        draw(t, T) {
+          const k = ease.back(P(t, 0, 0.8));
+          if (k > 0) {
+            ctx.save();
+            ctx.translate(960, 320);
+            ctx.scale(k, k);
+            drawLaura(0, 0, 90, { T });
+            ctx.restore();
+          }
+          withAlpha(P(t, 0.4, 0.9), () => wordmark(960, 500, 84));
+          withAlpha(P(t, 0.9, 1.4), () =>
+            segs([{ t: 'Del modelo BIM al ' }, { t: 'presupuesto y cronograma.', o: 1 }], 960, 600, F.h(700, 54)));
+          withAlpha(P(t, 1.5, 2.0), () => {
+            const pulse = 1 + 0.03 * Math.sin(T * 4);
+            ctx.save();
+            ctx.translate(960, 735);
+            ctx.scale(pulse, pulse);
+            ctx.save();
+            ctx.shadowColor = 'rgba(255, 106, 26, 0.35)';
+            ctx.shadowBlur = 34;
+            ctx.shadowOffsetY = 12;
+            rr(-360, -52, 720, 104, 52);
+            ctx.fillStyle = C.orange;
+            ctx.fill();
+            ctx.restore();
+            txt('UNIRME A LA LISTA DE ESPERA', 0, 2, F.h(700, 34), '#FFFFFF', 'center', 'middle');
+            ctx.restore();
+          });
+        }
+      }
+    ];
+
+    let acc = 0;
+    scenes.forEach(s => { s.start = acc; acc += s.dur; });
+    const TOTAL = acc;
+    const STEPS = 6;
+
+    // ----------------------------------------------------
+    // MARCO PERSISTENTE (FONDO, BARRA SUPERIOR, SUBTÍTULOS)
+    // ----------------------------------------------------
+    function background() {
+      ctx.fillStyle = C.bg;
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.035)';
+      for (let x = 0; x < W; x += 48) ctx.fillRect(x, 0, 1, H);
+      for (let y = 0; y < H; y += 48) ctx.fillRect(0, y, W, 1);
+      const g = ctx.createRadialGradient(W / 2, H * 0.45, 0, W / 2, H * 0.45, 900);
+      g.addColorStop(0, 'rgba(255, 106, 26, 0.05)');
+      g.addColorStop(1, 'rgba(255, 106, 26, 0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function topBar(scene, a) {
+      ctx.save();
+      ctx.font = F.h(500, 38);
+      const w1 = ctx.measureText('metro').width;
+      ctx.font = F.h(700, 38);
+      const w2 = ctx.measureText('KUBIKO Planea').width;
+      wordmark(72 + (w1 + w2) / 2, 92, 38);
+      ctx.restore();
+
+      if (scene.step) {
+        withAlpha(a, () => {
+          const label = `PASO ${scene.step} DE ${STEPS}`;
+          ctx.font = F.m(600, 22);
+          const lw = ctx.measureText(label).width;
+          const w = 28 + lw + 24 + STEPS * 22 + 18;
+          const x = W - 72 - w;
+          rr(x, 54, w, 52, 26);
+          ctx.fillStyle = C.surface;
+          ctx.fill();
+          ctx.strokeStyle = C.border;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          txt(label, x + 28, 81, F.m(600, 22), C.orange, 'left', 'middle');
+          for (let i = 0; i < STEPS; i++) {
+            ctx.beginPath();
+            ctx.arc(x + 28 + lw + 30 + i * 22, 80, 6, 0, Math.PI * 2);
+            ctx.fillStyle = i < scene.step ? C.orange : C.borderFocus;
+            ctx.fill();
+          }
+        });
+      } else {
+        withAlpha(a, () => pill(W - 72, 80, 'IA + MODELO BIM',
+          { align: 'right', fill: C.orangeL, stroke: C.orangeB, color: C.orange, h: 52 }));
+      }
+    }
+
+    function caption(text, a) {
+      if (!text || a <= 0) return;
+      const font = F.b(500, 34), lh = 46;
+      const lines = wrap(text, 1480, font);
+      ctx.font = font;
+      const w = Math.max(...lines.map(l => ctx.measureText(l).width)) + 84;
+      const h = lines.length * lh + 40;
+      const x = (W - w) / 2, y = 1036 - h;
+      withAlpha(a, () => {
+        rr(x, y, w, h, 22);
+        ctx.fillStyle = 'rgba(17, 24, 39, 0.92)';
+        ctx.fill();
+        lines.forEach((l, i) => txt(l, W / 2, y + 20 + lh * i + lh / 2 + 1, font, '#FFFFFF', 'center', 'middle'));
+      });
+    }
+
+    function render(T) {
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.globalAlpha = 1;
+      background();
+
+      const idx = scenes.findIndex(s => T < s.start + s.dur);
+      const scene = idx === -1 ? scenes[scenes.length - 1] : scenes[idx];
+      const t = T - scene.start;
+      const a = Math.min(ease.out(P(t, 0, 0.5)), 1 - ease.inOut(P(t, scene.dur - 0.45, scene.dur)));
+
+      topBar(scene, a);
+
+      withAlpha(a, () => {
+        ctx.translate(0, (1 - a) * 16);
+        if (scene.head) segs(scene.head, W / 2, 192, F.h(700, 58));
+        scene.draw(t, T);
+      });
+
+      const cap = [...scene.caps].reverse().find(c => t >= c.at);
+      if (cap) caption(cap.text, a * ease.out(P(t, cap.at, cap.at + 0.4)));
+
+      // Barra de progreso del video
+      ctx.fillStyle = 'rgba(17, 24, 39, 0.06)';
+      ctx.fillRect(0, H - 6, W, 6);
+      ctx.fillStyle = C.orange;
+      ctx.fillRect(0, H - 6, W * (T / TOTAL), 6);
+      ctx.restore();
+    }
+
+    // ----------------------------------------------------
+    // REPRODUCTOR
+    // ----------------------------------------------------
+    const ui = {
+      play: document.getElementById('btn-play'),
+      restart: document.getElementById('btn-restart'),
+      seek: document.getElementById('seek'),
+      time: document.getElementById('time'),
+      download: document.getElementById('btn-download')
+    };
+    const state = { T: 0, playing: true, last: 0, recorder: null, chunks: [] };
+    const fmtTime = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+    function setPlaying(p) {
+      state.playing = p;
+      ui.play.textContent = p ? '❚❚' : '▶';
+      ui.play.setAttribute('aria-label', p ? 'Pausar' : 'Reproducir');
+    }
+
+    function frame(now) {
+      const dt = state.last ? Math.min(0.1, (now - state.last) / 1000) : 0;
+      state.last = now;
+      if (state.playing) {
+        state.T += dt;
+        if (state.T >= TOTAL) {
+          if (state.recorder) stopRecording();
+          state.T %= TOTAL;
+        }
+      }
+      render(state.T);
+      ui.seek.value = String(Math.round((state.T / TOTAL) * 1000));
+      ui.time.textContent = `${fmtTime(state.T)} / ${fmtTime(TOTAL)}`;
+      if (state.recorder) ui.download.textContent = `Grabando… ${Math.round((state.T / TOTAL) * 100)}%`;
+      requestAnimationFrame(frame);
+    }
+
+    ui.play.addEventListener('click', () => setPlaying(!state.playing));
+    cv.addEventListener('click', () => { if (!state.recorder) setPlaying(!state.playing); });
+    ui.restart.addEventListener('click', () => { state.T = 0; setPlaying(true); });
+    ui.seek.addEventListener('input', () => { if (!state.recorder) state.T = (Number(ui.seek.value) / 1000) * TOTAL; });
+    window.addEventListener('keydown', e => {
+      if (e.code === 'Space' && !state.recorder) { e.preventDefault(); setPlaying(!state.playing); }
+    });
+
+    // Grabación del lienzo a .webm (tiempo real)
+    function startRecording() {
+      const mime = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm']
+        .find(m => window.MediaRecorder && MediaRecorder.isTypeSupported(m));
+      if (!cv.captureStream || !mime) {
+        alert('Tu navegador no permite grabar el video. Prueba con Chrome o Edge.');
+        return;
+      }
+      state.chunks = [];
+      const rec = new MediaRecorder(cv.captureStream(30), { mimeType: mime, videoBitsPerSecond: 8_000_000 });
+      rec.ondataavailable = e => { if (e.data.size) state.chunks.push(e.data); };
+      rec.onstop = () => {
+        const url = URL.createObjectURL(new Blob(state.chunks, { type: 'video/webm' }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'metrokubiko-planea.webm';
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+      };
+      state.T = 0;
+      setPlaying(true);
+      state.recorder = rec;
+      ui.play.disabled = ui.restart.disabled = ui.seek.disabled = true;
+      rec.start();
+    }
+
+    function stopRecording() {
+      state.recorder.stop();
+      state.recorder = null;
+      ui.play.disabled = ui.restart.disabled = ui.seek.disabled = false;
+      ui.download.textContent = 'Descargar video';
+    }
+
+    ui.download.addEventListener('click', () => { if (!state.recorder) startRecording(); });
+
+    // ----------------------------------------------------
+    // CARGA (FUENTES + IMAGEN DE LAURA) E INICIO
+    // ----------------------------------------------------
+    function loadImage(src, cors) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        if (cors) img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    function isTainting(img) {
+      try {
+        const c = document.createElement('canvas');
+        c.width = c.height = 2;
+        const g = c.getContext('2d');
+        g.drawImage(img, 0, 0, 2, 2);
+        g.getImageData(0, 0, 1, 1);
+        return false;
+      } catch {
+        return true;
+      }
+    }
+
+    async function init() {
+      const fonts = [
+        F.h(500, 40), F.h(700, 40), F.b(400, 30), F.b(500, 30), F.b(600, 30),
+        F.m(500, 20), F.m(600, 20)
+      ].map(f => document.fonts.load(f));
+      const timeout = new Promise(r => setTimeout(r, 3000));
+      await Promise.race([Promise.all(fonts), timeout]);
+
+      try {
+        laura = await loadImage(LAURA_SRC, true);
+      } catch {
+        try { laura = await loadImage(LAURA_SRC, false); } catch { laura = null; }
+      }
+
+      if (laura && isTainting(laura)) {
+        ui.download.disabled = true;
+        ui.download.title = 'La imagen de Laura no permite exportar el video desde el navegador (CORS).';
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    init();
+  </script>
+</body>
+</html>
